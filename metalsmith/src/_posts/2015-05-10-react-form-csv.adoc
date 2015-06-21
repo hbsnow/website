@@ -1,0 +1,276 @@
+---
+title: Reactを使ってフォームで選択したCSVファイルを表示する
+date: 2015-05-10
+updated:
+tags: JavaScript, React
+---
+
+https://facebook.github.io/react/[React]を使って`<input type="file">`で指定された以下のCSVを表示してみます。
+
+[source,csv]
+----
+背番号,名前
+1,陽岱鋼
+2,大野奨太
+3,田中賢介
+----
+
+背番号は重複することのないユニークなIDです。
+
+
+
+[[preparation]]
+== Reactを使うための前準備
+
+Reactを使うために使用する必要最低限のものをリストアップをしていきます。BabelがJSXを標準でサポートしているので、使用するテンプレートエンジンはJSXを使います。
+
+- https://facebook.github.io/react/[React]
+- http://gulpjs.com/[gulp]
+- https://babeljs.io/[babel]
+- http://webpack.github.io/[webpack]
+- https://github.com/babel/babel-loader[babel-loader]
+
+Reactの比較的新しいサンプルコードの多くにはBabelが使われているので、link:https://babeljs.io/docs/learn-es6/[BabelのLearn ES6]を先に読んでおいたほうがいいとおもう。
+
+`gulpfile.js`のタスクはこんな感じです。かなり省略してるので実際に使っているのとはだいぶ違うし、この程度であればgulpを通す必要はないとおもう。
+
+[source,js]
+----
+gulp.task('build:js', function() {
+  var js = './src/scripts/main.jsx';
+  var loader = {
+    loaders: [
+      {
+        test: /\.jsx$/,
+        loader: 'babel-loader?stage=0'
+      }
+    ]
+  }
+
+  return gulp.src(js)
+    .pipe($.webpack({
+      output: {
+        filename: '[name].js'
+      },
+      module: loader
+    }))
+    .pipe(gulp.dest('./build/'))
+});
+----
+
+
+
+[[show-csv]]
+== フォームで指定されたCSVデータをReactを使って表示する
+
+`<input type="file">`で指定されたCSVのファイルの内容を表示させてみます。
+
+[source,js]
+----
+import React from 'react';
+
+let App = React.createClass({
+  getInitialState() {
+    return {
+      csv: ''
+    };
+  },
+  handleFile(e) {
+    let reader = new FileReader();
+    reader.readAsText(e.target.files[0]);
+    reader.onload = (upload) => {
+      this.setState({
+        csv: upload.target.result
+      });
+    };
+  },
+  render() {
+    return (
+      <div className="app">
+        <form>
+          <input type="file" onChange={this.handleFile} accept=".csv" />
+        </form>
+        <pre>{this.state.csv}</pre>
+      </div>
+    );
+  }
+});
+
+React.render(<App />, document.body);
+----
+
+エラー処理は後で追加していくとして、これで選択されたCSVの内容を表示することができました。`let`だったり`={gt}`はBabelというかES6の記述です。
+
+`let`はブロックスコープをもつことができて、要するにVBだったりC#の変数っぽくなります。おかげで`var`を使うことがほとんどなくなりました。
+
+`={gt}`はArrow Functionとよばれるもので、自分はエラーがでるまでただの糖衣構文だとおもっていたんだけど実はそうではありませんでした。例えば上のコードの`handleFile`の部分を書き直すと次のようになります。
+
+[source,js]
+----
+handleFile: function(e) {
+  var self = this;
+  var reader = new FileReader();
+
+  reader.readAsText(e.target.files[0]);
+
+  reader.onload = function(upload) {
+    self.setState({
+      csv: upload.target.result
+    });
+  };
+},
+----
+
+この二つを比較するとArrow Functionはレキシカルスコープを維持してくれている、ということがわかりやすいかもしれない。`var self = this;`みたいなことをする必要がなくなって嬉しい感じ。
+
+
+
+[[parse-csv]]
+== CSVをパースしてテーブルで表示する
+
+`<pre>`で表示するだけではプレビューの表示としてわかりにくいので、`<table>`できれいに表示させてみます。CSVをJSON形式のオブジェクトにパースするため、link:https://github.com/mholt/PapaParse[PapaParse]を使いました。
+
+とりあえずサンプルなのでCSVが認識可能な形式になっているかどうかの判定などの処理はしていません。
+
+[source,js]
+----
+import React from 'react';
+import Papa from 'papaparse';
+
+let PlayerTbody = React.createClass({
+  render() {
+    let cell = this.props.players.map((player) => {
+      return (
+        <tr key={player.id}>
+          <td>{player.id}</td>
+          <td>{player.name}</td>
+        </tr>
+      );
+    });
+
+    return <tbody>{cell}</tbody>;
+  }
+});
+
+let PlayerPreview = React.createClass({
+  render() {
+    let preview = <p>CSVを選択してください。</p>;
+
+    if (this.props.players.length > 0) {
+      preview = (
+        <table>
+          <thead>
+            <tr>
+              <td>背番号</td><td>名前</td>
+            </tr>
+          </thead>
+
+          <PlayerTbody players={this.props.players} />
+        </table>
+      );
+    }
+
+    return (
+      <div className="preview">
+        {preview}
+      </div>
+    );
+  }
+});
+
+let PlayerForm = React.createClass({
+  _onChange(e) {
+    this.props.onChange(e);
+  },
+  render() {
+    return (
+      <form encType="multipart/form-data" id="player-form">
+        <div className="form-group">
+          <input type="file" accept=".csv" id="player-form-csv"
+                 onChange={this._onChange} />
+        </div>
+      </form>
+    );
+  }
+});
+
+let Players = React.createClass({
+\tgetInitialState() {
+    return {
+      players: []
+    };
+  },
+  handleChange(e) {
+    let reader = new FileReader();
+
+    reader.readAsText(e.target.files[0]);
+
+    reader.onload = (upload) => {
+      let csv = upload.target.result.replace(
+        '背番号,名前',
+        'id,name'
+      );
+
+      let json = Papa.parse(csv, { header: true });
+
+      this.setState({
+        players: json.data
+      });
+    };
+  },
+  render() {
+    return (
+      <div className="players">
+        <PlayerForm onChange={this.handleChange} />
+        <PlayerPreview players={this.state.players} />
+      </div>
+    );
+  }
+});
+
+let App = React.createClass({
+  render() {
+    return (
+      <div className="app">
+        <Players />
+      </div>
+    );
+  }
+});
+
+React.render(<App />, document.body);
+----
+
+コードが一気に増えましたが、CSVのパースというよりも`<table>`を表示するためのコードが多いだけでやっていることは前項のものとそれほど変わりありません。
+
+ただこれは`<PlayerForm onChange={this.handleChange} />`みたいなものが単純なフォームだからこそ問題ないように見えているだけで、入力項目が複数あるようなフォームで同じようなコードを書くと酷いことになることが簡単に想像できます。それに階層が深くなっていくと`state`をもつコンポーネントと表示するコンポーネントの関係がわかりにくくなりそうだし、それを継承していくのも面倒になりそうで、とてもこんな記述でコードを書き進めようとはおもえなかった。
+
+
+
+[[flux]]
+== 実装をFluxにする
+
+Fluxについては以下のサイトやスライドを見ながら覚えていきました。とくにlink:http://azu.github.io/slide/react-meetup/flux.html[10分で実装するFlux]のスライドがわかりやすかった。
+
+- http://azu.github.io/slide/react-meetup/flux.html[10分で実装するFlux]
+- https://facebook.github.io/flux/[flux]
+- http://qiita.com/koba04/items/b32ba449d753fdb2b597[reactjs - React.jsとFlux - Qiita]
+- http://yutapon.hatenablog.com/entry/2015/04/27/150000[React+FluxでTodoMVCを作ってFluxについて学んでみた]
+
+ただ単純なサンプルでもある程度の前提知識がないと、理解するまでには時間がかかるとおもう。
+
+- https://github.com/hbsnow/react-flux-example[hbsnow/react-flux-example]
+
+コード量が多くなるのでgithubにコードをあげておきました。この規模であればそれほど問題にはならなかったんだけれども、処理が増えていくとStoreがかなり肥大化していきそうな気がする。
+
+作っているときにも結構わからないことがあって、`<PlayerPreview>`初期ロード時の`<table>`を出力しない場合の処理なんかはこれが正しい実装方法だとはあまりおもえなかったんだけど、これ以外の方法がおもいつかなかった。
+
+
+
+[[bibliography]]
+== 参照文献
+
+[bibliography]
+- http://qiita.com/advent-calendar/2014/reactjs[一人React.js Advent Calendar 2014 - Qiita]
+- http://azu.github.io/slide/react-meetup/flux.html[10分で実装するFlux]
+- http://yutapon.hatenablog.com/entry/2015/04/27/150000[React+FluxでTodoMVCを作ってFluxについて学んでみた]

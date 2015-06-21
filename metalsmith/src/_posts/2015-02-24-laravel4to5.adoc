@@ -1,0 +1,285 @@
+---
+title: Laravel4から5へのアップデート
+date: 2015-02-24
+updated: 2015-04-17
+tags: PHP, Laravel
+---
+
+Laravel4から5へのアップデート作業をしました。4で作り終えてから変更したかった箇所の修正だったり、5で追加されていたものを使ったりとしていたのでアップデートにはそれなりに時間がかかったけれども、これは4のときあまりに適当に作っていたツケであってLaravelが悪いわけではまったくない。
+
+ディレクトリ構造が大きく変わっているみたいだけど、それで困るようなことはなかった。個人的に4よりも5のほうがわかりやすいと感じたんだけども、一般的には逆らしい。自分の場合は4をはじめてさわるときにcomposerの知識がほとんどなかったことが原因だったと今になって思う。5をやるときにはこのあたりの知識がある程度そろってきていたからね。
+
+
+
+[[middleware]]
+== ミドルウェア
+
+HTTPリクエストをフィルタリングする、4のときのフィルターに相当するものらしい。
+
+[source,php]
+----
+Route::when('*', 'csrf', array('post'));
+Route::group(['before' => 'auth'], function()
+{
+    //
+});
+----
+
+以前はこんな感じで書いていたものを、以下のように変更した。
+
+[source,php]
+----
+Route::group(['middleware' => 'auth'], function()
+{
+    //
+});
+----
+
+Laravel5ではCSRF Protectionは全ルートで有効になっているらしいので関連の記述は削除した。フィルター自体は廃止されてないので、4のときのフィルターも使えるみたいだけど、わざわざミドルウェアではなくてフィルターで作るメリットがあるかどうかはよくわからない。
+
+ミドルウェアの作成は`artisan`のコマンドで簡単に雛形を作成することができます。
+
+[source,ps1]
+----
+php artisan make:middleware PjaxMiddleware
+----
+
+ここでは例としてPjaxのリクエストかどうかで表示を変更するためのミドルウェアを作成してみます。
+
+[source,php]
+----
+<?php namespace App\Http\Middleware;
+
+use Closure;
+
+class PjaxMiddleware {
+    public function handle($request, Closure $next)
+    {
+        if ($request->pjax()) {
+            return $next($request)->with('pjax', true);
+        }
+
+        return $next($request);
+    }
+}
+----
+
+Pjaxのリクエストかどうかの判定は`$request->pjax()`で簡単に行うことができます。ここは以前Laravel4で作っていたときはフィルターですらなく、`*.tpl.html`というファイルが存在するかのように振舞うことによって実装していて、Laravel5にアップデートするにあたってまずまっさきに変更したかったところだった。
+
+これで親のbladeになる`master.blade.php`のようなものを以下のようにする。
+
+[source,php]
+----
+@if (!isset($pjax) || !$pjax)
+<!DOCTYPE html>
+<html lang="ja">
+    // ...
+</html>
+@else
+    @yield('content')
+@endif
+----
+
+これでPjaxのリクエスト時に必要な部分だけ出力することができるようになります。
+
+ミドルウェアをルートに適用するためにはミドルウェアを`app/Http/Kernel.php`に登録する必要がある。
+
+[source,php]
+----
+protected $routeMiddleware = [
+    // ...
+    'pjax' => 'App\Http\Middleware\PjaxMiddleware',
+];
+----
+
+今回はこのように登録した。ルートへの登録は最初に書いたauthの例のように登録すればいい。
+
+[source,php]
+----
+Route::get('foo', ['middleware' => 'pjax', function()
+{
+    //
+}]);
+----
+
+実際のサイトでは`Route::controller`や`Route::resource`を使っていることも多いと思う、そういうときにはそのコントローラのコンストラクタに記述します。
+
+[source,php]
+----
+public function __construct()
+{
+    $this->middleware('pjax', ['only' => ['foo']]);
+}
+----
+
+ただこのミドルウェアの記述どうも正しく動作しなくて、pjaxの通信であっても`$request->pjax()`が`true`にはなりませんでした。なので実際に使っているコードはURLにクエリパラメータをつけることで対応しています。
+
+[source,php]
+----
+class PjaxMiddleware
+{
+    public function handle($request, Closure $next)
+    {
+        return $next($request)->with('pjax', $request->query('_pjax'));
+    }
+}
+----
+
+AngularJSのコードは以下のような感じ。
+
+[source,js]
+----
+var query = '?_pjax=true';
+$stateProvider
+  .state('home', {
+    url: '/',
+    templateUrl: 'index' + query
+  })
+  .state('blog-single', {
+    url: '/blog/{slug:[a-z0-9-\.]+}',
+    templateUrl: function($stateParams) {
+      return 'blog/' + $stateParams.slug + query;
+    }
+  })
+----
+
+あまりスマートではない気がする。
+
+
+
+[[named-route]]
+== ルートに名前をつけた
+
+ルートに名前をつけて、URLではなくルートを参照するように変更した。これは4のときから可能だったんだけども、最初に作ったときにまったく意識していなかったので、5のアップデートで修正しようと思っていた箇所。
+
+[source,php]
+----
+Route::controller('admin', 'Admin\AdminController', [
+    'getIndex' => 'admin.index'
+]);
+
+Route::group(['prefix' => 'blog'], function()
+{
+    Route::get('/', [
+        'as' => 'blog.index',
+        'uses' => 'BlogController@index',
+    ]);
+});
+----
+
+RESTful Resource Controllersを使っている場合には自動的に名前が与えられます。
+
+ルートに名前をつけるとなにが便利なのかというと、例えば作っているときにURLの設計を変更したくなったときにその変更が楽になることだと思う。ルートには名前をつけてResponseやビューでは直接URLを指定することはやめました。
+
+ルートにつけられた名前は`php artisan route:list`で確認することができます。
+
+
+
+[[eloquent]]
+== Eloquent
+
+EloquentはLaravel4でもあったんだけど、あまり理解していない状態で作っていたのでかなり書き換えました。個人のブログで負荷を気にするほどのアクセスになることはないので、データベースへのアクセスはすべてEloquentを使います。
+
+LaravelのModelについて調べていると、リポジトリパターンという言葉を結構見かけてあまり意味を理解せずに真似していたんだけど、最近ようやくこれがコントローラで直接データベースを扱う記述を書かないようにする手段の一つらしいということを理解できた。なんでこんな面倒なことをするのかというと、後でEloquentではなく他の方法でDBにアクセスしたくなった場合に書き換えるのが大変になるからじゃないかとおもう。
+
+ただ今回はそのままコントローラに書くことにしました。Eloquent以外の方法を使うことはおそらくないだろうしね。
+
+以下はEloquentを使ったモデルのサンプルです。Laravel5ではモデルのために用意されたフォルダはないので、`App\Eloquent`というフォルダを作りました。
+
+[source,php]
+----
+<?php namespace App\Eloquent;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Article extends Model {
+    protected $table = 'articles';
+    protected $fillable = ['title', 'slug', 'text', 'state', 'icon_id'];
+
+    public function tags()
+    {
+        return $this->belongsToMany('App\Eloquent\Tag');
+    }
+
+    public function icon()
+    {
+        return $this->belongsTo('App\Eloquent\Icon');
+    }
+
+    public function scopeArchives($query, $year)
+    {
+        return $query
+            ->whereBetween('created_at', array($year . '-01-01', $year . '-12-31'))
+            ->orderBy('created_at', 'desc');
+    }
+}
+----
+
+http://laravel.com/docs/5.0/eloquent#relationships[ドキュメントを見ていればすぐ気付ける]ことなんだけど、そのまま4からのコピーする場合にはRelationのクラス名を完全修飾名で書かないとエラーになることに注意が必要かもしれない。
+
+それと5になってはじめてQuery Scopesを使ってみたんだけど、とても便利だった。`scopeArchives`はパラメータに指定した年の間の記事を取得するというもの。
+
+[source,php]
+----
+Article::archives('2015')->get();
+----
+
+こう記述するだけで2015年に作成されたすべての記事が取得できるようになります。
+
+
+
+[[validation]]
+== バリデーション
+
+ユーザの入力したデータのバリデーションは4のときにはコントローラでしていたんだけど、5にはForm Request Validationというものがあるので使ってみることにした。
+
+コントローラはこんな感じ。
+
+[source,php]
+----
+public function store(ArticleRequest $request)
+{
+    $inputs = $request->all();
+    $article = Article::create(...);
+
+    return redirect()->route('admin.blog.article.index');
+}
+----
+
+`php artisan make:request ArticleRequest`で雛形のクラスを作成。
+
+[source,php]
+----
+<?php namespace App\Http\Requests\Admin\Blog;
+
+use App\Http\Requests\Request;
+
+class ArticleRequest extends Request {
+    public function authorize()
+    {
+        return true;
+    }
+
+    public function rules()
+    {
+        $id = $this->get('id') !== null ? ',' . $this->get('id') : '';
+
+        return [
+            'title' => 'required|max:256',
+            'slug' => 'required|max:128|regex:/^[a-z0-9\-]+$/|unique:articles,slug' . $id,
+            'text' => 'required',
+        ];
+    }
+}
+----
+
+`$this-{gt}get('id')`は記事の修正の場合に修正記事の自分自身をユニーク判定から除外するための記述になります。
+
+
+
+[[bibliography]]
+== 参照文献
+
+[bibliography]
+- http://laravel.com/api/5.0/index.html[Laravel API]
+- http://laravel.com/docs/5.0[Laravel Documentation]

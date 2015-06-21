@@ -1,0 +1,21 @@
+meta(charset='utf-8')
+meta(http-equiv='X-UA-Compatible', content='IE=edge')
+meta(name='viewport', content='width=device-width, initial-scale=1')
+meta(name='fragment', content='!')
+
+- var page_author = author ? author : site.author
+meta(name='author', content=page_author)
+
+if description
+	meta(name='description', content=description)
+
+- var page_title = title ? title + ' | ' : ''
+title(page-title)= page_title + site.title
+
+base(href='/')
+
+link(rel='alternate', href='/blog/feed.rss', title='RSS update information', type='application/rss+xml')
+
+link(rel='stylesheet', href='/styles/preloader.inline.css', inline)
+link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Lato:400,700')
+link(rel='stylesheet', href='/styles/main.css')

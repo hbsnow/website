@@ -1,0 +1,137 @@
+---
+title: マテリアルデザインとWeb Components、Polymerについて
+date: 2014-11-19
+updated: 2015-04-16
+tags: Web Components, Polymer
+---
+
+マテリアルデザインのデザインが今後これまで以上に流行るかどうかはわからないにしても、これが機になってWeb Componentsが使われていく未来がきたらいいなとおもう。
+
+
+
+[[material-design]]
+== マテリアルデザイン
+
+あるサイトをAngularJSを使って作っていたので、マテリアルデザインというよりもlink:https://www.polymer-project.org/docs/elements/paper-elements.html[paper風のデザイン]を導入するためにlink:https://material.angularjs.org/[Angular Material Design]を使いました。今のところ必要なデザインが完全に備わってるとはいえないけれど、今後そうなっていくと期待しているし、もしかすると今この記事を読んでいる人にとってはすでにそうなっているかもしれない。最近なにかと話題もReactにもAngular Material Designと同じようにlink:http://callemall.github.io/material-ui/[Material UI]というものがあります。
+
+自分はマテリアルデザインのデザインというよりもlink:https://www.polymer-project.org/[Polymer]のWeb Componentsのpolyfillにとても魅力を感じていて、これによってデザインにかかる時間を短縮して開発に集中できるようになることがとてもすばらしいとおもう。XHTML2が生きていればこんな感じで拡張できたはずで、あれが流行らなかっただけにすこし不安ではあるんだけど、単純にXMLだったから流行らなかったと考えることにした。
+
+マテリアルデザインのデザインについての善し悪しについてはその人のセンスによるものなのでここでは言及しません。大切なのはデザインそのものというよりも、そのデザインを実装するために使われている技術がどのようなものかを少しでも多く理解することだとおもう。
+
+
+
+[[web-components]]
+== Web Components
+
+Web Componentsは今のところ3つの仕様がある。link:http://lists.w3.org/Archives/Public/public-webapps/2013JanMar/0730.html[HTMLElementElement]みたいなものがあるらしいので今後増えていくかもしれない。
+
+- http://w3c.github.io/webcomponents/spec/shadow/[Shadow DOM]
+- http://w3c.github.io/webcomponents/spec/imports/[HTML Imports]
+- http://w3c.github.io/webcomponents/spec/custom/[Custom Elements]
+
+Web Componentsを使用することで、これまでのHTMLにとても大きな変化をもたらすことがわかります。
+
+[[shadow-dom]]
+=== Shadow DOM
+
+Shadow DOMはShadow Rootを作ってDOMツリーをカプセル化するもので、Chromeなんかのデバックツールで表示された`#shadow-root`という文字を見たことがある人もけっこういるんじゃないかとおもう。
+
+このShadow DOMによって`div`だらけのHTMLからようやく解放され、またさらにすばらしいことにlink:http://www.w3.org/TR/html-templates/[HTML Templates]を使うことで、JavaScriptではなくテンプレートに使用するHTMLをHTML内に記述することもできます。
+
+例えば以下のようなHTML。
+
+[source,html]
+----
+<div class="nameCard">
+    <div class="nameCardInner">
+        <div class="container">
+            <p>私の名前は<span class="name">yuki</span>です。</p>
+        </div>
+    </div>
+</div>
+----
+
+実際このように`div`で過剰にコーディングされているHTMLは少なくないし、しかもそれがスタイルのために重要な役割をもっていることもあります。このようなHTMLはShadow DOMとHTML Templatesを使うことで次のように簡潔に記述することができます。
+
+[source,html]
+----
+<div class="nameCard">yuki</div>
+
+<template id="nameCardTemplate">
+    <div class="nameCardInner">
+        <div class="container">
+            <p>私の名前は<span class="name"><content></content></span>です。</p>
+        </div>
+    </div>
+</template>
+----
+
+[source,js]
+----
+var shadow = document.querySelector('.nameCard').createShadowRoot();
+var template = document.querySelector('#nameCardTemplate');
+var clone = document.importNode(template.content, true);
+shadow.appendChild(clone);
+----
+
+HTMLの見通しがとてもよくなりました。
+
+[[html-imports]]
+=== HTML Imports
+
+HTML ImportsはXMLのlink:http://www.w3.org/TR/xinclude/[XInclude]のようなもの。このAPIのおかげで`iframe`やAjaxを使わなくてもHTMLファイルをコンテンツに読み込ませることができるようになります。
+
+これだけでも便利だけれども、`head`内で`import`するとさらに便利。
+
+[source,html]
+----
+<head>
+    <link rel="import" href="bootstrap.html">
+</head>
+----
+
+Shadow DOMででてくるテンプレートをここで読み込ませることで静的ファイルだけでテンプレートを共有化することができます。
+
+[source,html]
+----
+<link rel="stylesheet" href="style.css">
+<script src="script.js"></script>
+
+<template id="nameCardTemplate">
+    <div class="nameCardInner">
+        <div class="container">
+            <p>私の名前は<span class="name"><content></content></span>です。</p>
+        </div>
+    </div>
+</template>
+----
+
+[[cunstom-elements]]
+=== Custom Elements
+
+Custom Elementsは新しいHTMLの要素を作ることができる。新しく作る要素には接頭辞のようなものが必要で、XMLと似ています。すこし違うのはHTMLにもともとある要素の拡張ができることです。
+
+[source,js]
+----
+var x-button = document.registerElement('x-button', {
+  prototype: Object.create(HTMLButtonElement.prototype)
+});
+----
+
+内部をShadow DOMでカプセル化したり、HTML TemplateもつかえるのでShadow DOMの例のHTMLは次のように書けるようになります。
+
+[source,html]
+----
+<x-nameCard>yuki</x-nameCard>
+----
+
+
+
+[[bibliography]]
+== 参照文献
+
+[bibliography]
+- http://www.html5rocks.com/ja/tutorials/webcomponents/shadowdom/[Shadow DOM 101 - HTML5 Rocks]
+- http://www.html5rocks.com/ja/tutorials/webcomponents/shadowdom-201/[Shadow DOM 201: CSS とスタイリング - HTML5 Rocks]
+- http://www.html5rocks.com/ja/tutorials/webcomponents/imports/[HTML Imports: ウェブのための #include - HTML5 Rocks]
+- http://www.html5rocks.com/ja/tutorials/webcomponents/customelements/[Custom Elements: HTML に新しい要素を定義する - HTML5 Rocks]

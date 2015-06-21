@@ -1,0 +1,98 @@
+.layout {
+  // display
+  &.horizontal,
+  &.horizontal-reverse,
+  &.vertical,
+  &.vertical-reverse {
+    display: flex;
+  }
+
+  &.inline {
+    display: inline-flex;
+  }
+
+  // flex-direction
+  &.horizontal {
+    flex-direction: row;
+  }
+  &.horizontal-reverse {
+    flex-direction: row-reverse;
+  }
+  &.vertical {
+    flex-direction: column;
+  }
+  &.vertical-reverse {
+    flex-direction: column-reverse;
+  }
+
+  // flex-wrap
+  &.wrap {
+    flex-wrap: wrap;
+  }
+  &.wrap-reverse {
+    flex-wrap: wrap-reverse;
+  }
+
+  // align-items
+  &.start {
+    align-items: flex-start;
+  }
+  &.center,
+  &.center-center {
+    align-items: center;
+  }
+  &.end {
+    align-items: flex-end;
+  }
+
+  // justify-content
+  &.start-justified {
+    justify-content: flex-start;
+  }
+  &.center-justified,
+  &.center-center {
+    justify-content: center;
+  }
+  &.end-justified {
+    justify-content: flex-end;
+  }
+  &.around-justified {
+    justify-content: space-around;
+  }
+  &.justified {
+    justify-content: space-between;
+  }
+}
+
+// flex
+.flex-auto {
+  flex: 1 1 auto;
+}
+.flex-none {
+  flex: none;
+}
+.flex {
+  flex: 1;
+}
+
+.generate-flex(12);
+.generate-flex(@n, @i: 1) when (@i =< @n) {
+  .flex-@{i} {
+    flex: @i;
+  }
+  .generate-flex(@n, (@i + 1));
+}
+
+// align-self
+.self-start {
+  align-self: flex-start;
+}
+.self-center {
+  align-self: center;
+}
+.self-end {
+  align-self: flex-end;
+}
+.self-stretch {
+  align-self: stretch;
+}

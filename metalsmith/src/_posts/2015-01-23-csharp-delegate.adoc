@@ -1,0 +1,301 @@
+---
+title: デリゲートとラムダ式
+date: 2014-12-16
+updated: 2015-04-02
+tags: C Sharp
+---
+
+デリゲートについて調べても大体が処理の委譲です、といったような解説がされていて理解できないので自分用にメモを残しておく。
+
+
+
+[[delegate-example]]
+== デリゲートのサンプル
+
+https://msdn.microsoft.com/ja-jp/library/ms173172.aspx[MSDNのデリゲートの解説]にまず最初にのっているサンプルのコードがこれ。
+
+[source,cs]
+----
+public MainWindow()
+{
+    InitializeComponent();
+
+    // Instantiate the delegate.
+    Del handler = DelegateMethod;
+
+    // Call the delegate.
+    handler("Hello World");
+}
+
+public delegate void Del(string message);
+
+// Create a method for a delegate.
+public static void DelegateMethod(string message)
+{
+    Console.WriteLine(message);
+}
+----
+
+コードそのものは理解できるんだけど、何でこんなインスタンス生成してメソッドを呼び出してるのかの理由がわからない。でも意味がないわけがないので次のサンプルを見てみる。
+
+[source,cs]
+----
+public MainWindow()
+{
+    InitializeComponent();
+
+    // Instantiate the delegate.
+    Del handler = DelegateMethod;
+
+    // Call the delegate.
+    MethodWithCallback(1, 2, handler);
+}
+
+public delegate void Del(string message);
+
+// Create a method for a delegate.
+public static void DelegateMethod(string message)
+{
+    System.Console.WriteLine(message);
+}
+
+public void MethodWithCallback(int param1, int param2, Del callback)
+{
+    callback("The number is: " + (param1 + param2).ToString());
+}
+----
+
+これをみるとちょっとすごいっぽい雰囲気は伝わってくる。どうやらメソッド内で実行される関数を後から変えることができるものらしい。例えばメッセージの表示方法を`System.Console.WriteLine`から`System.Diagnostics.Debug.WriteLine`に変えたりできるようです。
+
+[source,cs]
+----
+public MainWindow()
+{
+    InitializeComponent();
+
+    Del handler1 = DelegateMethod1;
+    MethodWithCallback(1, 2, handler1);
+
+    Del handler2 = DelegateMethod2;
+    MethodWithCallback(1, 2, handler2);
+}
+
+public delegate void Del(string message);
+
+public static void DelegateMethod1(string message)
+{
+    System.Console.WriteLine(message);
+}
+
+public static void DelegateMethod2(string message)
+{
+    System.Diagnostics.Debug.WriteLine(message);
+}
+
+public void MethodWithCallback(int param1, int param2, Del callback)
+{
+    callback("The number is: " + (param1 + param2).ToString());
+}
+----
+
+
+
+[[multicasting]]
+== マルチキャスティング
+
+次に説明されているのがマルチキャスティングというもの。まずこんなクラスがサンプルにあります。
+
+[source,cs]
+----
+public class MethodClass
+{
+    public void Method1(string message) { }
+    public void Method2(string message) { }
+}
+----
+
+いくらサンプルっていっても、さすがにもうちょっとやる気だせよと言いたくなる。で、次はこれ。
+
+[source,cs]
+----
+public MainWindow()
+{
+    InitializeComponent();
+
+    MethodClass obj = new MethodClass();
+    Del d1 = obj.Method1;
+    Del d2 = obj.Method2;
+    Del d3 = DelegateMethod;
+
+    //Both types of assignment are valid.
+    Del allMethodsDelegate = d1 + d2;
+    allMethodsDelegate += d3;
+}
+
+public delegate void Del(string message);
+
+public static void DelegateMethod(string message)
+{
+    System.Console.WriteLine(message);
+}
+----
+
+このサンプル、理解させる気があるとは思えない。せめて最後に`allMethodsDelegate("Hello World");`くらいつけたらよかったんじゃないだろうか。でもそんなものつけたところでこのサンプルだとさっぱりわからないことに変わりはないので、ここでは別にサンプルを用意する。
+
+[source,cs]
+----
+public class MethodClass
+{
+    public void Method1(string message)
+    {
+        System.Console.WriteLine("Method1: {0}", message);
+    }
+    public void Method2(string message)
+    {
+        System.Console.WriteLine("Method2: {0}", message);
+    }
+}
+----
+
+メソッドが呼び出されたときにはどのメソッドが呼び出されたかをコンソールに出力するようにした。あとは最後に`allMethodsDelegate("Hello World");`を加えると次のような感じでコンソールに出力される。
+
+[source]
+----
+Method1: Hello World
+Method2: Hello World
+Hello World
+----
+
+どうやらマルチキャスティングというのは複数のデリゲートを代入した順番で呼び出すものらしい。普通にサンプル作って欲しかった。
+
+[source,cs]
+----
+//remove Method1
+allMethodsDelegate -= d1;
+
+// copy AllMethodsDelegate while removing d2
+Del oneMethodDelegate = allMethodsDelegate - d2;
+----
+
+あとはこういうこともできるみたいです。ここまでくると直感的でわかりやすいなと思える。
+
+
+
+[[named-method]]
+== 名前付きメソッドの使用
+
+https://msdn.microsoft.com/ja-jp/library/98dc08ac.aspx[MSDNの解説では名前付きメソッドの使用]になっているんだけれども、いままでやっていたのが名前付きメソッドの使用でなんでこんな項目があるのかよくわからない。むしろこれまで匿名メソッドを使ったサンプルがなかったのでここでは匿名メソッドを使ったサンプルを確認しておく。
+
+[source,cs]
+----
+public MainWindow()
+{
+    InitializeComponent();
+
+    Del d = delegate(string message) {
+        System.Console.WriteLine(message);
+    };
+
+    d("Hello World");
+}
+
+public delegate void Del(string message);
+----
+
+名前付きとか匿名とか用語をみると何をいっているのかわかりにくいけども、実際にコードをみると、名前付きってそういうことかと理解できるはず。単にそのメソッドに名前がついてるかついてないかの違いしかない。
+
+ここではさらっとしか書かないけどラムダ式も使える。
+
+[source,cs]
+----
+Del d = message => { Console.WriteLine(message); };
+----
+
+実際のコードでみかけるのはラムダ式ばかりで、デリゲート自体理解してないとコードすべて理解できないという残念なことになる。
+
+
+
+[[lambda]]
+== ラムダ式
+
+ラムダ式をまったく理解していない状態でラムダ式について調べると、たぶん何がなんだか理解できないとおもう。ただラムダ式という言葉はしらなくてもJavaScriptで匿名関数は使ったことがあるかもしれない。
+
+[source,js]
+----
+var show = function(message){ Console.log(message); }
+show("Hello World");
+----
+
+かつての自分はこれを見てJavaScript気持ち悪いな、と思っていたんだけどJavaScriptは悪くない。匿名関数とデリゲートを理解してなかった自分が悪かった。
+
+JavaScriptはとりあえずおいといて、今はC#でこれと似たようなことはできないのかという話。C#で匿名関数っていうと匿名メソッドとラムダ式のことをさしているんですが、これは匿名メソッド。
+
+[source,cs]
+----
+Del d = delegate(string message) {
+    System.Console.WriteLine(message);
+};
+----
+
+最初に書いたJavaScriptのコードとそっくりですよねこれ。でもC#では基本こんな書き方はあんまりしなくて、だいたい次のように書きます。これがラムダ式。
+
+[source,cs]
+----
+Del d = message => { Console.WriteLine(message); };
+----
+
+`=>`はラムダ演算子っていうそうです。この左辺にあるmessageは入力パラメーターで複数あったりなかったりすることもあります。
+
+[source,cs]
+----
+(x, y) => { Console.WriteLine(x + y); };
+() => { Console.WriteLine("パラメータがないよ！"); };
+----
+
+右辺にあるのは式もしくはステートメントで見ればわかる。
+
+ラムダ式があれば匿名メソッドの記法いらないじゃんって思うかもしれないんだけど、これが実装されたのは.NET3以降らしいのでそういう事情なんでしょう。細かい挙動の違いみたいなものもあるみたいですけど、基本的にラムダ式使えばいい感じっぽいです。
+
+当然のことなんだけど、デリゲートがわかってないとラムダ式も理解できない。でも前面にでてくる言葉がラムダ式だからラムダ式でばかり検索しちゃうんだよね。
+
+
+
+[[generic-delegates]]
+== 汎用デリゲート
+
+汎用デリゲートと書くと何のことだかわからないけども、`Action`と`Func`と書くとなんだそれかとなる人もいるかもしれない。汎用という名前が付いているところからわかるように汎用的に使えるデリゲート用の型で、これまでのコードは次のように簡単に記述することができる。
+
+[source,cs]
+----
+Action<string> d = message => { Console.WriteLine(message); };
+d("Hello World");
+----
+
+何が不要になったかというとデリゲートの宣言。
+
+[source,cs]
+----
+public delegate void Del(string message);
+----
+
+これがいらなくなる。`Action`の右隣にいる`<string>`はパラメータの型。
+
+`Action`と`Func`の違いは戻り値の有無で、戻り値があるようなものの場合には`Func`を使う。
+
+[source,cs]
+----
+Func<int, int, int> add = (x, y) => x + y;
+Console.WriteLine(add(1, 2));
+----
+
+パラメータが3つもあるのはもっとも右辺にあるのが戻り値の型になるから。
+
+
+
+[[bibliography]]
+== 参照文献
+
+[bibliography]
+- https://msdn.microsoft.com/ja-jp/library/ms173171.aspx[デリゲート (C# プログラミング ガイド)]
+- https://msdn.microsoft.com/ja-jp/library/0yw3tz5k.aspx[匿名メソッド (C# プログラミング ガイド)]
+- https://msdn.microsoft.com/ja-jp/library/bb882516.aspx[匿名関数 (C# プログラミング ガイド)]

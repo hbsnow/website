@@ -1,0 +1,215 @@
+---
+title: 静的サイトをMetalsmithで生成する
+date: 2015-06-21
+tags: JavaScript, Metalsmith
+---
+
+Metalsmithはやりたいことをプラグインで導入していくスタイルなので、若干のとっつきにくさはあるかもしれません。ただ、だいたいの仕組みとよく使うプラグインを把握してしまえばあとは自由にサイトを作ることができるようになってくるので、そういったものを求めているのであればMetalsmithが最良の選択になるはず。
+
+
+- https://github.com/hbsnow/blog-metalsmith[blog-metalsmith]
+
+Metalsmithで生成されいるこのサイトのコードはすべてGitHubで公開しています。
+
+
+
+[[install]]
+== インストール
+
+まずはMetalsmithをインストール。
+
+CLIを使う場合にはグローバルにインストールするのが普通なんだろうけど、CLIは使わないので普通にインストールしていきます。
+
+[source,ps1]
+----
+npm init
+npm install metalsmith --save-dev
+----
+
+これだけだとほとんど何もすることができません。必要なプラグインを自分でインストールしていく必要があります。
+
+
+
+[[plugin]]
+== プラグイン
+
+よく使うプラグインをリストアップするとこんな感じ。
+
+[horizontal]
+metalsmith-branch:: 指定されたパターンで分岐処理
+metalsmith-collections:: ファイルのコレクションを生成
+metalsmith-permalinks:: 出力ファイルのディレクトリを`\*.html`から`*/index.html`に変更
+metalsmith-copy:: ファイルのコピー、もしくは移動。リネームも可能
+metalsmith-template:: テンプレートの処理
+metalsmith-tags:: カテゴリ、タグページの出力
+metalsmith-markdown:: Markdownの変換
+metalsmith-asciidoc:: AsciiDocの変換
+metalsmith-filemetadata:: 指定されたパターンにマッチするファイルにメタデータを追加
+metalsmith-except:: メタデータの除外
+metalsmith-paths:: メタデータに自身のパス情報を追加
+metalsmith-replace:: メタデータの置き換え
+metalsmith-define:: 使用するモジュールを一括で指定
+metalsmith-draft:: draftをbuildから除外
+metalsmith-autotoc:: ToC生成
+metalsmith-highlight:: コードのハイライト
+
+ブログ程度のものであれば必要なプラグインがなくて自作しないといけないようなことにはならないとおもう。
+
+[[metalsmith-collections]]
+=== metalsmith-collections
+
+ブログをつくる目的であればかなりの重要なプラグインなんだけど、いきなりMetalsmithを理解しないまま使おうとするとわかりにくいかもしれない。
+
+[source,js]
+----
+metalsmith
+  .use(asciidoc())
+  .use(collections({
+    posts: {
+      pattern: '_posts/**.html',
+      sortBy: 'date',
+      reverse: true
+    }
+  }))
+----
+
+こうしておくとテンプレート側で`collections.posts`を指定すると、`pattern`にマッチしたファイルのデータを呼び出すことができます。
+
+[source,jade]
+----
+ol
+  each item in collections.posts
+    li: a(href=item.path)= item.title
+----
+
+これは`_posts/**.html`のファイルをメタデータの`date`で日付の新しい順にソートしたもので、ブログのArchivesのページを想像するとわかりやすい。
+
+`next`と`prev`にはソート順で前後にあるファイルのデータが含まれていて、よくあるブログの前後ナビゲーションはこのプラグインで作ることができます。
+
+metalsmith-collectionsがあれば「metalsmith-feedやmetalsmith-sitemapのようなプラグインを使わなくてもRSSのようなフィードやsitemap.xmlをつくることはそれほど難しいことではありません。
+
+[[metalsmith-template]]
+=== metalsmith-template, metalsmith-filemetadata
+
+Wordpressからの移行で、JekyllやOctopressのような静的ジェネレータを一切使ったことがない場合にはちょっとわかりにくいのかもしれない。
+
+[source,adoc]
+----
+---
+title: テスト投稿
+date: 2015-06-12
+tags: test
+template: post.jade
+---
+
+[[test]]
+== テスト
+これはテスト投稿です。
+----
+
+このAsciiDocの上部にある`---`で囲まれている部分がYAML front-matterです。テンプレートを使う場合にはここのメタデータにtemplateを追加して、テンプレートに使うファイルを指定するだけになります。
+
+ただブログの記事のようにそのフォルダ内すべてでかならず共通になるメタデータをすべてのファイルに記述するのは面倒なので、そういったときにはmetalsmith-filemetadataをつかうのがおすすめ。
+
+[source,js]
+----
+metalsmith
+  .use(fileMetadata([
+    {
+      pattern: '_posts/*',
+      metadata: {
+        template: 'post.jade'
+      }
+    }
+  ]))
+----
+
+これで`_posts`以下のすべてのファイルのメタデータに`template: post.jade`が追加されます。
+
+
+
+[[gulp]]
+== gulpからMetalsmithでサイトを生成する
+
+Metalsmithで使うJavaScriptやCSSはgulpでビルドしたいので、Metalsmithのビルドでもgulpから実行したくなります。
+
+gulpからMetalsmith、もしくはその逆を扱うためにgulpsmithというプラグインがあるのですが、デフォルトではYAML front matterを読み込めないため使うには面倒な記述が必要になるのでgulpからコマンドを実行することにしました。
+
+[source,js]
+----
+var gulp = require('gulp');
+var exec = require('child_process').exec;
+
+gulp.task('build:metalsmith', function() {
+  exec('node metalsmith/build.js', function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
+----
+
+[[gh-pages]]
+== GitHub Pagesで公開する
+
+作成したサイトをGitHub Pagesで公開します。
+
+サイトを作成するために使うコードをプッシュします。このとき最終的にビルドしたサイトを`public`フォルダとすると、その`public`フォルダにビルド結果を含めた状態にしてください。
+
+[source,ps1]
+----
+git subtree push --prefix public origin gh-pages
+----
+
+これで`public`をルートとするgh-pagesブランチが作成されました。このコマンドさすがに毎回入力するのが面倒なのでTravis CIやDrone.ioでやろうとおもったんですが、subtreeがありませんと怒られたのであきらめてgulpでやってます。
+
+
+
+[[other]]
+== その他の静的サイトジェネレータ
+
+Node.js製の静的サイトジェネレータにはMetalsmith以外にもいくつかあるので、Metalsmithの前に使ったことのあるジェネレータの簡単な紹介をしておきます。
+
+[[other-hexo]]
+=== Hexo
+
+Node.js製のジェネレータの中ではGitHubのStar数が最上位なので、Node.js製という条件内であれば今のところ一番人気といっていいんじゃないかとおもう。静的サイトジェネレータというよりも静的ブログジェネレータという感じ。
+
+初期状態のCSSプリプロセッサがstylusになっていたり、デフォルトテーマのEJSがまるでWordpressのテンプレートをみているような記述になってるので、これだけでHexoが嫌いになりそうになったんだけども、このへんはすべて差し替え可能なので問題になることはありません。
+
+[source,ejs]
+----
+<% if (theme.sidebar === 'bottom'){ %>
+  <%- partial('_partial/sidebar') %>
+<% } %>
+----
+
+こういう記述はJadeに置き換えることができるので、以下のように記述することができます。
+
+[source,jade]
+----
+if theme.sidebar === 'bottom'
+  != partial('_partial/sidebar')
+----
+
+ドキュメントがわかりやすいので、テーマの作成で困ることはないとおもう。コードのシンタックスハイライトにはlink:https://highlightjs.org/[highlight.js]が使われているんだけども、Jekyllからの移植用のためなのかクラス名はPygmentsに準じたものになっていたりと、Jekyllからのテーマの移植もしやすいようになっているのかもしれません。
+
+ヘルパーも結構便利でToCみたいなものから、記述が面倒になりがちなリンクや日付関連のものだったり色々と揃ってるのでテンプレートを自作するときにはまず一通り確認するとよさそう。
+
+
+
+[[other-hubpress]]
+=== HubPress
+
+静的サイトジェネレータでも、さまざまな環境から手軽にアップデートができるのがlink:https://github.com/HubPress/hubpress.io[HubPress]。記事の作成や更新はもちろんブログの作成からすべてをGitHubのページ上で行うことができます。
+
+記事をMarkdownではなくAsciiDocで書くというのがわりと新鮮。AsciiDocの存在自体、HubPressで知ったんだけれども技術系のブログ記事であればAsciiDocのほうが書きやすいはず。ただこのAsciiDocが合わなかった場合、Markdownに変更するといったようなテンプレートエンジンの変更もできないので選択肢から除外されることになります。
+
+ただそれよりも現状の移行における大きな問題は生成したHTMLファイルの出力先のフォルダを指定できないことで、これはつまり過去の記事はこれまでのURLとは異なるものにならざるをえないことを意味しています。ブログの移行ですべての記事のURLが変わることを許容することは難しいので、メインのブログからの移行はまだ現実的ではなさそう。
+
+
+
+[[bibliography]]
+== 参照文献
+
+[bibliography]
+- http://qiita.com/mizchi/items/17e2eb04c34b18aff921[Github pages に 特定のディレクトリだけデプロイする]

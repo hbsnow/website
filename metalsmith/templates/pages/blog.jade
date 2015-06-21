@@ -1,0 +1,14 @@
+extends ../content
+
+block content_body
+	h2 Archives
+
+	ol.contents-list
+		each item in collections.posts
+			li.contents-item
+				a(href='/' + item.path)
+					.contents-item-meta
+						time #{moment(item.date).format('YYYY-MM-DD')}
+
+					.contents-item-title
+						h2= item.title

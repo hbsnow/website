@@ -1,0 +1,6 @@
+if tags
+	#article-tags
+		ul
+			each tag in tags
+				- var url = '/blog/tag/' + tag.replace(' ', '-') + '.html'
+				li: a(href=url, class='button')= tag

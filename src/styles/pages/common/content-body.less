@@ -1,0 +1,41 @@
+.content-body {
+  > .container {
+    > *:first-child {
+      margin-top: 0;
+    }
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+article.main-root {
+  .content-body {
+    counter-reset: section;
+
+    .sect1 {
+      h2 {
+        position: relative;
+        border-top: 1px solid @border-color;
+        padding-top: 6rem;
+        margin-top: 6rem;
+
+        &::before {
+          position: absolute;
+          top: -.5rem;
+          left: 50%;
+          width: 8rem;
+          line-height: 1rem;
+          background-color: @theme-color1;
+          counter-increment: section;
+          content: '§ ' counters(section, '.');
+          color: @text-muted;
+          font-size: @font-size-large;
+          text-align: center;
+          margin-left: -4rem;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+//- ToCを出力する場合にはarticle要素にする
+if autotoc
+	article.main-root
+		include partial/content
+else
+	section.main-root
+		include partial/content

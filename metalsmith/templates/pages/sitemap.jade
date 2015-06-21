@@ -1,0 +1,22 @@
+doctype xml
+urlset(xmlns='http://www.sitemaps.org/schemas/sitemap/0.9')
+	url
+		loc= site.url
+		changefreq weekly
+		priority 0.5
+
+	url
+		loc= site.url + 'about'
+		changefreq monthly
+		priority 0.5
+
+	url
+		loc= site.url + 'work'
+		changefreq weekly
+		priority 1.0
+
+	each item in collections.posts
+		- var path = item.path.replace(/_posts.[0-9]{4}-[0-9]{2}-[0-9]{2}-/, 'blog/')
+		url
+			loc= site.url + path
+			priority 0.8

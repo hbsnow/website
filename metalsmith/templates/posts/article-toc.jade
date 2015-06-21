@@ -1,0 +1,12 @@
+mixin renderToc(items)
+	ol
+		each item in items
+			li
+				a(href='#' + item.id)= item.text
+				if item.children.length > 0
+					+renderToc(item.children)
+
+if toc.length > 0
+	#article-toc
+		.container
+			+renderToc(toc)

@@ -1,0 +1,17 @@
+extends ../content
+
+block content_body
+	h2 Applications
+
+	ol.contents-list
+		each item in collections.apps
+			li.contents-item
+				a(href='/' + item.path)
+					.contents-item-meta
+						span= item.type
+
+					.contents-item-title
+						h2= item.title
+
+				.contents-item-description
+					p= item.description

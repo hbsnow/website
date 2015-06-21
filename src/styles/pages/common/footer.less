@@ -1,0 +1,40 @@
+#footer {
+  position: relative;
+  margin-top: 4.5rem;
+  z-index: @zindex-footer;
+
+  > .container {
+    height: 4.5rem;
+    line-height: 4.5rem;
+    .layout.horizontal();
+    .layout.center();
+  }
+}
+
+#footer-social {
+  .flex-none();
+  order: 1;
+  width: 15rem;
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      text-align: center;
+      a {
+        display: block;
+      }
+    }
+  }
+}
+
+#footer-copyright {
+  .flex();
+  order: 0;
+
+  p {
+    margin: 0;
+  }
+}

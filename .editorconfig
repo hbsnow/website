@@ -1,0 +1,21 @@
+# LESS, SCSS
+[*.{less,scss}]
+indent_style: space
+indent_size: 2
+
+# JavaScript
+[*.js]
+indent_style: space
+indent_size: 2
+trim_trailing_whitespace: true
+
+# Jade
+[*.jade]
+indent_style: tab
+indent_size: 4
+
+# AsciiDoc
+[*.adoc]
+indent_style: space
+indent_size: 2
+insert_final_newline: true

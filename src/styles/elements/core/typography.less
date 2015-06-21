@@ -1,0 +1,126 @@
+// Links
+// -------------------------
+a {
+  color: @link-color;
+  text-decoration: none;
+
+  &:hover {
+    color: @link-hover-color;
+  }
+
+  &:focus {
+    .tab-focus();
+  }
+}
+
+
+
+
+// Headings
+// -------------------------
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: inherit;
+  font-weight: bold;
+  line-height: 1.1;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+h1, .h1 {
+  font-size: @font-size-h1;
+}
+h2, .h2 {
+  font-size: @font-size-h2;
+}
+h3, .h3 {
+  font-size: @font-size-h3;
+}
+h4, .h4 {
+  font-size: @font-size-h4;
+}
+h5, .h5 {
+  font-size: @font-size-h5;
+}
+h6, .h6 {
+  font-size: @font-size-h6;
+}
+
+
+
+// Body text
+// -------------------------
+
+p {
+  margin: 0 0 @baseline;
+}
+
+
+
+// Emphasis & misc
+// -------------------------
+
+small,
+.small {
+  font-size: .85rem;
+}
+
+mark,
+.mark {
+  background-color: @state-warning-bg;
+  padding: .2rem;
+}
+
+// Alignment
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+.text-center {
+  text-align: center;
+}
+.text-justify {
+  text-align: justify;
+}
+.text-nowrap {
+  white-space: nowrap;
+}
+
+// Contextual colors
+.text-muted {
+  color: @text-muted;
+}
+
+.text-success {
+  .text-emphasis-variant(@state-success-text);
+}
+.text-info {
+  .text-emphasis-variant(@state-info-text);
+}
+.text-warning {
+  .text-emphasis-variant(@state-warning-text);
+}
+.text-danger {
+  .text-emphasis-variant(@state-danger-text);
+}
+
+.bg-success {
+  .bg-variant(@state-success-bg);
+}
+.bg-info {
+  .bg-variant(@state-info-bg);
+}
+.bg-warning {
+  .bg-variant(@state-warning-bg);
+}
+.bg-danger {
+  .bg-variant(@state-danger-bg);
+}
+
+// adoc
+.line-through {
+  text-decoration: line-through;
+}

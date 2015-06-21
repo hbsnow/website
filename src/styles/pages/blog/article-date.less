@@ -1,0 +1,47 @@
+#article-date {
+  text-align: center;
+  margin-bottom: 1.5rem;
+
+  > div, > hr {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  > hr {
+    width: 2px;
+    height: 5rem;
+    border: 0;
+    background-color: @border-color;
+    transform: rotate(25deg);
+    margin: 0;
+    margin-left: 3rem;
+    margin-right: 3rem;
+  }
+
+  time {
+    font-size: 1.5rem;
+  }
+
+}
+
+#article-date-created,
+#article-date-updated {
+
+  &::before {
+    display: block;
+    content: 'created';
+    color: @text-muted;
+  }
+}
+
+#article-date-created {
+  &::before {
+    content: 'created';
+  }
+}
+
+#article-date-updated {
+  &::before {
+    content: 'updated';
+  }
+}

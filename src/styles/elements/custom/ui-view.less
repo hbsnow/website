@@ -1,0 +1,33 @@
+[ui-view] {
+  position: relative;
+  top: 0;
+  left: 0;
+
+  &.ng-enter, &.ng-enter-active  {
+    .main-root {
+      position: absolute;
+      left: 0;
+      width: 100%;
+    }
+  }
+
+  &.ng-enter {
+    top: 10px;
+    opacity: 0;
+    transition: opacity .2s, top .4s;
+  }
+
+  &.ng-enter-active {
+    top: 0;
+    opacity: 1;
+  }
+
+  &.ng-leave {
+    opacity: 1;
+    transition: opacity .4s;
+  }
+
+  &.ng-leave-active {
+    opacity: 0;
+  }
+}

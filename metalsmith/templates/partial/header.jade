@@ -1,0 +1,10 @@
+h1#site-title
+	a(href='/', ui-sref='home')= site.title
+
+nav#header-menu
+	icon(css-icon='menu', alt='Menu', click='true')
+
+	ul
+		li: a(href='/blog.html') Blog
+		//- li: a(href='/work.html') Work
+		li: a(href='/about.html') About

@@ -1,0 +1,161 @@
+---
+title: gulpでbrowserifyを使う
+date: 2014-11-19
+updated: 2015-04-28
+tags: JavaScript, gulp
+---
+
+http://gulpjs.com/[gulp]でlink:http://browserify.org/[browserify]を使って、Web開発で使用するモジュールを管理する。何がいいのかというとコード内にコードの依存関係を`require`で記述できることだとおもう。
+
+同じことはwebpackでもできるので、link:http://4uing.net/blog/gulp-webpack[webpackをつかうことも]あります。ただwebpackはできることが多すぎるので、そこまでの高性能を望まないのであればbrowserifyで問題ありません。
+
+
+[[browserify]]
+== browserify
+
+以前はgulp-browserifyを使っていたんだけれども、https://github.com/gulpjs/plugins/blob/master/src/blackList.json[BlackList]に含まれていて推奨されない方法とされているので、直接browserifyを使います。
+
+gulpのレシピにあるlink:https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md[Browserify + Uglify2 with sourcemaps]あたりが参考になりそうです。
+
+[[browserify-install]]
+=== インストール
+
+[source,ps1]
+----
+npm init
+npm install gulp bower debowerify browserify vinyl-transform --save-dev
+----
+
+Web用のパッケージはlinkhttp://bower.io/[bower]でしか管理されていないこともあるのでいれておきました。link:https://github.com/eugeneware/debowerify[debowerify]はbowerで取得したファイルを簡略な指定によってbrowserifyで使うためのもので`package.json`に以下を追記する必要があります。
+
+[source,json]
+----
+"browserify": {
+  "transform": [
+    "debowerify"
+  ]
+},
+----
+
+bowerのファイルがプロジェクトのルート直下にあると邪魔なので`.bowerrc`を作成してappディレクトリに移動しておきました。
+
+[source,json]
+----
+{
+  "directory": "/app/bower_components"
+}
+----
+
+
+
+[[browserify-gulpfile]]
+=== gulpfile.js
+
+[source,js]
+----
+var gulp = require('gulp');
+var transform = require('vinyl-transform');
+var browserify = require('browserify');
+
+gulp.task('js', function() {
+  return gulp.src('app/scripts/main.js')
+    .pipe(transform(function(filename) {
+      return browserify(filename, {
+        debug: true
+      }).bundle();
+    }))
+    .pipe(gulp.dest('dist'));
+});
+----
+
+`vinyl-transform`は`bundle`の返すファイルストリームをnpmで使用されているvinylに変換するために使われている。
+
+
+
+[[watchify]]
+== watchify
+
+browserifyで`watch`していると、ファイルの増加によってその処理時間もどんどん増えてくので`watch`のときにはWatchifyで差分コンパイルをします。
+
+- https://github.com/gulpjs/gulp/blob/master/docs/recipes/fast-browserify-builds-with-watchify.md[Fast browserify builds with watchify]
+- http://akabeko.me/blog/2015/02/watchify/[watchify を試す | アカベコマイリ]
+
+上記のサイトを参考にしました。
+
+[[watchify-install]]
+=== インストール
+
+browserifyがインストール済みであることを想定しています。
+
+[source,ps1]
+----
+npm install watchify vinyl-source-stream gulp-util --save-dev
+----
+
+`gulp-util`は必須ではないんだけど、出力されるログは色がついていたほうがわかりやすいので使いました。
+
+[[watchify-gulpfile]]
+=== gulpfile.js
+
+[source,js]
+----
+var gulp = require('gulp');
+var source = require('vinyl-source-stream');
+var browserify = require('browserify');
+var watchify   = require('watchify');
+var $ = require('gulp-load-plugins')();
+
+gulp.task('browserify', function() {
+  return compile(false);
+});
+
+gulp.task('watchify', function() {
+  return compile(true);
+});
+
+function compile(watch) {
+  var bundler = null;
+  var option = {
+    debug: true
+  };
+
+  if(watch) {
+    option.cache = {};
+    option.packageCache = {};
+    option.fullPaths = true;
+    bundler = watchify(browserify(path.js, option));
+  } else {
+    bundler = browserify(path.js, option);
+  }
+
+  function bundle() {
+    return bundler
+      .bundle()
+      .on('error', $.util.log.bind($.util, 'Browserify Error'))
+      .pipe(source('main.js'))
+      .pipe(gulp.dest(path.dist));
+  }
+
+  bundler.on('update', bundle);
+  bundler.on('log', function(msg) {
+    $.util.log('Finished', '\'' + $.util.colors.cyan('watchify') + '\'', msg);
+  });
+
+  return bundle();
+}
+
+gulp.task('watch', ['watchify'], function() {
+  //watchifyは監視しなくていい
+});
+----
+
+
+
+[[bibliography]]
+== 参照文献
+
+[bibliography]
+- https://github.com/mjhea0/angular-gulp-browserify-seed[angular-gulp-browserify-seed]
+- http://stackoverflow.com/questions/25088406/cant-get-external-library-with-browserify-and-debowerify[javascript - Can&#39;t get external library with browserify and debowerify - Stack Overflow]
+- http://umai-bow.hateblo.jp/entry/2014/10/08/002235[gulp と browserify と vinyl の話]
+- http://akabeko.me/blog/2015/02/watchify/[watchify を試す | アカベコマイリ]

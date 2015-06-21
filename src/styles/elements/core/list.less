@@ -1,0 +1,33 @@
+ul,
+ol {
+  margin-top: 0;
+  margin-bottom: @baseline;
+
+  & & {
+    margin-bottom: 0;
+  }
+
+  li {
+    p:only-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+dl {
+  margin-top: 0;
+  margin-bottom: @baseline;
+}
+
+dt,
+dd {
+  line-height: @line-height-base;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin-left: 0;
+}
