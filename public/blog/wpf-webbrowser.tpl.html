@@ -1,0 +1,218 @@
+<article class="main-root"><header class="content-header"><nav id="breadcrumb"><div class="container"><div itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="/blog.html" itemprop="url"><span itemprop="title">Blog</span></a></div></div></nav><div class="content-header-title"><div class="container"><h1 id="main-title">WPFのWebBrowserを使うためのいくつかのメモ</h1></div></div><div class="content-header-meta"><div class="container"><div id="article-date"><div id="article-date-created"><time>2014-12-16</time></div><hr/><div id="article-date-updated"><time>2015-06-21</time></div></div><div id="article-tags"><ul><li><a href="/blog/tag/C-Sharp.html" class="button">C Sharp</a></li><li><a href="/blog/tag/WPF.html" class="button">WPF</a></li></ul></div><div id="article-toc"><div class="container"><ol><li><a href="#change-version">WPFのWebBrowserで使用されるIEのバージョンを最新にする</a><ol><li><a href="#get-ie-version">インストールされたIEのバージョンを取得</a></li><li><a href="#rewrite-registry">レジストリを書き換える</a></li></ol></li><li><a href="#javascript-error">JavaScriptのエラーを抑止する</a><ol><li><a href="#add-javascript">JavaScriptを挿入する</a></li><li><a href="#iwb2-silent">IWebBrowser2インターフェースでSilentプロパティを設定する</a></li></ol></li><li><a href="#capture">WPFでWebBrowser内のスクリーンショットを保存する</a></li><li><a href="#bibliography">参照文献</a></li></ol></div></div></div></div></header><div class="content-body"><div class="container"><div class="paragraph">
+<p>WPFのWebBrowserで基本設定の変更をする方法や機能を追加する方法のメモです。</p>
+</div>
+<div class="sect1">
+<h2 id="change-version">WPFのWebBrowserで使用されるIEのバージョンを最新にする</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>WebBrowserで使用されるバージョンのデフォルトはIE7なので、インストールされている最新のバージョンに変更したくなることはよくあるとおもう。ただその変更はレジストリを使用する以外に方法はありません。</p>
+</div>
+<div class="sect2">
+<h3 id="get-ie-version">インストールされたIEのバージョンを取得</h3>
+<div class="paragraph">
+<p>IEをどのバージョンに変更するかを決定するためにはインストールされているIEのバージョンを知る必要があります。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cs" data-lang="cs"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> IEVersion
+{
+    <span class="hljs-keyword">get</span> {
+        <span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> Regex(<span class="hljs-string">@"(\d{1,2})\.(\d{1,2})\.[\d]+.[\d]+"</span>);
+        <span class="hljs-keyword">var</span> m = r.Match(Registry.LocalMachine.OpenSubKey(<span class="hljs-string">@"Software\Microsoft\Internet Explorer"</span>).GetValue(<span class="hljs-string">"Version"</span>).ToString());
+
+        <span class="hljs-keyword">var</span> ver1 = Convert.ToInt32(m.Groups[<span class="hljs-number">1</span>].Value);
+        <span class="hljs-keyword">var</span> ver2 = Convert.ToInt32(m.Groups[<span class="hljs-number">2</span>].Value);
+
+        <span class="hljs-keyword">if</span> (ver1 == <span class="hljs-number">9</span> &amp;&amp; ver2 &gt; <span class="hljs-number">9</span>)
+        {
+            <span class="hljs-keyword">return</span> ver2;
+        }
+
+        <span class="hljs-keyword">return</span> ver1;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>IE10以上のとき、バージョンによってはちょっと形式が違うことがあるようなので、その処理を追加しています。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="rewrite-registry">レジストリを書き換える</h3>
+<div class="paragraph">
+<p>WebBrowserがインストールされている最新のIEを使用するようにレジストリを書き換えます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cs" data-lang="cs"><span class="hljs-keyword">public</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">string</span> FEATURE_BROWSER_EMULATION = <span class="hljs-string">@"Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION"</span>;
+
+Microsoft.Win32.RegistryKey regkey = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(FEATURE_BROWSER_EMULATION);
+String exeName = System.IO.Path.GetFileName(Assembly.GetExecutingAssembly().Location);
+
+<span class="hljs-keyword">int</span> IeVer = <span class="hljs-keyword">this</span>.IEVersion;
+regkey.SetValue(exeName, IeVer * <span class="hljs-number">1000</span>, Microsoft.Win32.RegistryValueKind.DWord);
+regkey.Close();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>レジストリの削除には<code>DeleteSubKey</code>を使うだけです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cs" data-lang="cs">regkey.DeleteSubKey(exeName, <span class="hljs-keyword">false</span>);
+regkey.Close();</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="javascript-error">JavaScriptのエラーを抑止する</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Windows Formsでは簡単なWebBrowserのエラーを抑止する方法もWPFだとそうもいきません。</p>
+</div>
+<div class="sect2">
+<h3 id="add-javascript">JavaScriptを挿入する</h3>
+<div class="paragraph">
+<p>検索していて多かった解説がこのパターン。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">noError</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+}
+<span class="hljs-built_in">window</span>.onerror = noError;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>window.onerror</code>をハンドリングするJavaScriptを挿入するとても賢いようにおもえるこの方法も、ドキュメントの初期ロード時にエラーが発生する場合にはエラーのダイアログは抑止できません。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="iwb2-silent">IWebBrowser2インターフェースでSilentプロパティを設定する</h3>
+<div class="paragraph">
+<p><a href="http://msyi303.blog130.fc2.com/blog-entry-59.html">Scribbled Records - WPF の WebBrowser コントロールで ScriptErrorsSuppressed を実現する方法</a>で書かれていた方法です。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-tag">&lt;<span class="hljs-title">WebBrowser</span> <span class="hljs-attribute">x:Name</span>=<span class="hljs-value">"browser"</span>/&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cs" data-lang="cs"><span class="hljs-keyword">var</span> axIWebBrowser2 = <span class="hljs-keyword">typeof</span>(WebBrowser).GetProperty(<span class="hljs-string">"AxIWebBrowser2"</span>, BindingFlags.Instance | BindingFlags.NonPublic);
+<span class="hljs-keyword">var</span> comObj = axIWebBrowser2.GetValue(browser, <span class="hljs-keyword">null</span>);
+
+<span class="hljs-comment">// JavaScriptのエラー表示を抑止する</span>
+comObj.GetType().InvokeMember(<span class="hljs-string">"Silent"</span>, BindingFlags.SetProperty, <span class="hljs-keyword">null</span>, comObj, <span class="hljs-keyword">new</span> <span class="hljs-keyword">object</span>[] { <span class="hljs-keyword">true</span> });</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ドラッグ&amp;ドロップについても同様に設定できます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cs" data-lang="cs"><span class="hljs-comment">// Drag&amp;Dropの禁止</span>
+comObj.GetType().InvokeMember(<span class="hljs-string">"RegisterAsDropTarget"</span>, BindingFlags.SetProperty, <span class="hljs-keyword">null</span>, comObj, <span class="hljs-keyword">new</span> <span class="hljs-keyword">object</span>[] { <span class="hljs-keyword">false</span>, });</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="capture">WPFでWebBrowser内のスクリーンショットを保存する</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>WPFで特定要素、今回の場合WebBrowserの範囲のスクリーンショットを保存するために以下のようなコードを書きました。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-tag">&lt;<span class="hljs-title">WebBrowser</span> <span class="hljs-attribute">x:Name</span>=<span class="hljs-value">"browser"</span>/&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cs" data-lang="cs"><span class="hljs-keyword">var</span> rtb = <span class="hljs-keyword">new</span> RenderTargetBitmap(
+    (<span class="hljs-keyword">int</span>)browser.Width,
+    (<span class="hljs-keyword">int</span>)browser.Height,
+    <span class="hljs-number">96</span>,
+    <span class="hljs-number">96</span>,
+    PixelFormats.Pbgra32
+);
+rtb.Render(browser);
+
+<span class="hljs-keyword">string</span> dir = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+<span class="hljs-keyword">using</span> (FileStream fs = File.Open(filePath, FileMode.Create))
+{
+    <span class="hljs-keyword">var</span> encoder = <span class="hljs-keyword">new</span> PngBitmapEncoder();
+    encoder.Frames.Add(BitmapFrame.Create(bmp));
+    encoder.Save(fs);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>このコードでは当然何もキャプチャすることはできません。</p>
+</div>
+<div class="paragraph">
+<p><a href="http://msdn.microsoft.com/ja-jp/library/system.windows.media.imaging.rendertargetbitmap%28v=vs.90%29.aspx">RenderTargetBitmap クラス</a>を読めばわかるように、ここでのbrowserはVisualオブジェクトでは全然ありません。つまりこれは以下のように書き直す必要があるということです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cs" data-lang="cs">Image imgScreen = <span class="hljs-keyword">new</span> Image();
+imgScreen.Width = (<span class="hljs-keyword">int</span>)browser.Width;
+imgScreen.Height = (<span class="hljs-keyword">int</span>)browser.Height;
+imgScreen.Source = <span class="hljs-keyword">new</span> DrawingImage(VisualTreeHelper.GetDrawing(browser));
+
+<span class="hljs-keyword">string</span> fileName = <span class="hljs-string">"sample.png"</span>;
+<span class="hljs-keyword">string</span> directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+<span class="hljs-keyword">string</span> filePath = System.IO.Path.Combine(directoryPath, fileName);
+
+<span class="hljs-keyword">using</span> (FileStream fs = <span class="hljs-keyword">new</span> FileStream(directoryPath, FileMode.Create))
+{
+    <span class="hljs-keyword">var</span> vis = <span class="hljs-keyword">new</span> DrawingVisual();
+    DrawingContext cont = vis.RenderOpen();
+    cont.DrawImage(
+        imgScreen.Source,
+        <span class="hljs-keyword">new</span> Rect(<span class="hljs-keyword">new</span> Size(imgScreen.Width, imgScreen.Height))
+    );
+    cont.Close();
+
+    <span class="hljs-keyword">var</span> rtb = <span class="hljs-keyword">new</span> RenderTargetBitmap(
+        (<span class="hljs-keyword">int</span>)imgScreen.Width,
+        (<span class="hljs-keyword">int</span>)imgScreen.Height,
+        <span class="hljs-number">96</span>d,
+        <span class="hljs-number">96</span>d,
+        PixelFormats.Default
+    );
+    rtb.Render(vis);
+
+    <span class="hljs-keyword">var</span> enc = <span class="hljs-keyword">new</span> PngBitmapEncoder();
+    enc.Frames.Add(BitmapFrame.Create(rtb));
+    enc.Save(fs);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>他にも<a href="http://www.ipentec.com/document/document.aspx?page=csharp-wpf-screen-capture-sendkey-winform">SendKeysを使う方法</a>もあるようだけど、今回のようにウィンドウ内の特定要素内だけが必要な場合には座標の計算がかなり面倒になるとおもう。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bibliography">参照文献</h2>
+<div class="sectionbody">
+<div class="ulist bibliography">
+<ul class="bibliography">
+<li>
+<p><a href="http://msyi303.blog130.fc2.com/blog-entry-59.html">Scribbled Records - WPF の WebBrowser コントロールで ScriptErrorsSuppressed を実現する方法</a></p>
+</li>
+<li>
+<p><a href="http://blogs.msdn.com/b/ie/archive/2009/03/10/more-ie8-extensibility-improvements.aspx">More IE8 Extensibility Improvements</a></p>
+</li>
+<li>
+<p><a href="http://nethelp.wikidot.com/save-as-image-using-drawingimage-in-wpf">Save as Image using DrawingImage() in WPF - Do Any Stuff</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></article>

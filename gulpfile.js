@@ -197,7 +197,8 @@ gulp.task('build', function (cb) {
       'clean',
       'build:metalsmith',
       ['build:less', 'build:js', 'move:metalsmith', 'move:metalsmith-tpl'],
-      ['public:html', 'public:css', 'public:js', 'move:assets'],
+      'public:html',
+      ['public:css', 'public:js', 'move:assets'],
       cb
     );
   }

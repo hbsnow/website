@@ -1,0 +1,166 @@
+<article class="main-root"><header class="content-header"><nav id="breadcrumb"><div class="container"><div itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="/blog.html" itemprop="url"><span itemprop="title">Blog</span></a></div></div></nav><div class="content-header-title"><div class="container"><h1 id="main-title">マテリアルデザインとWeb Components、Polymerについて</h1></div></div><div class="content-header-meta"><div class="container"><div id="article-date"><div id="article-date-created"><time>2014-11-19</time></div><hr/><div id="article-date-updated"><time>2015-04-16</time></div></div><div id="article-tags"><ul><li><a href="/blog/tag/Web-Components.html" class="button">Web Components</a></li><li><a href="/blog/tag/Polymer.html" class="button">Polymer</a></li></ul></div><div id="article-toc"><div class="container"><ol><li><a href="#material-design">マテリアルデザイン</a></li><li><a href="#web-components">Web Components</a><ol><li><a href="#shadow-dom">Shadow DOM</a></li><li><a href="#html-imports">HTML Imports</a></li><li><a href="#cunstom-elements">Custom Elements</a></li></ol></li><li><a href="#bibliography">参照文献</a></li></ol></div></div></div></div></header><div class="content-body"><div class="container"><div class="paragraph">
+<p>マテリアルデザインのデザインが今後これまで以上に流行るかどうかはわからないにしても、これが機になってWeb Componentsが使われていく未来がきたらいいなとおもう。</p>
+</div>
+<div class="sect1">
+<h2 id="material-design">マテリアルデザイン</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>あるサイトをAngularJSを使って作っていたので、マテリアルデザインというよりも<a href="https://www.polymer-project.org/docs/elements/paper-elements.html">paper風のデザイン</a>を導入するために<a href="https://material.angularjs.org/">Angular Material Design</a>を使いました。今のところ必要なデザインが完全に備わってるとはいえないけれど、今後そうなっていくと期待しているし、もしかすると今この記事を読んでいる人にとってはすでにそうなっているかもしれない。最近なにかと話題もReactにもAngular Material Designと同じように<a href="http://callemall.github.io/material-ui/">Material UI</a>というものがあります。</p>
+</div>
+<div class="paragraph">
+<p>自分はマテリアルデザインのデザインというよりも<a href="https://www.polymer-project.org/">Polymer</a>のWeb Componentsのpolyfillにとても魅力を感じていて、これによってデザインにかかる時間を短縮して開発に集中できるようになることがとてもすばらしいとおもう。XHTML2が生きていればこんな感じで拡張できたはずで、あれが流行らなかっただけにすこし不安ではあるんだけど、単純にXMLだったから流行らなかったと考えることにした。</p>
+</div>
+<div class="paragraph">
+<p>マテリアルデザインのデザインについての善し悪しについてはその人のセンスによるものなのでここでは言及しません。大切なのはデザインそのものというよりも、そのデザインを実装するために使われている技術がどのようなものかを少しでも多く理解することだとおもう。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="web-components">Web Components</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Web Componentsは今のところ3つの仕様がある。<a href="http://lists.w3.org/Archives/Public/public-webapps/2013JanMar/0730.html">HTMLElementElement</a>みたいなものがあるらしいので今後増えていくかもしれない。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://w3c.github.io/webcomponents/spec/shadow/">Shadow DOM</a></p>
+</li>
+<li>
+<p><a href="http://w3c.github.io/webcomponents/spec/imports/">HTML Imports</a></p>
+</li>
+<li>
+<p><a href="http://w3c.github.io/webcomponents/spec/custom/">Custom Elements</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Web Componentsを使用することで、これまでのHTMLにとても大きな変化をもたらすことがわかります。</p>
+</div>
+<div class="sect2">
+<h3 id="shadow-dom">Shadow DOM</h3>
+<div class="paragraph">
+<p>Shadow DOMはShadow Rootを作ってDOMツリーをカプセル化するもので、Chromeなんかのデバックツールで表示された<code>#shadow-root</code>という文字を見たことがある人もけっこういるんじゃないかとおもう。</p>
+</div>
+<div class="paragraph">
+<p>このShadow DOMによって<code>div</code>だらけのHTMLからようやく解放され、またさらにすばらしいことに<a href="http://www.w3.org/TR/html-templates/">HTML Templates</a>を使うことで、JavaScriptではなくテンプレートに使用するHTMLをHTML内に記述することもできます。</p>
+</div>
+<div class="paragraph">
+<p>例えば以下のようなHTML。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-html" data-lang="html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"nameCard"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"nameCardInner"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"container"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>私の名前は<span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"name"</span>&gt;</span>yuki<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>です。<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>実際このように<code>div</code>で過剰にコーディングされているHTMLは少なくないし、しかもそれがスタイルのために重要な役割をもっていることもあります。このようなHTMLはShadow DOMとHTML Templatesを使うことで次のように簡潔に記述することができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-html" data-lang="html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"nameCard"</span>&gt;</span>yuki<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">template</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"nameCardTemplate"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"nameCardInner"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"container"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>私の名前は<span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"name"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">content</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">content</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>です。<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">template</span>&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-keyword">var</span> shadow = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.nameCard'</span>).createShadowRoot();
+<span class="hljs-keyword">var</span> template = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#nameCardTemplate'</span>);
+<span class="hljs-keyword">var</span> clone = <span class="hljs-built_in">document</span>.importNode(template.content, <span class="hljs-literal">true</span>);
+shadow.appendChild(clone);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>HTMLの見通しがとてもよくなりました。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="html-imports">HTML Imports</h3>
+<div class="paragraph">
+<p>HTML ImportsはXMLの<a href="http://www.w3.org/TR/xinclude/">XInclude</a>のようなもの。このAPIのおかげで<code>iframe</code>やAjaxを使わなくてもHTMLファイルをコンテンツに読み込ませることができるようになります。</p>
+</div>
+<div class="paragraph">
+<p>これだけでも便利だけれども、<code>head</code>内で<code>import</code>するとさらに便利。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-html" data-lang="html"><span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"import"</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"bootstrap.html"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Shadow DOMででてくるテンプレートをここで読み込ませることで静的ファイルだけでテンプレートを共有化することができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-html" data-lang="html"><span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"style.css"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"script.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">template</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"nameCardTemplate"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"nameCardInner"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"container"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>私の名前は<span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"name"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">content</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">content</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>です。<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">template</span>&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cunstom-elements">Custom Elements</h3>
+<div class="paragraph">
+<p>Custom Elementsは新しいHTMLの要素を作ることができる。新しく作る要素には接頭辞のようなものが必要で、XMLと似ています。すこし違うのはHTMLにもともとある要素の拡張ができることです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-keyword">var</span> x-button = <span class="hljs-built_in">document</span>.registerElement(<span class="hljs-string">'x-button'</span>, {
+  prototype: <span class="hljs-built_in">Object</span>.create(HTMLButtonElement.prototype)
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>内部をShadow DOMでカプセル化したり、HTML TemplateもつかえるのでShadow DOMの例のHTMLは次のように書けるようになります。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-html" data-lang="html"><span class="hljs-tag">&lt;<span class="hljs-title">x-nameCard</span>&gt;</span>yuki<span class="hljs-tag">&lt;/<span class="hljs-title">x-nameCard</span>&gt;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bibliography">参照文献</h2>
+<div class="sectionbody">
+<div class="ulist bibliography">
+<ul class="bibliography">
+<li>
+<p><a href="http://www.html5rocks.com/ja/tutorials/webcomponents/shadowdom/">Shadow DOM 101 - HTML5 Rocks</a></p>
+</li>
+<li>
+<p><a href="http://www.html5rocks.com/ja/tutorials/webcomponents/shadowdom-201/">Shadow DOM 201: CSS とスタイリング - HTML5 Rocks</a></p>
+</li>
+<li>
+<p><a href="http://www.html5rocks.com/ja/tutorials/webcomponents/imports/">HTML Imports: ウェブのための #include - HTML5 Rocks</a></p>
+</li>
+<li>
+<p><a href="http://www.html5rocks.com/ja/tutorials/webcomponents/customelements/">Custom Elements: HTML に新しい要素を定義する - HTML5 Rocks</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></article>

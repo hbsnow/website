@@ -1,0 +1,158 @@
+<article class="main-root"><header class="content-header"><nav id="breadcrumb"><div class="container"><div itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="/blog.html" itemprop="url"><span itemprop="title">Blog</span></a></div></div></nav><div class="content-header-title"><div class="container"><h1 id="main-title">EditorConfigでコーディングスタイルを指定する</h1></div></div><div class="content-header-meta"><div class="container"><div id="article-date"><div id="article-date-created"><time>2015-04-21</time></div><hr/><div id="article-date-updated"><time>2015-04-21</time></div></div><div id="article-tags"><ul><li><a href="/blog/tag/editorconfig.html" class="button">editorconfig</a></li></ul></div><div id="article-toc"><div class="container"><ol><li><a href="#beginning">.editorconfigの基本的なこと</a></li><li><a href="#setting">適用されるファイルの指定</a></li><li><a href="#property">プロパティ一覧</a></li><li><a href="#bibliography">参照文献</a></li></ol></div></div></div></div></header><div class="content-body"><div class="container"><div class="paragraph">
+<p>PHPには<a href="http://www.php-fig.org/psr/">PSR</a>で標準のコーディングガイドが存在するんだけども、Lavravel5.0が若干従っていたりいなかったりと気になったのでいろいろ調べていると<a href="https://github.com/cakephp/cakephp/blob/master/.editorconfig">CakePHPのプロジェクトに<code>.editorconfig</code>という気になるファイル</a>をみつけました。</p>
+</div>
+<div class="paragraph">
+<p>この<code>.editorconfig</code>はエディタやIDE間で異なるコーディングスタイルを統一するための設定ファイルで、だいたいのテキストエディタには<code>.editorconfig</code>に対応したプラグインが用意されているので誰でもすぐに使えるとおもう。</p>
+</div>
+<div class="paragraph">
+<p>EditorCongfigはCakePHPのほかにもAngularJSやTwitter Bootstrapなど結構色々なところで使用されているみたいです。実際のプロジェクトでの使用例は<a href="https://github.com/editorconfig/editorconfig/wiki/Projects-Using-EditorConfig">Wiki</a>に一覧があるので、サンプルに困ることはありません。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tbody><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="title">Laravel5.0がPSR-2に準拠していない理由</div>
+<div class="paragraph">
+<p>Laravelがコーディングガイドに従っていないのは<a href="https://twitter.com/HiroKws/status/590412046799216641">PSR-2が先に決まった</a>という事情からのようです。</p>
+</div>
+</td>
+</tr>
+</tbody></table>
+</div>
+<div class="sect1">
+<h2 id="beginning">.editorconfigの基本的なこと</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>.editorconfig</code>の文字コードはUTF8、改行コードはCRLFかLFにします。コメントアウトには<code>#</code>もしくは<code>;</code>を使います。</p>
+</div>
+<div class="paragraph">
+<p>EditorCongfigのプラグインはファイルがひらかれたとき、親ディレクトリをたどって<code>.editorconfig</code>を探します。この検索はルートファイルパスに到達するか、<code>root = true</code>となる<code>.editorconfig</code>が見つかったときに停止します。</p>
+</div>
+<div class="paragraph">
+<p>ファイルは上から下に読み込まれ、ひらかれたファイルにもっとも近いEditorConfigファイルが最後に読み込まれます。</p>
+</div>
+<div class="paragraph">
+<p>EditorConfigのセクション名と一致するプロパティは近いファイルのプロパティが優先され、読み込み順で適用されます。これはようするに、完全に一致するような設定を書いたときにはファイル構成上、一番そのファイルから近い場所にある<code>.editorconfig</code>の設定が優先されて適用されるということ。ただファイルの指定は以下で説明するようにそれなりに柔軟に設定できるので、自分で複数の<code>.editorconfig</code>を作成するようなことはないはず。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="setting">適用されるファイルの指定</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>設定が適用されるファイル指定にはglobパターンを使うことができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># すべてのファイル共通
+[*]
+
+# CSS
+[*.css]
+
+# LESS, SCSS
+[*.{less,scss}]
+
+# Jade
+[resource/**.jade]
+
+# package.json
+[package.json]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="property">プロパティ一覧</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>公式のドキュメントを簡単に翻訳しただけです。不安があれば<a href="http://editorconfig.org/#file-format-details">公式ドキュメント</a>を参照してください。</p>
+</div>
+<div class="hdlist">
+<table>
+<tbody><tr>
+<td class="hdlist1">
+indent_style
+</td>
+<td class="hdlist2">
+<p>インデントスタイルの設定。<code>tab</code>か<code>space</code>を指定する。</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+indent_size
+</td>
+<td class="hdlist2">
+<p>インデントに使われるスペースのサイズ。</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+tab_width
+</td>
+<td class="hdlist2">
+<p>インデントに使われるタブの幅。デフォルトは<code>indent_size</code>で指定された値になる。</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+end_of_line
+</td>
+<td class="hdlist2">
+<p>改行コードの設定。<code>lf</code>、<code>cr</code>か<code>crlf</code>のいずれかを指定する。</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+charset
+</td>
+<td class="hdlist2">
+<p>文字コードの設定。</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+trim_trailing_whitespace
+</td>
+<td class="hdlist2">
+<p><code>true</code>にすると改行文字の前の空白文字を削除する。</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+insert_final_newline
+</td>
+<td class="hdlist2">
+<p><code>true</code>にするとファイルの最終行を新しい行で終らせる。</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+root
+</td>
+<td class="hdlist2">
+<p>特別なプロパティ。<code>.editorconfig</code>の検索を停止させます。</p>
+</td>
+</tr>
+</tbody></table>
+</div>
+<div class="paragraph">
+<p>プロパティの指定がされていない場合にはエディタの設定が利用されるので、必要のないプロパティの設定は無駄に書く必要はありません。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bibliography">参照文献</h2>
+<div class="sectionbody">
+<div class="ulist bibliography">
+<ul class="bibliography">
+<li>
+<p><a href="http://editorconfig.org/">EditorConfig</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></article>

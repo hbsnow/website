@@ -1,0 +1,269 @@
+<!DOCTYPE html><html lang="ja" ng-app="mainApp"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="fragment" content="!"><meta name="author" content="hbsnow"><title page-title>Flashゲームをpopupで表示するChrome Extensionを作成する | 4uing</title><base href="/"><link rel="alternate" href="/blog/feed.rss" title="RSS update information" type="application/rss+xml"><style>preloader{display:block;position:fixed;top:0;left:0;width:100%;height:100%;z-index:4;background-color:#f2f1ed}preloader .cage{position:fixed;bottom:0;top:50%;left:-10%;right:-10%;background-color:#b65252}preloader .cage .box{width:960px;height:300px;margin:auto;background-color:#b65252;position:relative;display:block;-webkit-filter:url(#goo);filter:url(#goo);-webkit-transform:translateZ(0);transform:translateZ(0)}preloader .drop-one,preloader .drop-two{border-radius:50%;overflow:hidden;position:absolute;background-color:#b65252}preloader .cage.two .box{-webkit-filter:url(#goo2);filter:url(#goo2)}preloader .drop-one{height:50px;width:50px;top:0;left:50%;-webkit-animation:big-drop 2s ease infinite;animation:big-drop 2s ease infinite}preloader .drop-two{height:40px;width:40px;top:10px;left:51%;-webkit-animation:big-drop 2s ease infinite .075s;animation:big-drop 2s ease infinite .075s}preloader .drop-four,preloader .drop-three{border-radius:50%;overflow:hidden;background-color:#b65252;position:absolute;height:20px;width:20px;top:10px;left:51%}preloader .drop-three{-webkit-animation:small-drop 2s ease infinite 1s;animation:small-drop 2s ease infinite 1s}preloader .drop-four{-webkit-animation:small-drop 2s ease infinite 1.075s;animation:small-drop 2s ease infinite 1.075s}preloader .ripple{height:25px;width:25px;border-radius:50%;overflow:hidden;background-color:#b65252;position:absolute;top:0}preloader .ripple.l-side{left:50%;-webkit-animation:left-ripple 2s ease infinite 1.2s;animation:left-ripple 2s ease infinite 1.2s}preloader .ripple.r-side{left:53%;-webkit-animation:right-ripple 2s ease infinite 1.2s;animation:right-ripple 2s ease infinite 1.2s}@-webkit-keyframes big-drop{0%,100%{top:25%}50%{top:-40%}}@keyframes big-drop{0%,100%{top:25%}50%{top:-40%}}@-webkit-keyframes small-drop{0%,100%{top:25%}50%{top:-23%}}@keyframes small-drop{0%,100%{top:25%}50%{top:-23%}}@-webkit-keyframes left-ripple{0%,100%{left:51%;top:-30px}25%{left:25%}25%,49%{top:0}50%{left:51%;top:-25px}75%,99%{left:35%;top:0}}@keyframes left-ripple{0%,100%{left:51%;top:-30px}25%{left:25%}25%,49%{top:0}50%{left:51%;top:-25px}75%,99%{left:35%;top:0}}@-webkit-keyframes right-ripple{0%,100%{left:53%;top:-30px}25%{left:75%}25%,49%,99%{top:0}50%{left:53%;top:-25px}75%{left:65%;top:0}}@keyframes right-ripple{0%,100%{left:53%;top:-30px}25%{left:75%}25%,49%,99%{top:0}50%{left:53%;top:-25px}75%{left:65%;top:0}}</style><link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:400,700"><link rel="stylesheet" href="/styles/main.css"></head><body><div class="layout vertical"><header id="header" class="flex-none"><h1 id="site-title"><a href="/" ui-sref="home">4uing</a></h1><nav id="header-menu"><icon css-icon="menu" alt="Menu" click="true"></icon><ul><li><a href="/blog.html">Blog</a></li><li><a href="/about.html">About</a></li></ul></nav></header><main class="flex-auto"><div ui-view><article class="main-root"><header class="content-header"><nav id="breadcrumb"><div class="container"><div itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="/blog.html" itemprop="url"><span itemprop="title">Blog</span></a></div></div></nav><div class="content-header-title"><div class="container"><h1 id="main-title">Flashゲームをpopupで表示するChrome Extensionを作成する</h1></div></div><div class="content-header-meta"><div class="container"><div id="article-date"><div id="article-date-created"><time>2014-12-11</time></div><hr/><div id="article-date-updated"><time>2015-04-17</time></div></div><div id="article-tags"><ul><li><a href="/blog/tag/JavaScript.html" class="button">JavaScript</a></li><li><a href="/blog/tag/Chrome-Extension.html" class="button">Chrome Extension</a></li></ul></div><div id="article-toc"><div class="container"><ol><li><a href="#action">二種類のアクション</a></li><li><a href="#manifest">Manifest</a></li><li><a href="#background">background</a></li><li><a href="#insert-js">JavaScriptを挿入する</a></li><li><a href="#option-page">オプションページ</a></li><li><a href="#reload-popup">createしたpopup windowのリロード</a></li><li><a href="#result">完成ファイル</a></li></ol></div></div></div></div></header><div class="content-body"><div class="container"><div class="paragraph">
+<p>いくつかのFlashゲームをサイズ変更可能な<code>popup</code>で表示するGoogle Extensionを作成する。すべてのFlashゲームに対応するのは当然無理なので、ユーザの多そうなDMMとスクウェアエニックスの汎用的な処理で対応できそうなFlashゲームに絞って対応しました。</p>
+</div>
+<div class="sect1">
+<h2 id="action">二種類のアクション</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Google Extensionには大きく分けると以下の二種類に分類できます。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://developer.chrome.com/extensions/pageAction">Page action</a></p>
+</li>
+<li>
+<p><a href="https://developer.chrome.com/extensions/browserAction">Browser action</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>常時表示するタイプがBrowser action、特定ページのURLでのみアドレスバー内で表示されるのがPage actionで、どちらが優れているとかそういった比較するものではありません。</p>
+</div>
+<div class="paragraph">
+<p>今回は対応するゲームはそのゲームを実行しているURLが決まっている、つまりExtensionを実行できるURLもそのURLに限定されるのでPage actionで作ることにします。ネット上には比較的Browser actionのサンプルのほうが多いので、慣れてないうちはBrowser actionのほうが作りやすいとおもう。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="manifest">Manifest</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Google Extensionには<code>manifest.json</code>が必須です。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://developer.chrome.com/extensions/manifest">Manifest File Format</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>default_locale</code>がRecommendedになってるけど言語用のフォルダを作らないとエラーになるので、他言語対応する気がそもそもまったくないのであればいらないとおもう。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "<span class="hljs-attribute">manifest_version</span>": <span class="hljs-value"><span class="hljs-number">2</span></span>,
+  "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Flash Game Cropper"</span></span>,
+  "<span class="hljs-attribute">version</span>": <span class="hljs-value"><span class="hljs-string">"1.0.0"</span></span>,
+  "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"FLASHゲームをリサイズ可能な別ウィンドウで表示します。"</span></span>,
+  "<span class="hljs-attribute">icons</span>": <span class="hljs-value">{
+  "<span class="hljs-attribute">16</span>" : <span class="hljs-value"><span class="hljs-string">"images/icon_16.png"</span></span>,
+  "<span class="hljs-attribute">48</span>" : <span class="hljs-value"><span class="hljs-string">"images/icon_48.png"</span></span>,
+  "<span class="hljs-attribute">128</span>": <span class="hljs-value"><span class="hljs-string">"images/icon_128.png"</span>
+  </span>}</span>,
+
+  "<span class="hljs-attribute">permissions</span>": <span class="hljs-value">[
+  <span class="hljs-string">"tabs"</span>,
+  <span class="hljs-string">"storage"</span>,
+  <span class="hljs-string">"&lt;all_urls&gt;"</span>
+  ]</span>,
+
+  "<span class="hljs-attribute">background</span>": <span class="hljs-value">{
+  "<span class="hljs-attribute">scripts</span>": <span class="hljs-value">[
+    <span class="hljs-string">"js/background.js"</span>
+  ]</span>,
+  "<span class="hljs-attribute">persistent</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
+  </span>}</span>,
+
+  "<span class="hljs-attribute">page_action</span>": <span class="hljs-value">{
+  "<span class="hljs-attribute">default_icon</span>": <span class="hljs-value"><span class="hljs-string">"images/icon_19.png"</span></span>,
+  "<span class="hljs-attribute">default_title</span>": <span class="hljs-value"><span class="hljs-string">"Flash Game Cropper"</span>
+  </span>}</span>,
+
+  "<span class="hljs-attribute">options_page</span>": <span class="hljs-value"><span class="hljs-string">"options/options.html"</span></span>,
+  "<span class="hljs-attribute">content_security_policy</span>": <span class="hljs-value"><span class="hljs-string">"script-src 'self' 'unsafe-eval'; object-src 'self'"</span>
+</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>今回の<code>manifest.json</code>はこんな感じ。<a href="https://developer.chrome.com/extensions/declare_permissions">permissions</a>はAPIに必要になるpermissionsが書かれている。最初は何を指定していいかわからなくて困るところなんだけど、実際に作っていくと使うものはそれほど多くならないのでわかりにくいものではない。APIを見ながらその都度チェックするでもいいし、漏れがあってもデバック中に権限が足りませんという親切なエラーがでるのでそんなに問題にはなりません。エラーメッセージで検索すると直球の答えは簡単に見つかるはず。</p>
+</div>
+<div class="paragraph">
+<p>URLの指定方法は<a href="https://developer.chrome.com/extensions/match_patterns">Match Patterns</a>で確認できる。<code>captureVisibleTab</code>を使う予定だったので<code>&lt;all_urls&gt;</code>が指定されているんだけど、結局完成したときには使ってないので実際に使うのであれば変更しておいたほうがパフォーマンスがよくなったりするかもしれません。</p>
+</div>
+<div class="paragraph">
+<p><code>content_security_policy</code>に書かれているのはJavaScript内で<code>eval</code>を使用するための指定で、Lo-Dashなどのライブラリを使うときにも指定が必要になります。今回ライブラリは使っていないのですが<code>eval</code>を使ったので指定しています。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="background">background</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>backgroundで指定されたファイルはChromeの起動時に実行されます。<code>"persistent": false</code>とすると必要なときにだけ実行するようになるらしいので、先述したURLの指定のパフォーマンスの話はここで関係してきそうな感じがするんだけど、まったく調べてないので全然関係ないかもしれません。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">chrome.tabs.onUpdated.addListener(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tabId, changeInfo, tab</span>) </span>{
+  <span class="hljs-keyword">if</span>(changeInfo.status === <span class="hljs-string">'complete'</span>) {
+    GAME_DATA.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">element</span>) </span>{
+      <span class="hljs-keyword">if</span>(tab.url === element.url) {
+        chrome.pageAction.show(tabId);
+      }
+    });
+  }
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>page_actionの場合にはbackgroundから<code>chrome.pageAction.show</code>でアイコンを表示させる手間がかかるので、これが完全な初心者だとちょっとわかりにくい部分かもしれない。</p>
+</div>
+<div class="paragraph">
+<p>アイコンがクリックされたときの動作は<code>chrome.pageAction.onClicked.addListener</code>で指定します。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="insert-js">JavaScriptを挿入する</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>指定されたページにJavaScriptを指定したい場合には<code>chrome.tabs.executeScript</code>を使います。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setScript</span>(<span class="hljs-params">tabId, js</span>) </span>{
+  chrome.tabs.executeScript(tabId, {
+  file: <span class="hljs-string">'js/common.js'</span>
+  }, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">if</span>(<span class="hljs-built_in">Array</span>.isArray(js)) {
+    js.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">element</span>) </span>{
+      chrome.tabs.executeScript(tabId, {
+        file: element
+      });
+    });
+  }
+  });
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>JavaScriptのファイルが複数あって、例えば<code>element</code>で指定されたJavaScriptのファイルから<code>js/common.js</code>で使用された変数を使用したいような場合にはこのように使われる側を最初に読み込んでコールバックする必要があります。</p>
+</div>
+<div class="paragraph">
+<p>CSSの挿入には<code>chrome.tabs.insertCSS</code>を使う。使い方は<code>chrome.tabs.executeScript</code>とほとんど同じです。</p>
+</div>
+<div class="paragraph">
+<p>埋め込まれたJavaScriptとbackgroundとの受け渡しには、<code>chrome.runtime.onMessage.addListener</code>を使う。例えば<code>js/common.js</code>からbackgroundで動作する<code>background.js</code>にメッセージを渡したいときには以下のようにします。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-comment">// js/common.js</span>
+chrome.runtime.sendMessage({
+  msg: <span class="hljs-string">'Hello, world!'</span>
+});
+
+<span class="hljs-comment">// background.js</span>
+chrome.runtime.onMessage.addListener(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">request</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(request.msg);
+});</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="option-page">オプションページ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>options_page</code>で指定されたページはChromeのExtension一覧で表示されているオプション部分からリンクされます。</p>
+</div>
+<div class="paragraph">
+<p>設定の保存には<a href="https://developer.chrome.com/extensions/storage">chrome.storage</a>を使いました。chrome.storageはpermissionsに指定をすることで容量の限界(5MB)を越えることができるので、このような設定の保存の他にも色々使い道がありそう。</p>
+</div>
+<div class="paragraph">
+<p>デフォルトの設定はbackgroundでインストール時に設定されるようにしています。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-keyword">var</span> HOTKEY = {
+  hotkey : {...}
+}
+chrome.runtime.onInstalled.addListener(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">details</span>)</span>{
+  <span class="hljs-keyword">if</span>(details.reason === <span class="hljs-string">'install'</span>) {
+    chrome.storage.local.set(HOTKEY);
+  }
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>設定を呼び出すには第一引数に<code>key</code>を指定して、<code>chrome.storage.local.get</code>を使用します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">chrome.storage.local.get(<span class="hljs-string">'hotkey'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">result</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(result);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>設定画面を作ってちょっと気になったのは、たかだか数バイトしかない設定を呼び出すだけなのに若干時間がかかることがあるったこと。何が原因なのかはわからなかったんだけども、設定画面を作るときに現在設定を表示するようなことをする場合にはちょっと意識したほうがいいかもしれない。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="reload-popup">createしたpopup windowのリロード</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>単純なリロードではいけない理由は<code>executeScript</code>や<code>insertCSS</code>で挿入したファイルがリロード時に実行されないことが理由です。</p>
+</div>
+<div class="paragraph">
+<p>このアイディアには<a href="https://github.com/kazamidoly/kanpaniExtension">kazamidoly/kanpaniExtension</a>を参考にしました。</p>
+</div>
+<div class="paragraph">
+<p>最初の実装は<code>F5</code>を押すとmessageとして<code>reload</code>を<code>background.js</code>に渡すという方法。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">chrome.runtime.onMessage.addListener(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">request</span>) </span>{
+  <span class="hljs-keyword">switch</span>(request.id) {
+    <span class="hljs-keyword">case</span> <span class="hljs-string">'reload'</span>:
+      <span class="hljs-keyword">var</span> queryInfo = {
+        active: <span class="hljs-literal">true</span>,
+        currentWindow: <span class="hljs-literal">true</span>
+      }
+
+      chrome.tabs.query(queryInfo, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tabs</span>) </span>{
+        createWindow(tabs[<span class="hljs-number">0</span>].id);
+      });
+      <span class="hljs-keyword">break</span>;
+  }
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>簡単にまとめると既存の開いているpopup windowを閉じて、同じURLのpopup windowを再生成という流れです。これの何が一番ダメかというとリロードしたときにウィンドウ座標が変わるところ。</p>
+</div>
+<div class="paragraph">
+<p>そもそも指定したURLで常にファイルを挿入してそれらのファイルを実行することができない理由は、popup windowでない状態のURLでは実行されてほしくないから。つまりこれを回避できれば、こんな複雑な方法を用いてウィンドウを再生成なんてする必要なんてない。それをどう解決するかというと、実に単純で、ウィンドウ化したときに状態を判別するクエリ文字列を与えてやればいい。</p>
+</div>
+<div class="paragraph">
+<p>ウィンドウ化には開いているタブをそのまま利用してリロードが発生しないようにしているため、URLにクエリ文字列を付与するにはウィンドウ化のときにHistory APIの<code>pushState</code>を使ってURLを変更する必要があります。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">chrome.tabs.executeScript(tab.id, {
+  code: <span class="hljs-string">'history.pushState(null, null, "?window=true");'</span>
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>あとは<code>chrome.tabs.onUpdated.addListener</code>でイベントを取得して、挿入したいファイルを指定すればいいだけです。<code>pushState</code>でも問題なく発火します。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="result">完成ファイル</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/hbsnow/flash-game-cropper">flash-game-cropper</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>今回作成したファイルはGitHubにあげておきました。登録に5ドルかかるようだったのでGoogle Chromeのウェブストアには登録していません。使いたい場合には<code>clone</code>して使ってください。</p>
+</div>
+</div>
+</div></div></div></article></div></main><footer id="footer" class="flex-none"><div class="container"><div id="footer-social"><ul class="layout horizontal"><li class="flex"><a href="https://twitter.com/hbsnow">Twitter</a></li><li class="flex"><a href="https://github.com/hbsnow">GitHub</a></li><li class="flex"><a href="/blog/feed.rss" target="_blank">RSS</a></li></ul></div><div id="footer-copyright"><p>&copy; 2015</p></div></div></footer><pageloader></pageloader><preloader><div class="cage"><div class="box"><div class="drop-one"></div><div class="drop-two"></div><div class="ripple l-side"></div><div class="ripple r-side"></div></div></div><div class="cage two"><div class="box"><div class="drop-three"></div><div class="drop-four"></div></div></div><svg xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur"></feGaussianBlur><feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo"></feColorMatrix><feComposite in="SourceGraphic" in2="goo" operator="atop"></feComposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="goo2"><feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"></feGaussianBlur><feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo"></feColorMatrix><feComposite in="SourceGraphic" in2="goo" operator="atop"></feComposite></filter></defs></svg></preloader></div><div id="javascript"><script src="/scripts/main.js"></script></div></body></html>

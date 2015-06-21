@@ -1,0 +1,147 @@
+<article class="main-root"><header class="content-header"><nav id="breadcrumb"><div class="container"><div itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="/blog.html" itemprop="url"><span itemprop="title">Blog</span></a></div></div></nav><div class="content-header-title"><div class="container"><h1 id="main-title">gulpでwebpackを使う</h1></div></div><div class="content-header-meta"><div class="container"><div id="article-date"><div id="article-date-created"><time>2014-11-19</time></div><hr/><div id="article-date-updated"><time>2015-04-28</time></div></div><div id="article-tags"><ul><li><a href="/blog/tag/JavaScript.html" class="button">JavaScript</a></li><li><a href="/blog/tag/gulp.html" class="button">gulp</a></li><li><a href="/blog/tag/webpack.html" class="button">webpack</a></li></ul></div><div id="article-toc"><div class="container"><ol><li><a href="#install">インストール</a></li><li><a href="#gulpfile">gulpfile.js</a></li><li><a href="#browserify">browserifyとの使い分け</a></li><li><a href="#bibliography">参照文献</a></li></ol></div></div></div></div></header><div class="content-body"><div class="container"><div class="paragraph">
+<p><a href="http://gulpjs.com/">gulp</a>で<a href="http://webpack.github.io/">webpack</a>を使って、Web開発で使用するモジュールを管理してみます。</p>
+</div>
+<div class="sect1">
+<h2 id="install">インストール</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="http://4uing.net/gulp-browserify/">browserifyのとき</a>と流れは同じです。</p>
+</div>
+<div class="paragraph">
+<p>まずはgulpとwebpackのインストールします。WebPackはコマンドを使うことがあればグローバルにインストールする必要があるけれども、今回はgulpを使うのでグローバルにインストールしていません。</p>
+</div>
+<div class="paragraph">
+<p><code>package.js</code>を作成してプロジェクトを追加、ついでにbowerやgulpなどのパッケージもインストールしておきます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ps1" data-lang="ps1">npm init
+npm install gulp bower gulp-webpack gulp-load-plugins --save-dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>bowerのファイルが直下にあると邪魔なので<code>.bowerrc</code>を作成。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "<span class="hljs-attribute">directory</span>": <span class="hljs-value"><span class="hljs-string">"/app/bower_components"</span>
+</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>もちろんbowerを使わなければそれらに関連する記述は必要ありません。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="gulpfile">gulpfile.js</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-pi">'use strict'</span>;
+
+<span class="hljs-keyword">var</span> gulp = <span class="hljs-built_in">require</span>(<span class="hljs-string">'gulp'</span>);
+<span class="hljs-keyword">var</span> $ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'gulp-load-plugins'</span>)();
+
+gulp.task(<span class="hljs-string">'dev-webpack'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> gulp.src(<span class="hljs-string">'app/scripts/main.js'</span>)
+    .pipe($.webpack(<span class="hljs-built_in">require</span>(<span class="hljs-string">'./webpack.config.js'</span>)))
+    .pipe(gulp.dest(<span class="hljs-string">'./test/scripts/'</span>));
+});
+
+gulp.task(<span class="hljs-string">'dev-html'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  gulp.src([<span class="hljs-string">'app/**/*.html'</span>])
+    .pipe(gulp.dest(<span class="hljs-string">'./test'</span>));
+});
+
+gulp.task(<span class="hljs-string">'default'</span>, [<span class="hljs-string">'dev-webpack'</span>, <span class="hljs-string">'dev-html'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>設定はgulp内に記述することもできるんだけど、サンプルでは<code>webpack.config.js</code>を使っています。gulpを通さないときにあると便利かとおもったんだけど、自分の場合はほとんどそういう状況にならなかったので、実際の運用では<code>webpack.config.js</code>を作らないで直接gulp内に設定を書くことが多いです。</p>
+</div>
+<div class="paragraph">
+<p><code>webpack.config.js</code>はこんな感じ。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
+
+<span class="hljs-built_in">module</span>.exports = {
+  entry: <span class="hljs-string">'./app/scripts/main.js'</span>,
+  output: {
+    path: path.join(__dirname, <span class="hljs-string">"test/scripts"</span>),
+    filename: <span class="hljs-string">'[name].js'</span>
+  }
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>htmlとjavascriptについては<a href="http://4uing.net/gulp-browserify/">browserifyのとき</a>と同じものを使えます。変更したのは<code>require</code>のファイルのパスを相対パスに書き換えたこと。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="browserify">browserifyとの使い分け</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>webpackで便利だと感じるのはこれまでgulpで大量のコードを書いていたことを簡単にwebpackで一気にまとめてやってしまうことができるようになったこと。とくにbrowserifyやwatchifyなどのvinylを扱った記述はあまり見たくなるコードでないことは間違いないと確信できたので、基本的にこれらが必要になったときは何も考えずにwebpack使うことにしています。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">gulp.task(<span class="hljs-string">'build:js'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">var</span> src = <span class="hljs-string">'src/scripts/main.js'</span>;
+  <span class="hljs-keyword">var</span> dist = <span class="hljs-string">'tmp/scripts/'</span>;
+  <span class="hljs-keyword">var</span> config = {
+    output: {
+      filename: <span class="hljs-string">'[name].js'</span>
+    },
+    <span class="hljs-built_in">module</span>: {
+      loaders: [
+        {
+          test: <span class="hljs-regexp">/\.jade$/</span>,
+          loader: <span class="hljs-string">'jade'</span>
+        }
+      ]
+    },
+  };
+
+  <span class="hljs-keyword">if</span>(watch) {
+    config = objectAssign(config, {
+      watch: <span class="hljs-literal">true</span>,
+      devtool: <span class="hljs-string">'#inline-source-map'</span>
+    });
+
+    <span class="hljs-keyword">return</span> gulp.src(src)
+      .pipe(webpack(config))
+      .pipe(gulp.dest(dist));
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">return</span> gulp.src(src)
+      .pipe(webpack(config))
+      .pipe($.uglify({
+        mangle: <span class="hljs-literal">false</span>
+      }))
+      .pipe(gulp.dest(dist));
+  }
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>例えばこんなタスクと同じことをbrowserifyやwatchifyなどを使って書きたいとは積極的におもえませんでした。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bibliography">参照文献</h2>
+<div class="sectionbody">
+<div class="ulist bibliography">
+<ul class="bibliography">
+<li>
+<p><a href="http://qiita.com/derui@github/items/5233b4ef8fbde1e80d33">JavaScript - BrowserifyからWebpackへの移行時の注意点 - Qiita</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></article>

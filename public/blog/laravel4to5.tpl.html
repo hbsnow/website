@@ -1,0 +1,316 @@
+<article class="main-root"><header class="content-header"><nav id="breadcrumb"><div class="container"><div itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="/blog.html" itemprop="url"><span itemprop="title">Blog</span></a></div></div></nav><div class="content-header-title"><div class="container"><h1 id="main-title">Laravel4から5へのアップデート</h1></div></div><div class="content-header-meta"><div class="container"><div id="article-date"><div id="article-date-created"><time>2015-02-24</time></div><hr/><div id="article-date-updated"><time>2015-04-17</time></div></div><div id="article-tags"><ul><li><a href="/blog/tag/PHP.html" class="button">PHP</a></li><li><a href="/blog/tag/Laravel.html" class="button">Laravel</a></li></ul></div><div id="article-toc"><div class="container"><ol><li><a href="#middleware">ミドルウェア</a></li><li><a href="#named-route">ルートに名前をつけた</a></li><li><a href="#eloquent">Eloquent</a></li><li><a href="#validation">バリデーション</a></li><li><a href="#bibliography">参照文献</a></li></ol></div></div></div></div></header><div class="content-body"><div class="container"><div class="paragraph">
+<p>Laravel4から5へのアップデート作業をしました。4で作り終えてから変更したかった箇所の修正だったり、5で追加されていたものを使ったりとしていたのでアップデートにはそれなりに時間がかかったけれども、これは4のときあまりに適当に作っていたツケであってLaravelが悪いわけではまったくない。</p>
+</div>
+<div class="paragraph">
+<p>ディレクトリ構造が大きく変わっているみたいだけど、それで困るようなことはなかった。個人的に4よりも5のほうがわかりやすいと感じたんだけども、一般的には逆らしい。自分の場合は4をはじめてさわるときにcomposerの知識がほとんどなかったことが原因だったと今になって思う。5をやるときにはこのあたりの知識がある程度そろってきていたからね。</p>
+</div>
+<div class="sect1">
+<h2 id="middleware">ミドルウェア</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>HTTPリクエストをフィルタリングする、4のときのフィルターに相当するものらしい。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">Route::when(<span class="hljs-string">'*'</span>, <span class="hljs-string">'csrf'</span>, <span class="hljs-keyword">array</span>(<span class="hljs-string">'post'</span>));
+Route::group([<span class="hljs-string">'before'</span> =&gt; <span class="hljs-string">'auth'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-comment">//</span>
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>以前はこんな感じで書いていたものを、以下のように変更した。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">Route::group([<span class="hljs-string">'middleware'</span> =&gt; <span class="hljs-string">'auth'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-comment">//</span>
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Laravel5ではCSRF Protectionは全ルートで有効になっているらしいので関連の記述は削除した。フィルター自体は廃止されてないので、4のときのフィルターも使えるみたいだけど、わざわざミドルウェアではなくてフィルターで作るメリットがあるかどうかはよくわからない。</p>
+</div>
+<div class="paragraph">
+<p>ミドルウェアの作成は<code>artisan</code>のコマンドで簡単に雛形を作成することができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ps1" data-lang="ps1">php artisan make:middleware PjaxMiddleware</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ここでは例としてPjaxのリクエストかどうかで表示を変更するためのミドルウェアを作成してみます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php"><span class="hljs-preprocessor">&lt;?php</span> <span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Http</span>\<span class="hljs-title">Middleware</span>;
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">Closure</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PjaxMiddleware</span> </span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handle</span><span class="hljs-params">(<span class="hljs-variable">$request</span>, Closure <span class="hljs-variable">$next</span>)</span>
+    </span>{
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable">$request</span>-&gt;pjax()) {
+            <span class="hljs-keyword">return</span> <span class="hljs-variable">$next</span>(<span class="hljs-variable">$request</span>)-&gt;with(<span class="hljs-string">'pjax'</span>, <span class="hljs-keyword">true</span>);
+        }
+
+        <span class="hljs-keyword">return</span> <span class="hljs-variable">$next</span>(<span class="hljs-variable">$request</span>);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Pjaxのリクエストかどうかの判定は<code>$request→pjax()</code>で簡単に行うことができます。ここは以前Laravel4で作っていたときはフィルターですらなく、<code>*.tpl.html</code>というファイルが存在するかのように振舞うことによって実装していて、Laravel5にアップデートするにあたってまずまっさきに変更したかったところだった。</p>
+</div>
+<div class="paragraph">
+<p>これで親のbladeになる<code>master.blade.php</code>のようなものを以下のようにする。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">@<span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$pjax</span>) || !<span class="hljs-variable">$pjax</span>)
+&lt;!DOCTYPE html&gt;
+&lt;html lang=<span class="hljs-string">"ja"</span>&gt;
+    <span class="hljs-comment">// ...</span>
+&lt;/html&gt;
+@<span class="hljs-keyword">else</span>
+    @<span class="hljs-keyword">yield</span>(<span class="hljs-string">'content'</span>)
+@<span class="hljs-keyword">endif</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これでPjaxのリクエスト時に必要な部分だけ出力することができるようになります。</p>
+</div>
+<div class="paragraph">
+<p>ミドルウェアをルートに適用するためにはミドルウェアを<code>app/Http/Kernel.php</code>に登録する必要がある。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php"><span class="hljs-keyword">protected</span> <span class="hljs-variable">$routeMiddleware</span> = [
+    <span class="hljs-comment">// ...</span>
+    <span class="hljs-string">'pjax'</span> =&gt; <span class="hljs-string">'App\Http\Middleware\PjaxMiddleware'</span>,
+];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>今回はこのように登録した。ルートへの登録は最初に書いたauthの例のように登録すればいい。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">Route::get(<span class="hljs-string">'foo'</span>, [<span class="hljs-string">'middleware'</span> =&gt; <span class="hljs-string">'pjax'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-comment">//</span>
+}]);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>実際のサイトでは<code>Route::controller</code>や<code>Route::resource</code>を使っていることも多いと思う、そういうときにはそのコントローラのコンストラクタに記述します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-variable">$this</span>-&gt;middleware(<span class="hljs-string">'pjax'</span>, [<span class="hljs-string">'only'</span> =&gt; [<span class="hljs-string">'foo'</span>]]);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ただこのミドルウェアの記述どうも正しく動作しなくて、pjaxの通信であっても<code>$request→pjax()</code>が<code>true</code>にはなりませんでした。なので実際に使っているコードはURLにクエリパラメータをつけることで対応しています。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PjaxMiddleware</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handle</span><span class="hljs-params">(<span class="hljs-variable">$request</span>, Closure <span class="hljs-variable">$next</span>)</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-variable">$next</span>(<span class="hljs-variable">$request</span>)-&gt;with(<span class="hljs-string">'pjax'</span>, <span class="hljs-variable">$request</span>-&gt;query(<span class="hljs-string">'_pjax'</span>));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>AngularJSのコードは以下のような感じ。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-keyword">var</span> query = <span class="hljs-string">'?_pjax=true'</span>;
+$stateProvider
+  .state(<span class="hljs-string">'home'</span>, {
+    url: <span class="hljs-string">'/'</span>,
+    templateUrl: <span class="hljs-string">'index'</span> + query
+  })
+  .state(<span class="hljs-string">'blog-single'</span>, {
+    url: <span class="hljs-string">'/blog/{slug:[a-z0-9-\.]+}'</span>,
+    templateUrl: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">$stateParams</span>) </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-string">'blog/'</span> + $stateParams.slug + query;
+    }
+  })</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>あまりスマートではない気がする。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="named-route">ルートに名前をつけた</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ルートに名前をつけて、URLではなくルートを参照するように変更した。これは4のときから可能だったんだけども、最初に作ったときにまったく意識していなかったので、5のアップデートで修正しようと思っていた箇所。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">Route::controller(<span class="hljs-string">'admin'</span>, <span class="hljs-string">'Admin\AdminController'</span>, [
+    <span class="hljs-string">'getIndex'</span> =&gt; <span class="hljs-string">'admin.index'</span>
+]);
+
+Route::group([<span class="hljs-string">'prefix'</span> =&gt; <span class="hljs-string">'blog'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span>
+</span>{
+    Route::get(<span class="hljs-string">'/'</span>, [
+        <span class="hljs-string">'as'</span> =&gt; <span class="hljs-string">'blog.index'</span>,
+        <span class="hljs-string">'uses'</span> =&gt; <span class="hljs-string">'BlogController@index'</span>,
+    ]);
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>RESTful Resource Controllersを使っている場合には自動的に名前が与えられます。</p>
+</div>
+<div class="paragraph">
+<p>ルートに名前をつけるとなにが便利なのかというと、例えば作っているときにURLの設計を変更したくなったときにその変更が楽になることだと思う。ルートには名前をつけてResponseやビューでは直接URLを指定することはやめました。</p>
+</div>
+<div class="paragraph">
+<p>ルートにつけられた名前は<code>php artisan route:list</code>で確認することができます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="eloquent">Eloquent</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>EloquentはLaravel4でもあったんだけど、あまり理解していない状態で作っていたのでかなり書き換えました。個人のブログで負荷を気にするほどのアクセスになることはないので、データベースへのアクセスはすべてEloquentを使います。</p>
+</div>
+<div class="paragraph">
+<p>LaravelのModelについて調べていると、リポジトリパターンという言葉を結構見かけてあまり意味を理解せずに真似していたんだけど、最近ようやくこれがコントローラで直接データベースを扱う記述を書かないようにする手段の一つらしいということを理解できた。なんでこんな面倒なことをするのかというと、後でEloquentではなく他の方法でDBにアクセスしたくなった場合に書き換えるのが大変になるからじゃないかとおもう。</p>
+</div>
+<div class="paragraph">
+<p>ただ今回はそのままコントローラに書くことにしました。Eloquent以外の方法を使うことはおそらくないだろうしね。</p>
+</div>
+<div class="paragraph">
+<p>以下はEloquentを使ったモデルのサンプルです。Laravel5ではモデルのために用意されたフォルダはないので、<code>App\Eloquent</code>というフォルダを作りました。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php"><span class="hljs-preprocessor">&lt;?php</span> <span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Eloquent</span>;
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">Illuminate</span>\<span class="hljs-title">Database</span>\<span class="hljs-title">Eloquent</span>\<span class="hljs-title">Model</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Article</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">protected</span> <span class="hljs-variable">$table</span> = <span class="hljs-string">'articles'</span>;
+    <span class="hljs-keyword">protected</span> <span class="hljs-variable">$fillable</span> = [<span class="hljs-string">'title'</span>, <span class="hljs-string">'slug'</span>, <span class="hljs-string">'text'</span>, <span class="hljs-string">'state'</span>, <span class="hljs-string">'icon_id'</span>];
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">tags</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-variable">$this</span>-&gt;belongsToMany(<span class="hljs-string">'App\Eloquent\Tag'</span>);
+    }
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">icon</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-variable">$this</span>-&gt;belongsTo(<span class="hljs-string">'App\Eloquent\Icon'</span>);
+    }
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">scopeArchives</span><span class="hljs-params">(<span class="hljs-variable">$query</span>, <span class="hljs-variable">$year</span>)</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-variable">$query</span>
+            -&gt;whereBetween(<span class="hljs-string">'created_at'</span>, <span class="hljs-keyword">array</span>(<span class="hljs-variable">$year</span> . <span class="hljs-string">'-01-01'</span>, <span class="hljs-variable">$year</span> . <span class="hljs-string">'-12-31'</span>))
+            -&gt;orderBy(<span class="hljs-string">'created_at'</span>, <span class="hljs-string">'desc'</span>);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="http://laravel.com/docs/5.0/eloquent#relationships">ドキュメントを見ていればすぐ気付ける</a>ことなんだけど、そのまま4からのコピーする場合にはRelationのクラス名を完全修飾名で書かないとエラーになることに注意が必要かもしれない。</p>
+</div>
+<div class="paragraph">
+<p>それと5になってはじめてQuery Scopesを使ってみたんだけど、とても便利だった。<code>scopeArchives</code>はパラメータに指定した年の間の記事を取得するというもの。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">Article::archives(<span class="hljs-string">'2015'</span>)-&gt;get();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>こう記述するだけで2015年に作成されたすべての記事が取得できるようになります。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="validation">バリデーション</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ユーザの入力したデータのバリデーションは4のときにはコントローラでしていたんだけど、5にはForm Request Validationというものがあるので使ってみることにした。</p>
+</div>
+<div class="paragraph">
+<p>コントローラはこんな感じ。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">store</span><span class="hljs-params">(ArticleRequest <span class="hljs-variable">$request</span>)</span>
+</span>{
+    <span class="hljs-variable">$inputs</span> = <span class="hljs-variable">$request</span>-&gt;all();
+    <span class="hljs-variable">$article</span> = Article::create(...);
+
+    <span class="hljs-keyword">return</span> redirect()-&gt;route(<span class="hljs-string">'admin.blog.article.index'</span>);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>php artisan make:request ArticleRequest</code>で雛形のクラスを作成。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php"><span class="hljs-preprocessor">&lt;?php</span> <span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Http</span>\<span class="hljs-title">Requests</span>\<span class="hljs-title">Admin</span>\<span class="hljs-title">Blog</span>;
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Http</span>\<span class="hljs-title">Requests</span>\<span class="hljs-title">Request</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ArticleRequest</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Request</span> </span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">authorize</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+    }
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">rules</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-variable">$id</span> = <span class="hljs-variable">$this</span>-&gt;get(<span class="hljs-string">'id'</span>) !== <span class="hljs-keyword">null</span> ? <span class="hljs-string">','</span> . <span class="hljs-variable">$this</span>-&gt;get(<span class="hljs-string">'id'</span>) : <span class="hljs-string">''</span>;
+
+        <span class="hljs-keyword">return</span> [
+            <span class="hljs-string">'title'</span> =&gt; <span class="hljs-string">'required|max:256'</span>,
+            <span class="hljs-string">'slug'</span> =&gt; <span class="hljs-string">'required|max:128|regex:/^[a-z0-9\-]+$/|unique:articles,slug'</span> . <span class="hljs-variable">$id</span>,
+            <span class="hljs-string">'text'</span> =&gt; <span class="hljs-string">'required'</span>,
+        ];
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>$this-&gt;get('id')</code>は記事の修正の場合に修正記事の自分自身をユニーク判定から除外するための記述になります。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bibliography">参照文献</h2>
+<div class="sectionbody">
+<div class="ulist bibliography">
+<ul class="bibliography">
+<li>
+<p><a href="http://laravel.com/api/5.0/index.html">Laravel API</a></p>
+</li>
+<li>
+<p><a href="http://laravel.com/docs/5.0">Laravel Documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></article>
