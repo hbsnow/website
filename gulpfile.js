@@ -188,17 +188,16 @@ gulp.task('build', function (cb) {
   if(watch) {
     runSequence(
       ['clean:metalsmith', 'clean:tmp'],
-      ['build:metalsmith'],
+      'build:metalsmith',
       ['move:metalsmith', 'move:metalsmith-tpl', 'move:assets'],
       cb
     );
   } else {
     runSequence(
-      ['clean'],
-      ['build:metalsmith', 'build:less', 'build:js'],
-      ['move:metalsmith', 'move:metalsmith-tpl'],
+      'clean',
+      'build:metalsmith',
+      ['build:less', 'build:js', 'move:metalsmith', 'move:metalsmith-tpl'],
       ['public:html', 'public:css', 'public:js', 'move:assets'],
-      ['clean:tmp'],
       cb
     );
   }

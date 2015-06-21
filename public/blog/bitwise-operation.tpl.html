@@ -1,0 +1,660 @@
+<article class="main-root"><header class="content-header"><nav id="breadcrumb"><div class="container"><div itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="/blog.html" itemprop="url"><span itemprop="title">Blog</span></a></div></div></nav><div class="content-header-title"><div class="container"><h1 id="main-title">JavaScriptでのビット演算</h1></div></div><div class="content-header-meta"><div class="container"><div id="article-date"><div id="article-date-created"><time>2011-11-02</time></div><hr/><div id="article-date-updated"><time>2015-06-09</time></div></div><div id="article-tags"><ul><li><a href="/blog/tag/JavaScript.html" class="button">JavaScript</a></li></ul></div><div id="article-toc"><div class="container"><ol><li><a href="#binary">ビット演算と二進法</a></li><li><a href="#logical-operation">ビット演算における論理演算</a></li><li><a href="#negativeminus">二進法での負の値</a></li><li><a href="#complement">1の補数と2の補数</a></li><li><a href="#signed-number">符号付数値表現</a></li><li><a href="#bit-shift">ビットシフト</a></li><li><a href="#application">ビット演算の応用例</a></li><li><a href="#bibliography">参照文献</a></li></ol></div></div></div></div></header><div class="content-body"><div class="container"><div class="sect1">
+<h2 id="binary">ビット演算と二進法</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>データの二進法で表現されたコンピュータの扱う情報の最小単位であるビットを直接操作するのがビット演算です。つまり二進数がどのようなものであるか理解していなければ、ビット演算を理解することはできないということになります。では、二進法というのは一体どのようなものでしょうか。</p>
+</div>
+<div class="paragraph">
+<p>二進法は普段、生活で利用している十進法がどのようなものかを理解していればとても簡単なものであることがわかります。</p>
+</div>
+<div class="paragraph">
+<p>例えば<code>2011</code>という数字は十進法では<code>(2 × 10<sup>3</sup>) + (0 × 10<sup>2</sup>) + (1 × 10<sup>1</sup>) + (1 × 10<sup>0</sup>)</code>と表すことができます。このとき桁を示すために使用される数、十進法の場合には10を基数と言います。</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 42%;">
+<col style="width: 14%;">
+<col style="width: 14%;">
+<col style="width: 14%;">
+<col style="width: 14%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">桁</th>
+<th class="tableblock halign-left valign-top">4</th>
+<th class="tableblock halign-left valign-top">3</th>
+<th class="tableblock halign-left valign-top">2</th>
+<th class="tableblock halign-left valign-top">1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>基数<sup>x</sup></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>10<sup>3</sup></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>10<sup>2</sup></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>10<sup>1</sup></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>10<sup>0</sup></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">桁の数</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>二進法ではこの計算で使用されている基数である10が2に置き換わっているというだけの単純なことなのです。二進法では、十進法で桁としている部分のことをビット列と言います。</p>
+</div>
+<div class="paragraph">
+<p>ここで二進法では<code>1111</code>が十進法でいくつを表しているのか考えてみましょう。</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 42%;">
+<col style="width: 14%;">
+<col style="width: 14%;">
+<col style="width: 14%;">
+<col style="width: 14%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">ビット列</th>
+<th class="tableblock halign-left valign-top">3</th>
+<th class="tableblock halign-left valign-top">2</th>
+<th class="tableblock halign-left valign-top">1</th>
+<th class="tableblock halign-left valign-top">0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>基数<sup>x</sup></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>2<sup>3</sup></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>2<sup>2</sup></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>2<sup>1</sup></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>2<sup>0</sup></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">列の数</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>この表から<code>(1 × 2<sup>3</sup>) + (1 × 2<sup>2</sup>) + (1 × 2<sup>1</sup>) + (1 × 2<sup>0</sup>)</code>の解が十進法での数となることがわかります。答えは<code>15</code>です。</p>
+</div>
+<div class="paragraph">
+<p>ビット演算はこの二進法で表現された<code>0</code>と<code>1</code>の数字を操作することです。また、ビット演算に使用される記号のことをビット演算子といいます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="logical-operation">ビット演算における論理演算</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><code>&amp;</code></p>
+</li>
+<li>
+<p><code>|</code></p>
+</li>
+<li>
+<p><code>^</code></p>
+</li>
+<li>
+<p><code>~</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>これらのビット演算における論理演算について見てみましょう。</p>
+</div>
+<div class="paragraph">
+<p>十進法での<code>15</code>と<code>9</code>を使って実際にどういった数値の変化をするのかを考えます。</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 12%;">
+<col style="width: 6%;">
+<col style="width: 6%;">
+<col style="width: 6%;">
+<col style="width: 6%;">
+<col style="width: 12%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">ビット列</th>
+<th class="tableblock halign-left valign-top">3</th>
+<th class="tableblock halign-left valign-top">2</th>
+<th class="tableblock halign-left valign-top">1</th>
+<th class="tableblock halign-left valign-top">0</th>
+<th class="tableblock halign-left valign-top">結果</th>
+<th class="tableblock halign-left valign-top">説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>a</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>変数<code>a</code>とする。</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>b</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>変数<code>b</code>とする。</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>a &amp; b</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>どちらも1ならば1、そうでなければ0とする。</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>a | b</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>どちらかが1もしくは共に1ならば1、どちらも0ならば0とする。</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>a ^ b</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>どちらかが1ならば1、どちらも0か1なら0とする。</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>~a</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>0を1、1を0に反転する。</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>JavaScriptのビット演算における論理演算は32ビット整数に変換されるため、否定演算を二度行うことでその値を整数に変換することができます。これはJavaScriptではよく使われる手法です。ただこの場合には文字列が含まれると処理されないことに注意しなければなりません。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-built_in">console</span>.log(~~<span class="hljs-number">123.4</span>); <span class="hljs-comment">// 123</span>
+<span class="hljs-built_in">console</span>.log(~~-<span class="hljs-number">4</span>);    <span class="hljs-comment">// -4</span>
+<span class="hljs-built_in">console</span>.log(~~-<span class="hljs-number">3.14</span>); <span class="hljs-comment">// -3</span>
+<span class="hljs-built_in">console</span>.log(~~<span class="hljs-number">5</span>px);   <span class="hljs-comment">// これはダメ</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>JavaScriptは数値を64ビットの倍精度浮動小数点数として扱いますが、それに対してビット演算では符号付32ビットの整数に変換して適用されるということです。つまり、符号付32ビットの整数型に型変換が行われるということになります。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-comment">// 1が32個</span>
+<span class="hljs-keyword">var</span> foo = <span class="hljs-built_in">parseInt</span>(<span class="hljs-string">"11111111111111111111111111111111"</span>,<span class="hljs-number">2</span>); <span class="hljs-comment">// 4294967295</span>
+<span class="hljs-built_in">console</span>.log(~~foo); <span class="hljs-comment">// -1</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>このように<code>parseInt()</code>では扱える整数であっても<code>~</code>を使う手法では扱えない数値が存在するため、場合によっては意図しない結果をまねくかもしれません。</p>
+</div>
+<div class="paragraph">
+<p>しかし、32ビットであるにせよ上記の記述で<code>-1</code>という結果になってしまうのはおかしいとおもうはずです。これは最も左のビット列が符号を表していることが原因になっています。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-comment">// 1 が 31個、つまりこれが最大値</span>
+<span class="hljs-built_in">console</span>.log(~~<span class="hljs-built_in">parseInt</span>(<span class="hljs-string">"1111111111111111111111111111111"</span>,<span class="hljs-number">2</span>));  <span class="hljs-comment">// 2147483647</span>
+<span class="hljs-comment">// 符号を明示</span>
+<span class="hljs-built_in">console</span>.log(~~<span class="hljs-built_in">parseInt</span>(<span class="hljs-string">"01111111111111111111111111111111"</span>,<span class="hljs-number">2</span>)); <span class="hljs-comment">// 2147483647</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="negativeminus">二進法での負の値</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>負の値がでてきましたので、負の値について考えてみましょう。まずは人間が負の二進数を入力する場合、普通にマイナスの符号を使うことができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-built_in">parseInt</span>(<span class="hljs-string">"-1111"</span>,<span class="hljs-number">2</span>); <span class="hljs-comment">// -15</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&lt;p&gt;しかしコンピュータでは負の値を内部的に2の補数によって表現しています。さて、2の補数とは一体なんでしょうか。&lt;/p&gt;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-built_in">console</span>.log(~~<span class="hljs-built_in">parseInt</span>(<span class="hljs-string">"01111111111111111111111111111111"</span>,<span class="hljs-number">2</span>)); <span class="hljs-comment">// 2147483647</span>
+<span class="hljs-built_in">console</span>.log(~~<span class="hljs-built_in">parseInt</span>(<span class="hljs-string">"11111111111111111111111111111111"</span>,<span class="hljs-number">2</span>)); <span class="hljs-comment">// これは何になる？</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>最も左のビット列の数値が符号を示しているならば、<code>0</code>が<code>1</code>に変われば<code>-2147483647</code>になると考えられます。ですがこの結果はその予想とは異なり<code>-1</code>となります。このように単純に考えることができない、ということを理解していればここでは問題ありません。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="complement">1の補数と2の補数</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>補数とは、ある数が基準となる数になるために加える必要がある数のことです。</p>
+</div>
+<div class="paragraph">
+<p>そしてx進法において、aを表現するのに必要な桁数をnとしたとき、xの補数は<code>x<sup>n</sup>-a</code>、x-1の補数は<code>x<sup>n</sup>-a-1</code>と定義されます。</p>
+</div>
+<div class="paragraph">
+<p>例えば10進法で<code>29</code>の10の補数は<code>10<sup>2</sup>-29</code>で<code>71</code>、9の補数は<code>10<sup>2</sup>-29-1</code>で<code>70</code>となります。10進法での10の補数をもうすこしわかりやすく説明すると、次の位の最小値100から29を引いた数ということです。</p>
+</div>
+<div class="paragraph">
+<p>次に4ビットの2進法での<code>1001</code>の2の補数を考えてみましょう。<code>1001</code>は10進法で<code>9</code>なので<code>2<sup>4</sup>-9</code>で<code>7</code>、つまり2進法では<code>0111</code>が2の補数となります。1の補数は<code>2<sup>4</sup>-9-1</code>で6、つまり<code>0110</code>が1の補数となります。</p>
+</div>
+<div class="paragraph">
+<p>また、この定義から2の補数と1の補数はより簡単に求められることがわかります。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>1の補数は次のビット列の最小値からの差、つまり各ビット列を反転したものである</p>
+</li>
+<li>
+<p>2の補数は1の補数<code>+1</code>である</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="signed-number">符号付数値表現</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>二進数で負の数をあらわす場合、もっとも左のビット列の数値を負の値にすることで表現されます。</p>
+</div>
+<div class="paragraph">
+<p>ではなぜ負の表現に2の補数を利用するのかを4ビットの二進法で考えてみましょう。</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">n(10進法)</th>
+<th class="tableblock halign-left valign-top">n(2進法)</th>
+<th class="tableblock halign-left valign-top">nの2の補数</th>
+<th class="tableblock halign-left valign-top">nとnの2の補数の合計</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0000</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><span class="line-through">1</span>0000</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><span class="line-through">1</span>0000</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0001</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>1111</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><span class="line-through">1</span>0000</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0011</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>1101</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><span class="line-through">1</span>0000</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0111</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>1001</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><span class="line-through">1</span>0000</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1111</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>0001</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><span class="line-through">1</span>0000</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>この表から2進数nとその補数の合計は常に同じであり、さらにこの和は常に<code>0000</code>であることがわかります。このことから、nの2の補数を-n(10進法)とすると定義する都合がよさそうです。</p>
+</div>
+<div class="paragraph">
+<p>しかし、そうすると<code>1111</code>が<code>15</code>でもあり<code>-1</code>でもあることになってしまいます。そこで3番目のビット列が<code>0</code>のときを正、<code>1</code>のときを負にするという定義を追加することで重複を解消するのです。</p>
+</div>
+<div class="paragraph">
+<p>さて、これをふまえたうえで、先ほどの問題に戻ってみましょう。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-built_in">console</span>.log(~~<span class="hljs-built_in">parseInt</span>(<span class="hljs-string">"01111111111111111111111111111111"</span>,<span class="hljs-number">2</span>)); <span class="hljs-comment">// 2147483647</span>
+<span class="hljs-built_in">console</span>.log(~~<span class="hljs-built_in">parseInt</span>(<span class="hljs-string">"11111111111111111111111111111111"</span>,<span class="hljs-number">2</span>)); <span class="hljs-comment">// これは何になる？</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これが<code>-2147483647</code>にならないのは明白です。</p>
+</div>
+<div class="paragraph">
+<p>実際にこの数値が十進法でいくつかを考えるには、定義により成り立つ次の式で求めることができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-keyword">var</span> x = ~~<span class="hljs-built_in">parseInt</span>(<span class="hljs-string">"00000000000000000000000000000001"</span>,<span class="hljs-number">2</span>); <span class="hljs-comment">// 1</span>
+<span class="hljs-built_in">console</span>.log(~~<span class="hljs-built_in">parseInt</span>(<span class="hljs-string">"11111111111111111111111111111111"</span>,<span class="hljs-number">2</span>) + x)； <span class="hljs-comment">// 0</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>この式から<code>~~parseInt("11111111111111111111111111111111",2)</code>は<code>-1</code>であることがわかります。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bit-shift">ビットシフト</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>次はビットシフトについてです。ビットシフトは二進法で表した数値をずらし、空いたビット列には<code>0</code>を埋めます。</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16%;">
+<col style="width: 25%;">
+<col style="width: 8%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">コード</th>
+<th class="tableblock halign-left valign-top">二進法</th>
+<th class="tableblock halign-left valign-top">十進法</th>
+<th class="tableblock halign-left valign-top">説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>12</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">00000000000000000000000000001100</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>-12</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111111111111111111111110100</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-12</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>12 &lt;&lt; 1</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">00000000000000000000000000011000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">24</p></td>
+<td class="tableblock halign-left valign-top" rowspan="3"><p class="tableblock">ビットを指定された数だけ左にずらします。これは左オペランドを<code>x</code>右オペランドを<code>y</code>とすると、<code>x*(2^y)</code>と同様の結果になります。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>12 &lt;&lt; 2</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">00000000000000000000000000110000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">48</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>12 &lt;&lt; 3</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">00000000000000000000000001100000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">96</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>12 &gt;&gt; 1</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">00000000000000000000000000000110</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top" rowspan="4"><p class="tableblock">ビットを指定された数だけ右にずらします。ただし符号は維持されます。これは左オペランドを<code>x</code>右オペランドを<code>y</code>とすると、<code>x/(2^y)</code>と同様の結果になります。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>12 &gt;&gt; 2</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">00000000000000000000000000000011</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>12 &gt;&gt; 3</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">00000000000000000000000000000001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>-12 &gt;&gt; 1</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11111111111111111111111111111010</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-6</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>-12 &gt;&gt;&gt; 1</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">01111111111111111111111111111010</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2147483642</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ビットを指定された数だけ右にずらします。ただし符号は維持しません。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="application">ビット演算の応用例</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>XorshiftはGeorge Marsagliaが開発したビット演算を利用した擬似乱数生成法の1つです。JavaScriptでは次のように実装されます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-keyword">var</span> xor128 = {
+  x: <span class="hljs-number">123456789</span>,
+  y: <span class="hljs-number">362436069</span>,
+  z: <span class="hljs-number">521288629</span>,
+  w: <span class="hljs-number">88675123</span>,
+
+  setSeed: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">seed</span>)</span>{
+      <span class="hljs-keyword">this</span>.w = seed;
+  },
+
+  generate: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">var</span> t  = <span class="hljs-keyword">this</span>.x ^ (<span class="hljs-keyword">this</span>.x &lt;&lt; <span class="hljs-number">11</span>);
+      <span class="hljs-keyword">this</span>.x = <span class="hljs-keyword">this</span>.y;
+      <span class="hljs-keyword">this</span>.y = <span class="hljs-keyword">this</span>.z;
+      <span class="hljs-keyword">this</span>.z = <span class="hljs-keyword">this</span>.w;
+      <span class="hljs-keyword">this</span>.w = <span class="hljs-keyword">this</span>.w ^ (<span class="hljs-keyword">this</span>.w &gt;&gt; <span class="hljs-number">19</span>) ^ (t ^ (t &gt;&gt; <span class="hljs-number">8</span>));
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.w;
+  }
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>実際に試してみる場合には、次のコードを入力してみてください。コンソールに数値が出力されているはずです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-keyword">var</span> obj = <span class="hljs-built_in">Object</span>.create(xor128);
+obj.setSeed(<span class="hljs-number">100</span>);
+<span class="hljs-built_in">console</span>.log(obj.generate());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>もう少しシンプルな利用例では奇数と偶数の判別があります。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js"><span class="hljs-keyword">if</span>(num&amp;<span class="hljs-number">1</span> === <span class="hljs-number">0</span>){
+  <span class="hljs-comment">// これは偶数</span>
+}<span class="hljs-keyword">else</span>{
+  <span class="hljs-comment">// 残りは奇数</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>num&amp;1</code>が<code>0</code>であれば偶数になるのはなぜでしょうか。</p>
+</div>
+<div class="paragraph">
+<p>偶数である条件が最も右のビット列が<code>0</code>であるということは、最も右のビット列以外が2の倍数で表現されていることから明白です。<code>&amp;</code>はどちらも<code>1</code>ならば<code>1</code>、そうでなければ<code>0</code>になるので<code>num&amp;1</code>とすることで、最も右のビット列以外の全てのビット列を<code>0</code>にし、かつ右のビット列の状態だけを残すことができるのです。</p>
+</div>
+<div class="paragraph">
+<p>4ビットで考えると次のようになります。</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">10進法n</th>
+<th class="tableblock halign-left valign-top">2進法n</th>
+<th class="tableblock halign-left valign-top">0001</th>
+<th class="tableblock halign-left valign-top">n&amp;1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0001</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1111</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1110</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1111</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0001</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bibliography">参照文献</h2>
+<div class="sectionbody">
+<div class="ulist bibliography">
+<ul class="bibliography">
+<li>
+<p><a href="http://www.jstatsoft.org/v08/i14/">Xorshift RNGs</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></article>
