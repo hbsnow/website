@@ -256,7 +256,7 @@ gulp.task('git:commit', function(cb) {
   });
 });
 
-gulp.task('git:master', function(cb) {
+gulp.task('git:push', function(cb) {
   exec('git push -u origin master', function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
@@ -264,16 +264,8 @@ gulp.task('git:master', function(cb) {
   });
 });
 
-gulp.task('git:gh-pages', function(cb) {
-  exec('git subtree push --prefix public origin gh-pages', function (err, stdout, stderr) {
-    console.log(stdout);
-    console.log(stderr);
-    cb(err);
-  });
-});
-
 gulp.task('deploy', function(cb) {
-  runSequence('git:add', 'git:commit', 'git:master', 'git:gh-pages', cb);
+  runSequence('git:add', 'git:commit', 'git:push', cb);
 });
 
 
@@ -282,6 +274,4 @@ gulp.task('deploy', function(cb) {
  * default
  */
 
-gulp.task('default', function (cb) {
-  runSequence('build', 'deploy', cb);
-});
+gulp.task('default', ['watch']);

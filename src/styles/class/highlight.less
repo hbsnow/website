@@ -1,374 +1,95 @@
+// Monokai Phoenix
 pre.highlight {
   // prefix
-  @base: hljs-;
   @lang: language-;
 
   // color
-  @base00: #fff;
-  @base0: #333;
-  @base1: #969896;
-  @brown: #693a17;
-  @orange: #df5000;
-  @red: #b52a1d;
-  @magenta: #a71d5d;
-  @violet: #795da3;
-  @blue: #183691;
-  @cyan: #0086b3;
-  @green: #63a35c;
-  @light-green: #55a532;
-  @teal: #008080;
+  @base0: #111112;
+  @base00: #F8F8F2;
+  @base01: #75715E;
+  @base02: #CFCFC2;
+  @base03: #E6DB74;
+  @base04: #AE81FF;
+  @base05: #F92672;
+  @base06: #66D9EF;
+  @base07: #A6E22E;
+  @base08: #FD971F;
 
-  background: @base00;
-  color: @base0;
+  background: @base0;
+  color: @base00;
 
-  .@{base}comment {
-    color: @base1;
+  .comment {
+    color: @base01;
   }
 
-  .@{base}string {
-    color: @orange;
+  .string {
+    color: @base03;
   }
 
-  .@{base}keyword {
-    color: @magenta;
+  .keyword {
+    color: @base06;
   }
 
-  // bash
-  .@{lang}bash {
-    .@{base}shebang {
-      color: @base1;
-    }
-    .@{base}literal,
-    .@{base}built_in {
-      color: @cyan;
-    }
-    .@{base}title {
-      color: @violet;
-    }
+  .tag {
+    color: @base05;
   }
 
-  // C
-  .@{lang}c {
-    .@{base}preprocessor {
-      color: @orange;
-    }
-    .@{base}number,
-    .@{base}built_in {
-      color: @cyan;
-    }
-    .@{base}title {
-      color: @violet;
-    }
+  .attr-name {
+    color: @base07;
   }
 
-  // C++
-  .@{lang}cpp {
-    .@{base}preprocessor {
-      color: @orange;
-    }
-    .@{base}number,
-    .@{base}built_in {
-      color: @cyan;
-    }
-    .@{base}title {
-      color: @violet;
+  .attr-value {
+    color: @base03;
+  }
+
+  .selector {
+     color: @base07;
+  }
+
+  .property {
+    color: @base06;
+  }
+
+  .number {
+    color: @base04;
+  }
+
+  .operator {
+    color: @base05;
+  }
+
+  .@{lang}adoc {
+    .attribute {
+      color: @base07;
     }
   }
 
-  // C#
-  .@{lang}cs {
-    .@{base}number,
-    .@{base}built_in {
-       color: @cyan;
+  .@{lang}jade {
+    .tag {
+      > .punctuation {
+        color: @base00;
+      }
+
+      + .punctuation {
+        color: @base04;
+      }
     }
-    .@{base}xmlDocTag {
-      color: @green;
-    }
-    .@{base}title {
-      color: @violet;
+
+    .attributes {
+      color: @base00;
+      > .punctuation {
+        &:first-child,
+        &:last-child {
+          color: @base04;
+        }
+      }
     }
   }
 
-  // CoffeeScript
-  .@{lang}coffee {
-    .@{base}subst,
-    .@{base}regexp {
-      color: @orange;
-    }
-    .@{base}literal,
-    .@{base}built_in,
-    .@{base}number {
-      color: @cyan;
-    }
-    .@{base}title {
-      color: @violet;
-    }
-    .@{base}reserved,
-    .@{base}attribute {
-      color: @blue;
-    }
-  }
-
-  // CSS
-  .@{lang}css {
-    .@{base}at_rule,
-    .@{base}important {
-      color: @magenta;
-    }
-    .@{base}attribute,
-    .@{base}hexcolor,
-    .@{base}number,
-    .@{base}function {
-      color: @cyan;
-    }
-    .@{base}tag {
-      color: @green;
-    }
-    .@{base}id,
-    .@{base}class,
-    .@{base}pseudo {
-      color: @violet;
-    }
-  }
-
-  // go
-  .@{lang}go {
-    .@{base}typename {
-      color: @magenta;
-    }
-    .@{base}built_in,
-    .@{base}constant {
-      color: @cyan;
-    }
-  }
-
-  // ini
-  .@{lang}ini {
-    .@{base}setting {
-      color: @magenta;
-    }
-    .@{base}title {
-    color: @violet;
-    }
-  }
-
-  // Java
-  .@{lang}java {
-    .@{base}javadoc {
-      color: @base1;
-    }
-    .@{base}javadoctag {
-      color: @magenta;
-    }
-    .@{base}number {
-      color: @cyan;
-    }
-    .@{base}title {
-      color: @violet;
-    }
-  }
-
-  // JavaScript
-  .@{lang}js {
-    .@{base}javadoc {
-      color: @base1;
-    }
-    .@{base}regexp {
-      color: @orange;
-    }
-    .@{base}tag,
-    .@{base}javadoctag {
-      color: @magenta;
-    }
-    .@{base}built_in,
-    .@{base}literal,
-    .@{base}number {
-      color: @cyan;
-    }
-    .@{base}title {
-      color: @violet;
-    }
-    .@{base}tag .@{base}title {
-      color: @base0;
-    }
-  }
-
-  // json
-  .@{lang}json {
-    .@{base}attribute {
-      color: @orange;
-    }
-    .@{base}number {
-      color: @cyan;
-    }
-  }
-
-  // LESS
   .@{lang}less {
-    .@{base}built_in {
-      color: @orange;
-    }
-    .@{base}tag,
-    .@{base}at_rule {
-      color: @magenta;
-    }
-    .@{base}number,
-    .@{base}hexcolor,
-    .@{base}function,
-    .@{base}attribute {
-      color: @cyan;
-    }
-    .@{base}id,
-    .@{base}pseudo,
-    .@{base}class {
-      color: @violet;
+    .operator {
+      color: @base00;
     }
   }
 
-  // makefile
-  .@{lang}makefile {
-    .@{base}variable {
-      color: @orange;
-    }
-    .@{base}keyword {
-      color: @cyan;
-    }
-    .@{base}title {
-      color: @violet;
-    }
-  }
-
-  // Markdown
-  .@{lang}md {
-    .@{base}value,
-    .@{base}link_label,
-    .@{base}strong,
-    .@{base}emphasis,
-    .@{base}blockquote {
-      color: @orange;
-    }
-    .@{base}link_reference {
-      color: @cyan;
-    }
-    .@{base}link_url {
-      text-decoration: underline;
-    }
-  }
-
-  // PHP
-  .@{lang}php {
-    .@{base}regexp {
-      color: @orange;
-    }
-    .@{base}phpdoc {
-      color: @magenta;
-    }
-    .@{base}literal,
-    .@{base}number {
-      color: @cyan;
-    }
-    .@{base}title {
-    color: @violet;
-    }
-  }
-
-  // python
-  .@{lang}python {
-    .@{base}number {
-      color: @cyan;
-    }
-    .@{base}decorator,
-    .@{base}title {
-      color: @violet;
-    }
-  }
-
-  // Ruby
-  .@{lang}ruby {
-    .@{base}prompt,
-    .@{base}constant,
-    .@{base}number,
-    .@{base}subst .@{base}keyword,
-    .@{base}symbol {
-      color: @cyan;
-    }
-    .@{base}parent,
-    .@{base}title {
-      color: @violet;
-    }
-  }
-
-  // SCSS
-  .@{lang}scss {
-    .@{base}built_in {
-      color: @orange;
-    }
-    .@{base}tag,
-    .@{base}at_rule,
-    .@{base}important {
-      color: @magenta;
-    }
-    .@{base}preprocessor,
-    .@{base}number,
-    .@{base}hexcolor,
-    .@{base}function,
-    .@{base}attribute {
-      color: @cyan;
-    }
-    .@{base}id,
-    .@{base}pseudo,
-    .@{base}class {
-      color: @violet;
-    }
-  }
-
-  // Stylus
-  .@{lang}stylus {
-    .@{base}at_rule {
-      color: @magenta;
-    }
-    .@{base}tag {
-      color: @green;
-    }
-    .@{base}number,
-    .@{base}hexcolor,
-    .@{base}attribute,
-    .@{base}params {
-      color: @cyan;
-    }
-    .@{base}class,
-    .@{base}id,
-    .@{base}pseudo,
-    .@{base}title {
-    color: @violet;
-    }
-  }
-
-  // Swift
-  .@{lang}swift {
-    .@{base}preprocessor {
-      color: @magenta;
-    }
-    .@{base}built_in,
-    .@{base}number {
-      color: @cyan;
-    }
-    .@{base}title, {
-    color: @violet;
-    }
-  }
-
-  // HTML, XML
-  .@{lang}html,
-  .@{lang}xml {
-    .@{base}value, {
-      color: @orange;
-    }
-    .@{base}title {
-      color:@green;
-    }
-    .@{base}attribute {
-      color: @violet;
-    }
-  }
 }

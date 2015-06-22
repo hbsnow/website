@@ -1,0 +1,16 @@
+box: wercker/nodejs
+
+build:
+    steps:
+        - npm-install
+
+        - script:
+            name: metalsmith build
+            code: ./node_modules/.bin/gulp build
+
+deploy:
+    steps:
+        - lukevivier/gh-pages:
+            token: $GITHUB_TOKEN
+            basedir: ./public
+            repo: hbsnow/4uing.net

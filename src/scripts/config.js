@@ -15,46 +15,45 @@ module.exports = function(
     }
   })
   .state('about', {
-    url: '/about.html',
-    templateUrl: 'about' + ext,
+    url: '/about/',
+    templateUrl: 'about/index' + ext,
     data: {
       pageTitle: 'About'
     }
   })
   .state('work', {
-    url: '/work.html',
-    templateUrl: 'work' + ext,
+    url: '/work/',
+    templateUrl: 'work/index' + ext,
     data: {
       pageTitle: 'Work'
     }
   })
   .state('blog', {
-    url: '/blog.html',
-    templateUrl: 'blog' + ext,
+    url: '/blog/',
+    templateUrl: 'blog/index' + ext,
     data: {
       pageTitle: 'Blog'
     }
   })
   .state('blog-post', {
-    url: '/blog/{slug:[a-z0-9-\.]+}',
+    url: '/blog/{slug:[a-z0-9-\.]+}/',
     templateUrl: function($stateParams) {
-      return 'blog/' + $stateParams.slug.replace('.html', ext);
+      return 'blog/' + $stateParams.slug + '/index' + ext;
     },
     data: {
       //
     }
   })
   .state('blog-tag', {
-    url: '/blog/tag/{slug:[a-zA-Z0-9-\.]+}',
+    url: '/blog/tag/{slug:[a-zA-Z0-9-\.]+}/',
     templateUrl: function($stateParams) {
-      return 'blog/tag/' + $stateParams.slug.replace('.html', ext);
+      return 'blog/tag/' + $stateParams.slug + '/index' + ext;
     },
     data: {
       //
     }
   })
   .state('404', {
-    url: '/404.html',
     templateUrl: '/404' + ext,
     data: {
       pageTitle: '404 Not Found'

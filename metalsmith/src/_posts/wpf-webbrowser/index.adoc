@@ -1,0 +1,204 @@
+---
+title: WPFのWebBrowserを使うためのいくつかのメモ
+description: WPFのWebBrowserを使うための基本的な設定の変更とスクリーンショットなどの機能追加についての解説です。
+date: 2014-12-16
+updated: 2015-06-21
+tags: C Sharp, WPF
+---
+
+WPFのWebBrowserで基本設定の変更をする方法や機能を追加する方法のメモです。
+
+
+
+[[change-version]]
+== WPFのWebBrowserで使用されるIEのバージョンを最新にする
+
+WebBrowserで使用されるバージョンのデフォルトはIE7なので、インストールされている最新のバージョンに変更したくなることはよくあるとおもう。ただその変更はレジストリを使用する以外に方法はありません。
+
+[[get-ie-version]]
+=== インストールされたIEのバージョンを取得
+
+IEをどのバージョンに変更するかを決定するためにはインストールされているIEのバージョンを知る必要があります。
+
+[source,cs]
+----
+private int IEVersion
+{
+    get {
+        var r = new Regex(@"(\d{1,2})\.(\d{1,2})\.[\d]+.[\d]+");
+        var m = r.Match(Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Internet Explorer").GetValue("Version").ToString());
+
+        var ver1 = Convert.ToInt32(m.Groups[1].Value);
+        var ver2 = Convert.ToInt32(m.Groups[2].Value);
+
+        if (ver1 == 9 && ver2 > 9)
+        {
+            return ver2;
+        }
+
+        return ver1;
+    }
+}
+----
+
+IE10以上のとき、バージョンによってはちょっと形式が違うことがあるようなので、その処理を追加しています。
+
+
+
+[[rewrite-registry]]
+=== レジストリを書き換える
+
+WebBrowserがインストールされている最新のIEを使用するようにレジストリを書き換えます。
+
+[source,cs]
+----
+public const string FEATURE_BROWSER_EMULATION = @"Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION";
+
+Microsoft.Win32.RegistryKey regkey = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(FEATURE_BROWSER_EMULATION);
+String exeName = System.IO.Path.GetFileName(Assembly.GetExecutingAssembly().Location);
+
+int IeVer = this.IEVersion;
+regkey.SetValue(exeName, IeVer * 1000, Microsoft.Win32.RegistryValueKind.DWord);
+regkey.Close();
+----
+
+レジストリの削除には`DeleteSubKey`を使うだけです。
+
+[source,cs]
+----
+regkey.DeleteSubKey(exeName, false);
+regkey.Close();
+----
+
+
+
+[[javascript-error]]
+== JavaScriptのエラーを抑止する
+
+Windows Formsでは簡単なWebBrowserのエラーを抑止する方法もWPFだとそうもいきません。
+
+[[add-javascript]]
+=== JavaScriptを挿入する
+
+検索していて多かった解説がこのパターン。
+
+[source,js]
+----
+function noError() {
+    return true;
+}
+window.onerror = noError;
+----
+
+`window.onerror`をハンドリングするJavaScriptを挿入するとても賢いようにおもえるこの方法も、ドキュメントの初期ロード時にエラーが発生する場合にはエラーのダイアログは抑止できません。
+
+[[iwb2-silent]]
+=== IWebBrowser2インターフェースでSilentプロパティを設定する
+
+http://msyi303.blog130.fc2.com/blog-entry-59.html[Scribbled Records - WPF の WebBrowser コントロールで ScriptErrorsSuppressed を実現する方法]で書かれていた方法です。
+
+[source,xml]
+----
+<WebBrowser x:Name="browser"/>
+----
+
+[source,cs]
+----
+var axIWebBrowser2 = typeof(WebBrowser).GetProperty("AxIWebBrowser2", BindingFlags.Instance | BindingFlags.NonPublic);
+var comObj = axIWebBrowser2.GetValue(browser, null);
+
+// JavaScriptのエラー表示を抑止する
+comObj.GetType().InvokeMember("Silent", BindingFlags.SetProperty, null, comObj, new object[] { true });
+----
+
+ドラッグ&ドロップについても同様に設定できます。
+
+[source,cs]
+----
+// Drag&Dropの禁止
+comObj.GetType().InvokeMember("RegisterAsDropTarget", BindingFlags.SetProperty, null, comObj, new object[] { false, });
+----
+
+
+
+[[capture]]
+== WPFでWebBrowser内のスクリーンショットを保存する
+
+WPFで特定要素、今回の場合WebBrowserの範囲のスクリーンショットを保存するために以下のようなコードを書きました。
+
+[source,xml]
+----
+<WebBrowser x:Name="browser"/>
+----
+
+[source,cs]
+----
+var rtb = new RenderTargetBitmap(
+    (int)browser.Width,
+    (int)browser.Height,
+    96,
+    96,
+    PixelFormats.Pbgra32
+);
+rtb.Render(browser);
+
+string dir = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+using (FileStream fs = File.Open(filePath, FileMode.Create))
+{
+    var encoder = new PngBitmapEncoder();
+    encoder.Frames.Add(BitmapFrame.Create(bmp));
+    encoder.Save(fs);
+}
+----
+
+このコードでは当然何もキャプチャすることはできません。
+
+http://msdn.microsoft.com/ja-jp/library/system.windows.media.imaging.rendertargetbitmap%28v=vs.90%29.aspx[RenderTargetBitmap クラス]を読めばわかるように、ここでのbrowserはVisualオブジェクトでは全然ありません。つまりこれは以下のように書き直す必要があるということです。
+
+[source,cs]
+----
+Image imgScreen = new Image();
+imgScreen.Width = (int)browser.Width;
+imgScreen.Height = (int)browser.Height;
+imgScreen.Source = new DrawingImage(VisualTreeHelper.GetDrawing(browser));
+
+string fileName = "sample.png";
+string directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+string filePath = System.IO.Path.Combine(directoryPath, fileName);
+
+using (FileStream fs = new FileStream(directoryPath, FileMode.Create))
+{
+    var vis = new DrawingVisual();
+    DrawingContext cont = vis.RenderOpen();
+    cont.DrawImage(
+        imgScreen.Source,
+        new Rect(new Size(imgScreen.Width, imgScreen.Height))
+    );
+    cont.Close();
+
+    var rtb = new RenderTargetBitmap(
+        (int)imgScreen.Width,
+        (int)imgScreen.Height,
+        96d,
+        96d,
+        PixelFormats.Default
+    );
+    rtb.Render(vis);
+
+    var enc = new PngBitmapEncoder();
+    enc.Frames.Add(BitmapFrame.Create(rtb));
+    enc.Save(fs);
+}
+----
+
+他にもlink:http://www.ipentec.com/document/document.aspx?page=csharp-wpf-screen-capture-sendkey-winform[SendKeysを使う方法]もあるようだけど、今回のようにウィンドウ内の特定要素内だけが必要な場合には座標の計算がかなり面倒になるとおもう。
+
+
+
+[[bibliography]]
+== 参照文献
+
+[bibliography]
+- http://msyi303.blog130.fc2.com/blog-entry-59.html[Scribbled Records - WPF の WebBrowser コントロールで ScriptErrorsSuppressed を実現する方法]
+- http://blogs.msdn.com/b/ie/archive/2009/03/10/more-ie8-extensibility-improvements.aspx[More IE8 Extensibility Improvements]
+- http://nethelp.wikidot.com/save-as-image-using-drawingimage-in-wpf[Save as Image using DrawingImage() in WPF - Do Any Stuff]

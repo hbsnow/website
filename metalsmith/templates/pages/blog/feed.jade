@@ -13,11 +13,9 @@ rdf:RDF(
 		items
 			rdf:Seq
 				each item in collections.posts
-					- var path = item.path.replace(/_posts.[0-9]{4}-[0-9]{2}-[0-9]{2}-/, 'blog/')
-					rdf:li(rdf:resource=site.url + path)/
+					rdf:li(rdf:resource=site.url + item.path)/
 
 	each item in collections.posts
-		- var path = item.path.replace(/_posts.[0-9]{4}-[0-9]{2}-[0-9]{2}-/, 'blog/')
 		item(rdf:about=site.url + path)
 			title= item.title
 			link= site.url + path

@@ -1,0 +1,83 @@
+---
+title: EditorConfigでコーディングスタイルを指定する
+description: コーディングスタイルを指定する.editorconfigについての解説です。
+date: 2015-04-21
+updated: 2015-04-21
+tags: editor
+---
+
+PHPにはlink:http://www.php-fig.org/psr/[PSR]で標準のコーディングガイドが存在するんだけども、Lavravel5.0が若干従っていたりいなかったりと気になったのでいろいろ調べているとlink:https://github.com/cakephp/cakephp/blob/master/.editorconfig[CakePHPのプロジェクトに`.editorconfig`という気になるファイル]をみつけました。
+
+この`.editorconfig`はエディタやIDE間で異なるコーディングスタイルを統一するための設定ファイルで、だいたいのテキストエディタには`.editorconfig`に対応したプラグインが用意されているので誰でもすぐに使えるとおもう。
+
+EditorCongfigはCakePHPのほかにもAngularJSやTwitter Bootstrapなど結構色々なところで使用されているみたいです。実際のプロジェクトでの使用例はlink:https://github.com/editorconfig/editorconfig/wiki/Projects-Using-EditorConfig[Wiki]に一覧があるので、サンプルに困ることはありません。
+
+[NOTE]
+.Laravel5.0がPSR-2に準拠していない理由
+====
+Laravelがコーディングガイドに従っていないのはlink:https://twitter.com/HiroKws/status/590412046799216641[PSR-2が先に決まった]という事情からのようです。
+====
+
+
+[[beginning]]
+== .editorconfigの基本的なこと
+
+`.editorconfig`の文字コードはUTF8、改行コードはCRLFかLFにします。コメントアウトには`#`もしくは`;`を使います。
+
+EditorCongfigのプラグインはファイルがひらかれたとき、親ディレクトリをたどって`.editorconfig`を探します。この検索はルートファイルパスに到達するか、`root = true`となる`.editorconfig`が見つかったときに停止します。
+
+ファイルは上から下に読み込まれ、ひらかれたファイルにもっとも近いEditorConfigファイルが最後に読み込まれます。
+
+EditorConfigのセクション名と一致するプロパティは近いファイルのプロパティが優先され、読み込み順で適用されます。これはようするに、完全に一致するような設定を書いたときにはファイル構成上、一番そのファイルから近い場所にある`.editorconfig`の設定が優先されて適用されるということ。ただファイルの指定は以下で説明するようにそれなりに柔軟に設定できるので、自分で複数の`.editorconfig`を作成するようなことはないはず。
+
+
+
+[[setting]]
+== 適用されるファイルの指定
+
+設定が適用されるファイル指定にはglobパターンを使うことができます。
+
+[source]
+----
+# すべてのファイル共通
+[*]
+
+# CSS
+[*.css]
+
+# LESS, SCSS
+[*.{less,scss}]
+
+# Jade
+[resource/**.jade]
+
+# package.json
+[package.json]
+----
+
+
+
+[[property]]
+== プロパティ一覧
+
+公式のドキュメントを簡単に翻訳しただけです。不安があればlink:http://editorconfig.org/#file-format-details[公式ドキュメント]を参照してください。
+
+[horizontal]
+indent_style:: インデントスタイルの設定。`tab`か`space`を指定する。
+indent_size:: インデントに使われるスペースのサイズ。
+tab_width:: インデントに使われるタブの幅。デフォルトは`indent_size`で指定された値になる。
+end_of_line:: 改行コードの設定。`lf`、`cr`か`crlf`のいずれかを指定する。
+charset:: 文字コードの設定。
+trim_trailing_whitespace:: `true`にすると改行文字の前の空白文字を削除する。
+insert_final_newline:: `true`にするとファイルの最終行を新しい行で終らせる。
+root:: 特別なプロパティ。`.editorconfig`の検索を停止させます。
+
+プロパティの指定がされていない場合にはエディタの設定が利用されるので、必要のないプロパティの設定は無駄に書く必要はありません。
+
+
+
+[[bibliography]]
+== 参照文献
+
+[bibliography]
+- http://editorconfig.org/[EditorConfig]

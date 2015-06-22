@@ -21,7 +21,8 @@ metalsmith
   .metadata({
     site: {
       title: '4uing',
-      author: 'hbsnow'
+      author: 'hbsnow',
+      url: 'https://4uing.net/'
     }
   })
   .source('src')
@@ -31,52 +32,60 @@ metalsmith
   }))
   .use(drafts())
   .use(asciidoc())
-  .use(collections({
-    posts: {
-      pattern: '_posts/*.html',
-      sortBy: 'date',
-      reverse: true
-    },
-    apps: {
-      pattern: 'work/*.adoc',
-      sortBy: 'type'
-    }
-  }))
-  .use(branch('_posts/*.html')
+  .use(branch('_posts/*/index.html')
     .use(fileMetadata([
       {
-        pattern: '_posts/*',
+        pattern: '_posts/*/index.html',
         metadata: {
           template: 'posts/blog.jade',
           autotoc: true
         }
       }
     ]))
-    .use(path())
-    .use(replace({
-      path: function(path) {
-        return path.replace(/_posts.[0-9]{4}-[0-9]{2}-[0-9]{2}-/, 'blog/');
-      }
-    }))
-    .use(copy({
-      move: true,
-      pattern: '_posts/*.html',
-      transform: function(file) {
-        return file.replace(/_posts.[0-9]{4}-[0-9]{2}-[0-9]{2}-/, 'blog/');
-      }
-    }))
     .use(autotoc({
       selector: 'h2, h3'
     }))
+    .use(highlight())
+    .use(copy({
+      move: true,
+      pattern: '_posts/*/index.html',
+      transform: function(file) {
+        return file.replace('_posts', 'blog');
+      }
+    }))
     .use(tags({
       handle: 'tags',
-      path: 'blog/tag/:tag.html',
+      path: 'blog/tag/:tag/index.html',
       template: 'pages/blog/tag.jade',
       sortBy: 'date',
       reverse: true
     }))
-    .use(highlight())
+    .use(branch('blog/tag/*/index.html')
+      .use(fileMetadata([
+        {
+          pattern: 'blog/tag/*/index.html',
+          metadata: {
+            description: '投稿の新しい日付順にソートされた指定タグに所属する記事の全件表示。'
+          }
+        }
+      ]))
+    )
   )
+  .use(path())
+  .use(replace({
+    path: function(path) {
+      return path.replace('_posts', 'blog')
+                 .replace('index.html', '')
+                 .replace(/\\/g, '/');
+    }
+  }))
+  .use(collections({
+    posts: {
+      pattern: 'blog/*/index.html',
+      sortBy: 'date',
+      reverse: true
+    }
+  }))
   .use(templates({
     engine: 'jade',
     directory: 'templates'

@@ -1,6 +1,6 @@
 doctype html
 html(lang='ja', ng-app='mainApp')
-	head
+	head(prefix="og: http://ogp.me/ns#")
 		include partial/head
 
 	body
@@ -20,5 +20,4 @@ html(lang='ja', ng-app='mainApp')
 			preloader
 				include partial/preloader
 
-		#javascript
-			script(src='/scripts/main.js')
+		script(src='/scripts/main.js')

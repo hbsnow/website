@@ -1,0 +1,163 @@
+---
+title: gitについてのメモ
+description:
+date: 2015-06-21
+updated:
+tags: git
+draft: true
+---
+
+gitのコマンドをよく忘れて何度も調べなおすのも面倒なので、よくつかうものだけまとめた自分用のただのメモ。チートシートを探しているのであればlink:http://ndpsoftware.com/git-cheatsheet.html[Git Cheatsheet]がいいとおもう。
+
+
+
+[[basic]]
+== 基本
+
+[cols=1,3]
+|===
+a|`git status -s`
+|short formatでワーキングツリーのステータスを表示する。
+
+a|`git add -n`
+|追加されるファイルの表示する。実際に追加されない。
+
+a|`git add .`
+|新規作成、変更ファイルのみを追加する。
+
+a|`git add -u .`
+|前回からの変更、削除ファイルのみを追加する。新規作成ファイルの追加はしない。
+
+a|`git add -A .`
+|新規作成、変更、削除ファイルすべてを追加する。
+
+a|`git add -i`
+|対話的に追加。
+
+a|`git rm <file>`
+|指定ファイルを削除する。
+
+a|`git rm --cached <file>`
+|インデックスから指定ファイルを削除する。実際にファイルの削除はしない。
+
+a|`git commit -m <msg>`
+|インデックスからローカルリポジトリにコミットする。
+
+a|`git commit --amend`
+|直前のコミットを取り消して再度コミットする。
+
+a|`git reset HEAD`
+|addを取り消す。
+
+a|`git reset --hard HEAD`
+|コミット後の変更をすべて削除する。
+
+a|`git reset --hard ORIG_HEAD`
+|リセットを取り消す。
+
+a|`git checkout -- <paths>`
+|ファイルへの変更の取り消す。
+
+a|`git diff`
+|ワーキングツリーとインデックスのdiff。
+
+a|`git diff --cached`
+|commitの前に変更内容を確認する。
+
+a|`git diff HEAD^ HEAD`
+|commitの変更内容を確認する。
+|===
+
+
+
+[[branch-merge]]
+== ブランチ、マージ
+
+[cols=1,3]
+|===
+a|`git branch`
+|ローカルのブランチ一覧を表示する。
+
+a|`git branch -r`
+|リモートのブランチ一覧を表示する。
+
+a|`git branch <branchname>`
+|ブランチを作る。
+
+a|`git branch -d <branchname>`
+|ブランチを削除する。
+
+a|`git branch -m <branchname>`
+|現在のブランチ名を変更する。
+
+a|`git checkout <branchname>`
+|ブランチを切り替える。
+
+a|`git checkout -b <branchname>`
+|ブランチを作成し、そのブランチに切り替える。
+
+a|`git merge <commit>`
+|ブランチをマージする。
+
+a|`git merge --no-ff <commit>`
+|ブランチをNon Fast-Forwardでマージする。
+
+a|`git stash`
+|作業中ファイルを一時退避する。
+
+a|`git stash list`
+|一時退避しているファイルの一覧を表示する。
+
+a|`git stash show -p <stash>`
+|一時退避しているファイルの変更を確認する。
+
+a|`git stash apply <stash>`
+|一時退避しているファイルを取り出す。
+
+a|`git stash drop <stash>`
+|一時退避しているファイルを退避から削除する。
+
+a|`git stash pop <stash>`
+|一時退避しているファイルを取り出して、退避から削除する。
+
+a|`git tag -n`
+|タグの一覧とコメントを表示する。
+
+a|`git tag <tagname>`
+|タグを追加する。
+
+a|`git tag -a <tagname> -m <msg>`
+|注釈付きタグを追加する。
+
+a|`git tag -d <tagname>`
+|タグを削除する。
+|===
+
+
+
+[[update]]
+== アップデート
+
+[cols=1,3]
+|===
+a|`gitbranch`
+|
+
+a|`gitbranch`
+|
+
+a|`gitbranch`
+|
+
+a|`gitbranch`
+|
+
+a|`gitbranch`
+|
+|===
+
+
+
+[bibliography]
+- https://git-scm.com/docs[Git - Reference]
+
