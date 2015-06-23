@@ -7,4 +7,4 @@ build:
             code: sudo npm install -g gulp-cli
         - script:
             name: build
-            code: gulp -v
+            code: gulp build
