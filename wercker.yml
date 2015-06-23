@@ -6,11 +6,15 @@ build:
         - npm-install
 
         - script:
-            name: install gulp
-            code: sudo npm install -g gulp
-        - script:
-            name: build metalsmith
-            code: gulp build
+            name: echo nodejs information
+            code: |
+                echo "node version $(node -v) running"
+                echo "npm version $(npm -v) running"
+
+        - gulp:
+            name: run gulp
+            code: |
+                gulp build
 
 deploy:
     steps:
