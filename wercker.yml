@@ -4,15 +4,12 @@ build:
     steps:
         - npm-install
         - script:
-            name: install gulp
-            code: sudo npm install -g gulp
-        - script:
             name: build
             code: npm run build
 
 deploy:
     steps:
-        - lukevivier/gh-pages@0.2.1:
+        - lukevivier/gh-pages:
             token: $GITHUB_TOKEN
             domain: 4uing.net
             basedir: public

@@ -16,10 +16,11 @@ template: content.jade
 - https://pages.github.com/[GitHub Pages]
 - https://www.value-domain.com/[VALUE DOMAIN]
 - https://www.cloudflare.com/[CloudFlare]
+- http://wercker.com/[wercker]
 
 またサイトを生成するために使われているコードはGitHubで公開しています。
 
-- https://github.com/hbsnow/blog-metalsmith[hbsnow/blog-metalsmith]
+- https://github.com/hbsnow/4uing.net[hbsnow/4uing.net]
 
 
 

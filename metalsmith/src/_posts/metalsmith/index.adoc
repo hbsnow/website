@@ -146,6 +146,7 @@ gulp.task('build:metalsmith', function() {
     console.log(stderr);
     cb(err);
   });
+});
 ----
 
 [[gh-pages]]
@@ -160,8 +161,31 @@ gulp.task('build:metalsmith', function() {
 git subtree push --prefix public origin gh-pages
 ----
 
-これで`public`をルートとするgh-pagesブランチが作成されました。このコマンドさすがに毎回入力するのが面倒なのでTravis CIやDrone.ioでやろうとおもったんですが、subtreeがありませんと怒られたのであきらめてgulpでやってます。
+これで`public`をルートとするgh-pagesブランチが作成されます。
 
+ただこの方法は毎回ローカルでビルドする必要があるし、masterブランチにgh-pagesブランチと同じ内容をもつpublicディレクトリが生成されてちょっとダサい感じがするのでlink:http://wercker.com/[wercker]をつかうことにします。
+
+[source,yml]
+----
+box: nodesource/trusty
+
+build:
+    steps:
+        - npm-install
+        - script:
+            name: install gulp
+            code: sudo npm install -g gulp
+        - script:
+            name: build
+            code: npm run build
+
+deploy:
+    steps:
+        - lukevivier/gh-pages:
+            token: $GITHUB_TOKEN
+            domain: 4uing.net
+            basedir: public
+----
 
 
 [[other]]
