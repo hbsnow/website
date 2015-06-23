@@ -4,13 +4,7 @@ build:
         - npm-install
         - script:
             name: install gulp
-            code: sudo npm install -g gulp
+            code: sudo npm install -g gulp-cli
         - script:
             name: build
-            code: gulp build
-deploy:
-    steps:
-        - lukevivier/gh-pages:
-            token: $GITHUB_TOKEN
-            basedir: ./public
-            repo: hbsnow/4uing.net
+            code: gulp -v
