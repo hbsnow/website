@@ -4,9 +4,8 @@ build:
     steps:
         - npm-install
 
-        - script:
-            name: metalsmith build
-            code: ./node_modules/.bin/gulp build
+        - hgen/gulp:
+            tasks: build
 
 deploy:
     steps:
