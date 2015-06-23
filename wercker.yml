@@ -4,12 +4,12 @@ build:
     steps:
         - npm-install
 
-    - script:
-        name: Install gulp
-        code: sudo npm install -g gulp
-    - script:
-        name: Generate static files
-        code: gulp build
+        - script:
+            name: Install gulp
+            code: sudo npm install -g gulp
+        - script:
+            name: Generate static files
+            code: gulp build
 
 deploy:
     steps:
