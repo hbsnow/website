@@ -2,6 +2,7 @@
 title: 静的サイトをMetalsmithでビルドし、Github Pagesにwerckerでプッシュする
 description: Metalsmithを使ってビルドし、Github Pagesにwerckerでプッシュする方法やいくつかのプラグインの解説、その他の静的サイトジェネレータの紹介もしています。
 date: 2015-06-21
+updated: 2015-06-22
 tags: JavaScript, Metalsmith, git
 ---
 
@@ -26,14 +27,14 @@ npm init
 npm install metalsmith --save-dev
 ----
 
-これだけだとほとんど何もすることができません。必要なプラグインを自分でインストールしていく必要があります。
+これだけではほとんど何もすることができません。必要なプラグインを自分でインストールしていきましょう。
 
 
 
 [[plugin]]
 == プラグイン
 
-よく使うプラグインをリストアップするとこんな感じ。
+よく使うプラグインをリストアップしておきます。
 
 [horizontal]
 metalsmith-branch:: 指定されたパターンで分岐処理
@@ -53,12 +54,12 @@ metalsmith-draft:: draftをbuildから除外
 metalsmith-autotoc:: ToC生成
 metalsmith-highlight:: コードのハイライト
 
-ブログ程度のものであれば必要なプラグインがなくて自作しないといけないようなことにはならないとおもう。
+ブログ程度のものであれば必要なプラグインはだいたい揃っているので、プラグインを自作しないといけないようなことにはならないとおもう。
 
 [[metalsmith-collections]]
 === metalsmith-collections
 
-ブログをつくる目的であればかなりの重要なプラグインなんだけど、いきなりMetalsmithを理解しないまま使おうとするとわかりにくい。
+ブログをつくる目的であればかなりの重要なプラグインなんだけど、いきなりMetalsmithを理解しないまま使おうとすると、何をするためにつかうプラグインなのかがわかりにくいとおもう。
 
 [source,js]
 ----
@@ -71,9 +72,10 @@ metalsmith
       reverse: true
     }
   }))
+  .use(templates())
 ----
 
-こうしておくとテンプレート側で`collections.posts`を指定すると、`pattern`にマッチしたファイルのデータを呼び出すことができます。
+こうするとテンプレート側で`collections.posts`を指定したとき、`pattern`にマッチしたファイルのデータを呼び出すことができます。
 
 [source,jade]
 ----
@@ -82,14 +84,15 @@ ol
     li: a(href=item.path)= item.title
 ----
 
-これは`_posts/**.html`のファイルをメタデータの`date`で日付の新しい順にソートしたもので、ブログのArchivesのページを想像するとわかりやすい。
+これは`_posts/**.html`のファイルをメタデータの`date`で日付の新しい順にソートしたもので、一般的なブログのArchivesのページを想像するとわかりやすい。
 
-`next`と`prev`にはソート順で前後にあるファイルのデータが含まれていて、よくあるブログの前後ナビゲーションはこのプラグインで作ることができます。
+`next`と`prev`にはソート順で前後にあるファイルのデータが含まれていて、よくあるブログの前後ナビゲーションはこのプラグインでつくることができます。
 
 metalsmith-collectionsがあれば「metalsmith-feedやmetalsmith-sitemapのようなプラグインを使わなくてもRSSのようなフィードやsitemap.xmlをつくることはそれほど難しいことではありません。
 
 うっかりやりそうなミスとしてはcollectionを作るタイミングがはやすぎて、必要なmetadataをもっていない状態のcollectionをつくってしまうこと。
 
+[source,js]
 ----
 metalsmith
   .use(asciidoc())
@@ -111,18 +114,15 @@ metalsmith
       }
     ]))
   )
-  .use(templates({
-    engine: 'jade',
-    directory: 'templates'
-  }));
+  .use(templates())
 ----
 
-サンプルだから不自然な処理になっているけれども、このサンプルのように`fileMetadata`でmetadataを追加するタイミングがcollectionを作成した後になっているので、このcollectionに含まれているアイテムには`fileMetadata`で追加されたmetadataを持っていないということになる。
+サンプルだから処理そのものはちょっと不自然になっているけれども、このサンプルのように`fileMetadata`でmetadataを追加するタイミングがcollectionを作成した後になっていると、このcollectionには`fileMetadata`で追加されたmetadataは含まれていないことになります。
 
 [[metalsmith-template]]
 === metalsmith-template, metalsmith-filemetadata
 
-Wordpressからの移行で、JekyllやOctopressのような静的ジェネレータを一切使ったことがない場合にはちょっとわかりにくいのかもしれない。
+Wordpressからの移行で、JekyllやOctopressのような静的ジェネレータを一切使ったことがない場合にはちょっとわかりにくいのかもしれません。
 
 [source,adoc]
 ----
@@ -145,9 +145,10 @@ template: post.jade
 [source,js]
 ----
 metalsmith
+  .use(asciidoc())
   .use(fileMetadata([
     {
-      pattern: '_posts/*',
+      pattern: '_posts/*.html',
       metadata: {
         template: 'post.jade'
       }
@@ -155,8 +156,7 @@ metalsmith
   ]))
 ----
 
-これで`_posts`以下のすべてのファイルのメタデータに`template: post.jade`が追加されます。
-
+これで`_posts`直下にあるすべてのHTMLファイルのメタデータに`template: post.jade`が追加されます。
 
 [[metalsmith-highlight]]
 === metalsmith-highlight
@@ -216,7 +216,7 @@ git subtree push --prefix public origin gh-pages
 [[wercker]]
 == werckerでビルドしてgh-pagesにプッシュする
 
-サイトのビルドとgh-pagesブランチへのプッシュにはlink:http://wercker.com/[wercker]が便利です。
+サイトのビルドからgh-pagesブランチへのプッシュするまでの流れはlink:http://wercker.com/[wercker]で自動化すると便利です。
 
 まずプロジェクトのルートに`wercker.yml`を作成します。
 
@@ -244,7 +244,7 @@ deploy:
 werckerの設定はとくに難しいところはありません。
 
 Createからリポジトリを選択して指示通りにアプリケーションを作成、Deploy targetsのDeploy target nameに`gh-pages`、
-Auto deployに`master`を指定します。Deploy pipelineに`GITHUB_TOKEN`を作成して終了です。
+Auto deployに`master`を指定します。Deploy pipelineに`wercker.yml`で使用する`GITHUB_TOKEN`を作成して終了です。
 
 
 
@@ -256,7 +256,7 @@ Node.js製の静的サイトジェネレータにはMetalsmith以外にもいく
 [[other-hexo]]
 === Hexo
 
-Node.js製のジェネレータの中ではGitHubのStar数が最上位なので、Node.js製という条件内であれば今のところ一番人気といっていいんじゃないかとおもう。静的サイトジェネレータというよりも静的ブログジェネレータという感じ。
+Node.js製のジェネレータの中ではGitHubのStar数が最上位なので、Node.js製という条件内であれば今のところ一番人気といっていいんじゃないかとおもう。静的サイトというよりも静的ブログジェネレータという感じ。
 
 初期状態のCSSプリプロセッサがstylusになっていたり、デフォルトテーマのEJSがまるでWordpressのテンプレートをみているような記述になってるので、これだけでHexoが嫌いになりそうになったんだけども、このへんはすべて差し替え可能なので問題になることはありません。
 

@@ -2,7 +2,7 @@
 title: gulpでwebpackを使う
 description: gulpでwebpackを使ってJavaScriptをビルドする方法の解説です。
 date: 2014-11-19
-updated: 2015-04-28
+updated: 2015-06-24
 tags: JavaScript, gulp, webpack
 ---
 
@@ -17,80 +17,34 @@ link:../gulp-browserify/[browserifyのとき]と流れは同じです。
 
 まずはgulpとwebpackのインストールします。WebPackはコマンドを使うことがあればグローバルにインストールする必要があるけれども、今回はgulpを使うのでグローバルにインストールしていません。
 
-`package.js`を作成してプロジェクトを追加、ついでにbowerやgulpなどのパッケージもインストールしておきます。
+`package.js`を作成してプロジェクトを追加、ついでにその他必要になるパッケージもインストールしておきます。
 
 [source,ps1]
 ----
 npm init
-npm install gulp bower gulp-webpack gulp-load-plugins --save-dev
+npm install gulp webpack-stream gulp-load-plugins --save
 ----
 
-bowerのファイルが直下にあると邪魔なので`.bowerrc`を作成。
-
-[source,json]
-----
-{
-  "directory": "/app/bower_components"
-}
-----
-
-もちろんbowerを使わなければそれらに関連する記述は必要ありません。
+loaderを使えばJadeやBabel、CoffeeScriptの変換もできます。
 
 
 
 [[gulpfile]]
 == gulpfile.js
 
+このサイトの作成時に使用している`gulpfile.js`の一部です。
+
 [source,js]
 ----
 'use strict';
 
 var gulp = require('gulp');
+var objectAssign = require('object-assign');
+var webpack = require('webpack-stream');
 var $ = require('gulp-load-plugins')();
 
-gulp.task('dev-webpack', function() {
-  return gulp.src('app/scripts/main.js')
-    .pipe($.webpack(require('./webpack.config.js')))
-    .pipe(gulp.dest('./test/scripts/'));
-});
+var watch = false;
 
-gulp.task('dev-html', function() {
-  gulp.src(['app/**/*.html'])
-    .pipe(gulp.dest('./test'));
-});
-
-gulp.task('default', ['dev-webpack', 'dev-html'], function() {
-});
-----
-
-設定はgulp内に記述することもできるんだけど、サンプルでは`webpack.config.js`を使っています。gulpを通さないときにあると便利かとおもったんだけど、自分の場合はほとんどそういう状況にならなかったので、実際の運用では`webpack.config.js`を作らないで直接gulp内に設定を書くことが多いです。
-
-`webpack.config.js`はこんな感じ。
-
-[source,js]
-----
-var path = require('path');
-
-module.exports = {
-  entry: './app/scripts/main.js',
-  output: {
-    path: path.join(__dirname, "test/scripts"),
-    filename: '[name].js'
-  }
-};
-----
-
-htmlとjavascriptについてはlink:http://4uing.net/gulp-browserify/[browserifyのとき]と同じものを使えます。変更したのは`require`のファイルのパスを相対パスに書き換えたこと。
-
-
-
-[[browserify]]
-== browserifyとの使い分け
-
-webpackで便利だと感じるのはこれまでgulpで大量のコードを書いていたことを簡単にwebpackで一気にまとめてやってしまうことができるようになったこと。とくにbrowserifyやwatchifyなどのvinylを扱った記述はあまり見たくなるコードでないことは間違いないと確信できたので、基本的にこれらが必要になったときは何も考えずにwebpack使うことにしています。
-
-[source,js]
-----
 gulp.task('build:js', function() {
   var src = 'src/scripts/main.js';
   var dist = 'tmp/scripts/';
@@ -120,15 +74,25 @@ gulp.task('build:js', function() {
   } else {
     return gulp.src(src)
       .pipe(webpack(config))
-      .pipe($.uglify({
-        mangle: false
-      }))
       .pipe(gulp.dest(dist));
   }
 });
+
+gulp.task('watch:js', function(cb) {
+  watch = true;
+
+  runSequence('build:js', cb);
+});
 ----
 
-例えばこんなタスクと同じことをbrowserifyやwatchifyなどを使って書きたいとは積極的におもえませんでした。
+webpackは機能自体は多くてちょっととっつきにくさはあるけれど、そのぶん`gulpfile.js`はbrowserifyを使ったときよりもだいぶシンプルになります。監視用のタスクはとくにそうだとおもう。
+
+
+
+[[browserify]]
+== browserifyとの使い分け
+
+webpackで便利だと感じるのはbrowserifyやwatchifyなどのvinylを扱った大量のコードでの表現をwebpackでは簡単な記述で実現できるところ。基本的に監視タスクが必要になる場合には何も考えずにwebpackを使っています。
 
 
 

@@ -39,7 +39,7 @@ Web用のパッケージはlink:http://bower.io/[bower]でしか管理されて�
 },
 ----
 
-bowerのファイルがプロジェクトのルート直下にあると邪魔なので`.bowerrc`を作成してappディレクトリに移動しておきました。
+bowerのファイルがプロジェクトのルート直下にあると邪魔だったので`.bowerrc`を作成してappディレクトリに移動しておきました。
 
 [source,json]
 ----
@@ -70,7 +70,7 @@ gulp.task('js', function() {
 });
 ----
 
-`vinyl-transform`は`bundle`の返すファイルストリームをnpmで使用されているvinylに変換するために使われている。
+`vinyl-transform`は`bundle`の返すファイルストリームをnpmで使用されているvinylに変換するために使われています。
 
 
 
