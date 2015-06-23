@@ -81,11 +81,36 @@ gulp.task('css', function() {
 
 - gulp-jade: JadeをHTMLに変換する
 - gulp-inline-source
+- gulp-minify-html: HTMLのminify
+- gulp-cheerio
 
 [[gulp-inline-source]]
 === gulp-inline-source
 
 外部CSS、JavaScriptをHTMLの`head`内に埋め込みます。Tumblrなどのテーマだったり、404などのエラーページでファイルを一つにまとめてしまいたいときに便利。
+
+[[gulp-cheerio]]
+=== gulp-cheerio
+
+jQueryライクにHTMLを扱うことができます。
+
+[source,js]
+----
+gulp.task('move', function() {
+  if(watch) {
+    gulp.src(src)
+      .pipe($.cheerio(function(cheerio, file) {
+        cheerio('meta[http-equiv="refresh"]').first().empty();
+      }))
+      .pipe(gulp.dest(dist));
+  } else {
+    gulp.src(src)
+      .pipe(gulp.dest(dist));
+  }
+});
+----
+
+監視時に不要な`meta[http-equiv="refresh"]`を削除するときなどに使っています。ただ使用しているcheerioのバージョンが古いせいか、日本語が数値参照になるのでビルドに使うのであれば注意が必要かもしれない。
 
 
 

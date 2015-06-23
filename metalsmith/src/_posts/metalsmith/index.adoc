@@ -1,8 +1,8 @@
 ---
-title: 静的サイトをMetalsmithで生成する
-description: Metalsmithを使って静的サイトを生成する方法やいくつかのプラグインの解説、その他の静的サイトジェネレータの紹介もしています。
+title: 静的サイトをMetalsmithでビルドし、Github Pagesにwerckerでプッシュする
+description: Metalsmithを使ってビルドし、Github Pagesにwerckerでプッシュする方法やいくつかのプラグインの解説、その他の静的サイトジェネレータの紹介もしています。
 date: 2015-06-21
-tags: JavaScript, Metalsmith
+tags: JavaScript, Metalsmith, git
 ---
 
 Metalsmithはやりたいことをプラグインで導入していくスタイルなので、若干のとっつきにくさはあるかもしれません。ただ、だいたいの仕組みとよく使うプラグインを把握してしまえばあとは自由にサイトを作ることができるようになってくるので、Node製でそういったものを求めているのであればMetalsmithが最良の選択になりそう。
@@ -58,7 +58,7 @@ metalsmith-highlight:: コードのハイライト
 [[metalsmith-collections]]
 === metalsmith-collections
 
-ブログをつくる目的であればかなりの重要なプラグインなんだけど、いきなりMetalsmithを理解しないまま使おうとするとわかりにくいかもしれない。
+ブログをつくる目的であればかなりの重要なプラグインなんだけど、いきなりMetalsmithを理解しないまま使おうとするとわかりにくい。
 
 [source,js]
 ----
@@ -87,6 +87,37 @@ ol
 `next`と`prev`にはソート順で前後にあるファイルのデータが含まれていて、よくあるブログの前後ナビゲーションはこのプラグインで作ることができます。
 
 metalsmith-collectionsがあれば「metalsmith-feedやmetalsmith-sitemapのようなプラグインを使わなくてもRSSのようなフィードやsitemap.xmlをつくることはそれほど難しいことではありません。
+
+うっかりやりそうなミスとしてはcollectionを作るタイミングがはやすぎて、必要なmetadataをもっていない状態のcollectionをつくってしまうこと。
+
+----
+metalsmith
+  .use(asciidoc())
+  .use(collections({
+    posts: {
+      pattern: '_posts/*.html',
+      sortBy: 'date',
+      reverse: true
+    }
+  }))
+  .use(branch('_posts/*.html')
+    .use(fileMetadata([
+      {
+        pattern: '_posts/*.html',
+        metadata: {
+          template: 'posts/blog.jade',
+          autotoc: true
+        }
+      }
+    ]))
+  )
+  .use(templates({
+    engine: 'jade',
+    directory: 'templates'
+  }));
+----
+
+サンプルだから不自然な処理になっているけれども、このサンプルのように`fileMetadata`でmetadataを追加するタイミングがcollectionを作成した後になっているので、このcollectionに含まれているアイテムには`fileMetadata`で追加されたmetadataを持っていないということになる。
 
 [[metalsmith-template]]
 === metalsmith-template, metalsmith-filemetadata
@@ -127,6 +158,22 @@ metalsmith
 これで`_posts`以下のすべてのファイルのメタデータに`template: post.jade`が追加されます。
 
 
+[[metalsmith-highlight]]
+=== metalsmith-highlight
+
+コードのハイライトにはすでにlink:https://github.com/weswigham/metalsmith-metallic[metalsmith-metallic]やlink:https://www.npmjs.com/package/metalsmith-code-highlight[metalsmith-code-highlight]があったのですが、自分はAsciiDocを使っていたのでMarkdown限定のmetalsmith-metallicは使えず、metalsmith-code-highlightはコードの推論がいらなかったことと、classの言語のプレフィックスが`lang-`である必要があったためlink:https://www.npmjs.com/package/metalsmith-highlight[metalsmith-highlight]というプラグインを作りました。
+
+metalsmith-code-highlightはハイライトにlink:https://highlightjs.org/[higlight.js]を使っていますが、metalsmith-highlightはlink:https://prismjs.com/[Prism]を使っています。同じだと芸がないかなとおもって変えただけなので、とくに変えた意味はなかったりします。
+
+[source,js]
+----
+metalsmith
+  .use(highlight())
+----
+
+オプションの設定項目はありません。それとPrismでは言語の指定で短縮表記を使えないようだったので、いくつかの言語にエイリアスをつくってあります。
+
+
 
 [[gulp]]
 == gulpからMetalsmithでサイトを生成する
@@ -152,18 +199,26 @@ gulp.task('build:metalsmith', function() {
 [[gh-pages]]
 == GitHub Pagesで公開する
 
-作成したサイトをGitHub Pagesで公開します。
-
-サイトを作成するために使うコードをプッシュします。このとき最終的にビルドしたサイトを`public`フォルダとすると、その`public`フォルダにビルド結果を含めた状態にしてください。
+作成したサイトをGitHub Pagesで公開します。masterブランチにコードと変換前のデータ、gh-pagesブランチに公開データをプッシュします。gh-pagesブランチは事前に作成する必要はありません。
 
 [source,ps1]
 ----
+git add . -A
+git commit -m "message"
+git push -u origin master
 git subtree push --prefix public origin gh-pages
 ----
 
-これで`public`をルートとするgh-pagesブランチが作成されます。
+このとき最終的にビルドしたサイトを`public`フォルダとすると、その`public`フォルダのビルド結果をmasterブランチに含めなければいけません。また毎回ローカルでビルドする必要があり少し面倒です。
 
-ただこの方法は毎回ローカルでビルドする必要があるし、masterブランチにgh-pagesブランチと同じ内容をもつpublicディレクトリが生成されてちょっとダサい感じがするのでlink:http://wercker.com/[wercker]をつかうことにします。
+
+
+[[wercker]]
+== werckerでビルドしてgh-pagesにプッシュする
+
+サイトのビルドとgh-pagesブランチへのプッシュにはlink:http://wercker.com/[wercker]が便利です。
+
+まずプロジェクトのルートに`wercker.yml`を作成します。
 
 [source,yml]
 ----
@@ -172,9 +227,6 @@ box: nodesource/trusty
 build:
     steps:
         - npm-install
-        - script:
-            name: install gulp
-            code: sudo npm install -g gulp
         - script:
             name: build
             code: npm run build
@@ -186,6 +238,14 @@ deploy:
             domain: 4uing.net
             basedir: public
 ----
+
+検索でかかる情報の中には古い情報もあって、古い情報の`wercker.yml`を使うとおそらく動きません。自分はまずboxの指定から間違えていてかなりハマりました。
+
+werckerの設定はとくに難しいところはありません。
+
+Createからリポジトリを選択して指示通りにアプリケーションを作成、Deploy targetsのDeploy target nameに`gh-pages`、
+Auto deployに`master`を指定します。Deploy pipelineに`GITHUB_TOKEN`を作成して終了です。
+
 
 
 [[other]]
@@ -237,3 +297,4 @@ if theme.sidebar === 'bottom'
 
 [bibliography]
 - http://qiita.com/mizchi/items/17e2eb04c34b18aff921[Github pages に 特定のディレクトリだけデプロイする]
+- http://devcenter.wercker.com/docs/[wercker - docs]

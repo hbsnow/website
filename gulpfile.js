@@ -25,12 +25,22 @@ gulp.task('build:metalsmith', function(cb) {
 });
 
 gulp.task('move:metalsmith', function() {
-  gulp.src(['metalsmith/build/**/*', '!metalsmith/build/**/*.tpl'])
-    .pipe(gulp.dest('tmp/'));
+  var src = ['metalsmith/build/**/*', '!metalsmith/build/**/*.tpl'];
+
+  if(watch) {
+    return gulp.src(src)
+      .pipe($.cheerio(function(cheerio, file) {
+        cheerio('meta[http-equiv="refresh"]').first().remove();
+      }))
+      .pipe(gulp.dest('tmp/'));
+  } else {
+    return gulp.src(src)
+      .pipe(gulp.dest('tmp/'));
+  }
 });
 
 gulp.task('move:metalsmith-tpl', function() {
-  gulp.src('metalsmith/build/**/*.tpl')
+  return gulp.src('metalsmith/build/**/*.tpl')
     .pipe($.rename({
       extname: '.tpl.html'
     }))
@@ -44,8 +54,9 @@ gulp.task('move:metalsmith-tpl', function() {
  */
 
 gulp.task('public:html', function() {
-  gulp.src('tmp/**/*.html')
+  return gulp.src('tmp/**/*.html')
     .pipe($.inlineSource())
+    .pipe($.minifyHTML())
     .pipe(gulp.dest('public/'));
 });
 
@@ -92,7 +103,7 @@ gulp.task('build:js', function() {
 });
 
 gulp.task('public:js', function() {
-  gulp.src('tmp/scripts/**/*.js')
+  return gulp.src('tmp/scripts/**/*.js')
     .pipe(gulp.dest('public/scripts'));
 });
 
@@ -174,7 +185,7 @@ gulp.task('serve', function() {
 gulp.task('move:assets', function() {
   var dist = watch ? 'tmp' : 'public';
 
-  gulp.src('src/assets/**/*')
+  return gulp.src('src/assets/**/*')
     .pipe(gulp.dest(dist))
 });
 
@@ -197,8 +208,7 @@ gulp.task('build', function (cb) {
       'clean',
       'build:metalsmith',
       ['build:less', 'build:js', 'move:metalsmith', 'move:metalsmith-tpl'],
-      'public:html',
-      ['public:css', 'public:js', 'move:assets'],
+      ['public:html', 'public:css', 'public:js', 'move:assets'],
       cb
     );
   }
