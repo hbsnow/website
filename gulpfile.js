@@ -56,7 +56,7 @@ gulp.task('move:metalsmith-tpl', function() {
 gulp.task('public:html', function() {
   return gulp.src('tmp/**/*.html')
     .pipe($.inlineSource())
-    .pipe($.minifyHTML())
+    .pipe($.minifyHtml())
     .pipe(gulp.dest('public/'));
 });
 
