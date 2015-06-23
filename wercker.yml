@@ -2,10 +2,12 @@ box: nodesource/trusty
 
 build:
     steps:
+        # `npm install` command
         - npm-install
 
-        - hgen/gulp:
-            tasks: build
+        - script:
+            name: metalsmith build
+            code: ./node_modules/.bin/gulp build
 
 deploy:
     steps:
