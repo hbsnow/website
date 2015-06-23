@@ -4,8 +4,12 @@ build:
     steps:
         - npm-install
 
-        - hgen/gulp:
-            tasks: build
+    - script:
+        name: Install gulp
+        code: sudo npm install -g gulp
+    - script:
+        name: Generate static files
+        code: gulp build
 
 deploy:
     steps:
