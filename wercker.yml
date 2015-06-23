@@ -4,6 +4,7 @@ build:
         - npm-install
         - script:
             name: install gulp
-            code: sudo npm install -g gulp-cli
-        - hgen/gulp:
-            tasks: build
+            code: sudo npm install -g gulp
+        - script:
+            name: build
+            code: npm run build
