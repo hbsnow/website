@@ -6,8 +6,11 @@ build:
         - npm-install
 
         - script:
-            name: metalsmith build
-            code: ./node_modules/.bin/gulp build
+            name: install gulp
+            code: sudo npm install -g gulp
+        - script:
+            name: build metalsmith
+            code: gulp build
 
 deploy:
     steps:
