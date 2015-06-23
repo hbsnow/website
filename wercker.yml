@@ -5,6 +5,5 @@ build:
         - script:
             name: install gulp
             code: sudo npm install -g gulp-cli
-        - script:
-            name: build
-            code: gulp build
+        - hgen/gulp:
+            tasks: build
