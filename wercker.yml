@@ -1,19 +1,13 @@
 box: nodesource/trusty
-
 build:
     steps:
-        # `npm install` command
         - npm-install
-
         - script:
-            name: echo nodejs information
-            code: echo "node version $(node -v) running"
-
-
-        - gulp:
-            name: run gulp
+            name: install gulp
+            code: sudo npm install -g gulp
+        - script:
+            name: build
             code: gulp build
-
 deploy:
     steps:
         - lukevivier/gh-pages:
