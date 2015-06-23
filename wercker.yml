@@ -1,4 +1,5 @@
 box: nodesource/trusty
+
 build:
     steps:
         - npm-install
@@ -8,3 +9,10 @@ build:
         - script:
             name: build
             code: npm run build
+
+deploy:
+    steps:
+        - lukevivier/gh-pages:
+            token: $GITHUB_TOKEN
+            basedir: ./public
+            repo: hbsnow/4uing.net
