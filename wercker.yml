@@ -12,7 +12,7 @@ build:
 
 deploy:
     steps:
-        - lukevivier/gh-pages:
+        - lukevivier/gh-pages@0.2.1:
             token: $GITHUB_TOKEN
-            basedir: ./public
-            repo: hbsnow/4uing.net
+            domain: 4uing.net
+            basedir: public
