@@ -88,7 +88,7 @@ ol
 
 `next`と`prev`にはソート順で前後にあるファイルのデータが含まれていて、よくあるブログの前後ナビゲーションはこのプラグインでつくることができます。
 
-metalsmith-collectionsがあれば「metalsmith-feedやmetalsmith-sitemapのようなプラグインを使わなくてもRSSのようなフィードやsitemap.xmlをつくることはそれほど難しいことではありません。
+metalsmith-collectionsがあればmetalsmith-feedやmetalsmith-sitemapのようなプラグインを使わなくてもRSSのようなフィードやsitemap.xmlをつくることはそれほど難しいことではありません。
 
 うっかりやりそうなミスとしてはcollectionを作るタイミングがはやすぎて、必要なmetadataをもっていない状態のcollectionをつくってしまうこと。
 

@@ -48,7 +48,7 @@
     "metalsmith-define": "^1.0.0",
     "metalsmith-drafts": "0.0.1",
     "metalsmith-filemetadata": "0.0.4",
-    "metalsmith-highlight": "^1.0.2",
+    "metalsmith-highlight": "^1.0.4",
     "metalsmith-html-minifier": "^1.1.0",
     "metalsmith-path": "^0.1.0",
     "metalsmith-replace": "^0.1.1",

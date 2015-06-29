@@ -124,7 +124,7 @@ gulp.task('build:less', function() {
   if(watch) {
     return gulp.src(src)
       .pipe($.plumber({
-        errorHandler: function (err) {
+        errorHandler: function(err) {
           console.log(err);
           this.emit('end');
         }
@@ -231,15 +231,15 @@ gulp.task('watch', function(cb) {
  */
 
 gulp.task('clean:metalsmith', function(cb) {
-  del('metalsmith/build/**/*', cb);
+  del('metalsmith/build', cb);
 });
 
 gulp.task('clean:tmp', function(cb) {
-  del('tmp/**/*', cb);
+  del('tmp', cb);
 });
 
 gulp.task('clean', function(cb) {
-  del(['public/**/*', 'tmp/**/*', 'metalsmith/build/**/*'], cb);
+  del(['public', 'tmp', 'metalsmith/build'], cb);
 });
 
 

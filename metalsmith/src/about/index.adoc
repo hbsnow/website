@@ -9,7 +9,7 @@ template: content.jade
 
 このサイトはウェブ制作やプログラムについて公開する、最新技術を取り入れることを目的とした実験的なサイトです。そのため最新の環境でなければ正しく表示されないことや、比較的新しい環境であっても単純なエラーが発生することもあるかもしれません。もし何かお気づきのことがあればlink:#contact[作者までご連絡]頂ければ幸いです。
 
-サイトの作成には以下のジェネレータやフレームワーク、サービスが使用されています。
+サイトには以下のジェネレータやフレームワーク、サービスが使用されています。
 
 - http://www.metalsmith.io/[Metalsmith]
 - https://angularjs.org/[AngularJS]
@@ -17,6 +17,7 @@ template: content.jade
 - https://www.value-domain.com/[VALUE DOMAIN]
 - https://www.cloudflare.com/[CloudFlare]
 - http://wercker.com/[wercker]
+- https://ifttt.com/[IFTTT]
 
 またサイトを生成するために使われているコードはGitHubで公開しています。
 
