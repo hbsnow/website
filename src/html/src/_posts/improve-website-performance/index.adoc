@@ -1,0 +1,241 @@
+---
+title: サイトパフォーマンスを向上させる
+description: gulpでwebpackを使ってJavaScriptをビルドする方法の解説です。
+date: 2015-07-04
+updated:
+tags: JavaScript, CSS, gulp, AngularJS
+draft: true
+---
+
+以前はGoogle Driveからテキストデータをもってきていたのでつかっていたpreloaderも静的サイトになり無用の長物となったので、その排除をするついでにある程度はパフォーマンスを向上させていきたいとおもいます。
+
+最終的な目標はlink:https://developers.google.com/speed/pagespeed/insights/[PageSpeed Insights]のモバイル対象で90点以上を獲得することです。
+
+
+
+[[about-preloader]]
+== preloaderを実装していた理由
+
+そもそもどうしてpreloaderを実装していたかというと
+
+* Webフォントの読み込み時に発生するフォントの切り替わり
+* ui-routerによるイニシャルロード時のコンテンツ多重読み込み
+
+この二点でとくに後者の解決方法としてかなり安易に選択してしまっていたようにおもう。個人サイトのブログでpreloaderなんて実装するべきでは絶対にないので反省したい。
+
+ただ反省したいで終らせるともったいない気もするので、どう実装したのかも書き残しておきます。あんまり調べて作ったわけではないのでこれが最善の実装方法ではないかもしれない。
+
+[source,html]
+----
+<preloader>
+  <div class="loading">
+    <p>ロード中です。</p>
+  </div>
+</preloader>
+----
+
+`preloader`の中にpreload中に表示するものを入れておきます。
+
+[source,less]
+----
+preloader {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: @color;
+  background-color: @bg-color;
+  z-index: @zindex-preloader;
+
+  &.ng-leave {
+    transition: opacity 1s;
+    opacity: 1;
+  }
+
+  &.ng-leave-active {
+    opacity: 0;
+  }
+}
+----
+
+LESSはローディング中に前面で固定しておくだけです。アニメーションが必要であれば`transition`もつけておきます。
+
+[source,js]
+----
+// ui-routerとangular-animateを使っています
+module.exports = function($animate) {
+  return {
+    restrict: 'E',
+    link: function(scope, element) {
+      scope.$on('$viewContentLoaded',
+      function(event) {
+        $animate.leave(element[0]);
+      });
+    }
+  };
+};
+----
+
+あとはJavaScriptでコンテンツの読み込み完了時に`<preloader>`を削除をするだけです。
+
+
+
+[[font-loader]]
+== フォントの読み込み
+
+Google Font APIから文字のためにフォントを読み込むのはやめることにしました。閲覧中に突然フォントがかわる挙動は不気味におもえたし、さらに悪いことにフォントの横幅が変わるケースでは文字の行がずれることがあって不快でしかなかったことが要因です。詳しいことについてはlink:https://css-tricks.com/fout-foit-foft/[FOUT, FOIT, FOFT]が参考になるとおもいます。
+
+ただ文字のために使うことはやめても、link:https://www.google.com/design/icons/[Material icons]のようなアイコンフォントではサイズを固定するため、そういった問題は起こらないので利用します。
+
+[source,js]
+----
+loadCSS('//fonts.googleapis.com/icon?family=Material+Icons');
+----
+
+アイコンであれば文字が消える挙動になることがあまり問題にならないので`<link>`を挿入して非同期に読み込ませました。これが問題になるのであればlink:https://github.com/typekit/webfontloader[Web Font Loader]を使うとよさそう。ただ日本語のフォントにこだわることはできないのだから、アルファベットのフォントだけあまりこだわるのは無駄でしかない気はする。
+
+もしサイトタイトルのロゴだけ数文字だけこだわりたいということであればCSSに必要な文字だけのフォントをdata URIで埋め込んだりしたほうがよさそう。
+
+[source,less]
+----
+// font-family
+@font-family-sans-serif: 'Helvetica Neue', 'Hiragino Kaku Gothic ProN',
+  Meiryo, sans-serif;
+@font-family-serif: Georgia, 'Times New Roman', Times, serif;
+@font-family-monospace: 'Migu 2M', 'Migu 1M', NasuM, Menlo, Consolas, monospace;
+@font-family-base: @font-family-sans-serif;
+@font-icon: 'Material Icons';
+----
+
+このサイトのフォントの指定はこんな感じ。ごくまれに游ゴシックが指定サイトがあったりするけど、細くて見にくいのでブラウザ上で文字を読ませるフォントとして使うのであれば、かなり大き目の文字設定にしないとあまり適してないとおもう。
+
+.游ゴシックの表示例
+image::/blog/improve-website-performance/yugothic.png[Windows上での游ゴシック表示例, 320, 240]
+
+等幅フォントの指定はサイトの内容を考えて、ユーザがインストールしてそうな等幅の日本語のフォントを指定しています。
+
+
+
+[[ui-router-initial-loading]]
+== ui-routerによるイニシャルロード時のコンテンツ読み込み
+
+フォントの問題は解決したのでそのほかにpreloaderを削除すると問題になるのは、すでに存在する内容と同じコンテンツを再度読み込む現象がです。これはGoogleがJavaScriptが出力する内容を完全に取得できていないようだったため、イニシャルロード時にはすでに`<ng-view>`内にコンテンツが存在する状態になっていることが原因です。
+
+
+https://github.com/angular-ui/ui-router/issues/1859[ui-routerのissue]でちょうど同じ話題があったのでそれを参考に対策してみました。ただ完全に仕様を理解して作ったわけではなくて、たぶんこれで大丈夫かなーと適当に作ったら希望通りに動いたというだけなのでもしかするとまずいところがあるかもしれない。
+
+[source,js]
+----
+angular.module(moduleName).config(function($httpProvider, $urlRouterProvider) {
+  $urlRouterProvider.deferIntercept();
+});
+----
+
+基本的にはこれだけでもよさそうなんだけれども、この指定だけだと`<a ui-sref>`ではなく`<a href>`で指定したサイト内リンクのリンクが殺されるという問題が発生します。
+
+[source,js]
+----
+angular.module(moduleName).run(function ($rootScope, $urlRouter) {
+  $rootScope.$on('$locationChangeSuccess', function() {
+    $urlRouter.listen();
+  });
+});
+----
+
+なので`$locationChangeSuccess`したあとに`$urlRouter.listen()`してやると、うまいことイニシャルロード時だけテンプレートを呼び出さなくなります。
+
+
+
+[[critical-css]]
+== Critical
+
+PageSpeed Insightsは対策をしていなければほぼ間違いなく、スクロールせずに見えるコンテンツのレンダリングをブロックしているJavaScript/CSSを排除するようにという警告がでるとおもいます。
+
+どうやらアクセス時に表示されているスクロールしないで見える範囲のJavaScriptとCSSにはリクエストを発生させるなということのようです。
+
+コードについてはまだしも、さすがに見える範囲のスタイルを手動でインライン化させるという作業は、手作業でできることで到底はないので、link:https://github.com/addyosmani/critical[critical]を使ってgulpから実行させることにしました。
+
+使うパッケージはこの二つです。
+
+- https://www.npmjs.com/package/critical[critical]
+- https://www.npmjs.com/package/gulp-inline-source[gulp-inline-source]
+
+まずはcriticalのタスク。
+
+[source,js]
+----
+gulp.task('critical', function(cb) {
+  critical.generate({
+    base: paths.dist,
+    src: 'index.html',
+    dest: 'styles/critical.css',
+    width: 320,
+    height: 480,
+    minify: true
+  }, cb.bind(cb));
+});
+----
+
+ファイルの出力をまたなくていいのであればcallbackは不要ですが、今回はこの出力の後にgulp-inline-sourceを実行させるので必要になります。
+
+すべてのHTMLファイルを対象にするわけにはいかないので、トップページを対象にしました。CSSファイルを指定することもできるますが、すでにHTMLに記述してある場合には省略することができるので省略しています。`width`と`height`はviewportの設定になるので変更が必要であれば変更してください。
+
+[source,html]
+----
+<link rel="stylesheet" src="/styles/critical.css" inline>
+
+<noscript>
+  <link rel="stylesheet" src="/styles/main.css">
+</noscript>
+----
+
+HTMLには出力された`critical.css`をインラインに埋め込むように`inline`を指定しておきます。すべてのCSSはJavaScriptで非同期に読み込ませるので、JavaSciript無効時のための記述も追加しています。
+
+[source,js]
+----
+gulp.task('build:html', function(cb) {
+  return gulp.src(paths.dist + '**/*.html')
+    .pipe($.inlineSource())
+    .pipe(gulp.dest(paths.build));
+});
+----
+
+あとはgulp-inline-sourceを実行するだけです。
+
+
+
+[[cdn-lib]]
+== CDNを利用する
+
+AngularJSとその関連ライブラリにはCDNを利用することにした。
+
+理由としてはサイトの規模が小さいことと、サイトの内容を考えるとそれなりに高い確率ですでにキャッシュされていることが期待できるというのが理由。
+
+
+
+[[ssl-cloudflare]]
+== CloudFlareでDNSの設定とSSLの導入
+
+解説できるほどには詳しくないのでCloudFlareとGitHub Pagesを使った場合の導入手順のための参考リンクです。
+
+[IMPORTANT]
+.CloudFlareのCNAME FlatteningをGitHub Pagesで使ってみた
+http://d.hatena.ne.jp/hnw/20150301
+
+上記のサイトの手順通りにDNSの設定を行います。CDNはGitHub Pagesがやってくれているようなので、自分もCloudFlareの設定は無効にしておきました。
+
+あとはSSLの設定になりますがおそらくデフォルトでSSLの設定も有効になっているはずです。実際に有効になるには少し時間がかかるようですが、このサイトは一日まったくらいで有効になっていた気がします。ただこのSSLの設定をしてしまうと一部の環境でサイトの閲覧ができなくなるので注意が必要です。
+
+
+
+[[bibliography]]
+== 参照文献
+
+[bibliography]
+* http://t32k.me/mol/log/style-class-conference/[Smashing Magazineのパフォーマンス改善ケースが凄まじい件]
+* http://qiita.com/Jxck_/items/3bd89c60ff90af7e0b95[01.Intro - High Performance Web 2015]
+* https://css-tricks.com/fout-foit-foft/[FOUT, FOIT, FOFT | CSS-Tricks]
+* http://d.hatena.ne.jp/hnw/20150301[CloudFlareのCNAME FlatteningをGitHub Pagesで使ってみた]
+* https://blog.euonymus.info/cloudflare%E3%81%A7ssl%E3%82%92%E5%B0%8E%E5%85%A5%E3%81%99%E3%82%8B%E6%99%82%E3%81%AE%E6%B3%A8%E6%84%8F/[CloudFlareでSSLを導入する時の注意]

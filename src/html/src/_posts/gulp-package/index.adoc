@@ -1,0 +1,484 @@
+---
+title: gulpで使うパッケージのメモ
+description: gulpでよく使うパッケージのまとめです。
+date: 2015-03-06
+updated: 2015-07-01
+tags: JavaScript, gulp
+---
+
+gulpで使うプラグインは毎回大体同じなので、よく使うもののメモを残しておく。カテゴリ分けはだいぶ適当。サンプルでは断りなくgulp-load-pluginsを使っているので`$.`ではじまるものは`gulp-`のパッケージを読み込んだものになっています。
+
+基本的にgulpのプラグインを作ったりしたことがあるわけではないので、vinylの説明なんかはちょっと怪しいかもしれない。
+
+
+
+[[file]]
+== ファイル
+
+* require-dir
+* del
+* gulp-rename
+* gulp-gzip: gzipに圧縮
+* gulp-concat: ファイルの結合
+
+[[require-dir]]
+=== require-dir
+
+ディレクトリ内のファイルを読み込むヘルパー。何に使うのかというと`gulpfile.js`を分割して管理されているようなものに使われています。
+
+[source,js]
+----
+var requireDir = require('require-dir');
+requireDir('gulp/tasks', {recurse: true});
+----
+
+`recurse: true`はサブフォルダも読み込ませたいときに必要。ファイル分割するほどのタスクになることになることが自分の場合にはないので、`gulpfile.js`でこれを使うようなことはおそらくこれからもないんじゃないかとおもう。
+
+実際にファイル分割するときのディレクトリ構成についてはlink:https://github.com/greypants/gulp-starter[gulp-starter]で雰囲気がつかめる。
+
+[[del]]
+=== del
+
+ファイルを削除します。ビルド前にディレクトリ内のファイルを削除するのに使われています。
+
+[source,js]
+----
+gulp.task('clean', function(cb) {
+  del(['dist\**\*'], cb);
+});
+----
+
+複数のファイルをglobによるパターンマッチングで除外設定をすることもできて、例えば`.gitkeep`などの`.git`から始まるファイルを削除したくないときには以下のようになます。
+
+[source,js]
+----
+gulp.task('clean:dist', function(cb) {
+  del(['dist/**/*', '!dist/.git{,/**}'], { dot: true }, cb);
+});
+----
+
+[[gulp-rename]]
+=== gulp-rename
+
+ファイルのリネームをします。ただ単純にリネームをするというよりも、prefixやsuffixをつけたりといった使い方をすることが多いかな。
+
+[source,js]
+----
+gulp.task('css', function() {
+  return gulp.src( 'src/style.css')
+  .pipe($.minifyCss())
+  .pipe($.rename({ suffix: '.min' }))
+  .pipe(gulp.dest('dist'));
+});
+----
+
+これで出力されるファイルのファイル名が`style.min.css`になります。
+
+
+
+[[html]]
+== HTML
+
+* gulp-jade: JadeをHTMLに変換する
+* gulp-inline-source
+* gulp-minify-html: HTMLのminify
+* gulp-cheerio
+
+[[gulp-inline-source]]
+=== gulp-inline-source
+
+外部CSS、JavaScriptをHTMLの`head`内に埋め込みます。Tumblrなどのテーマだったり、404などのエラーページでファイルを一つにまとめてしまいたいときに便利。
+
+[[gulp-cheerio]]
+=== gulp-cheerio
+
+jQueryライクにHTMLを扱うことができます。
+
+[source,js]
+----
+gulp.task('move', function() {
+  if(watch) {
+    gulp.src(src)
+      .pipe($.cheerio(function(cheerio, file) {
+        cheerio('meta[http-equiv="refresh"]').first().empty();
+      }))
+      .pipe(gulp.dest(dist));
+  } else {
+    gulp.src(src)
+      .pipe(gulp.dest(dist));
+  }
+});
+----
+
+監視時に不要な`meta[http-equiv="refresh"]`を削除するときなどに使っています。ただ使用しているcheerioのバージョンが古いせいか、日本語が数値参照になるのでビルドに使うのであれば注意が必要かもしれない。
+
+
+
+[[gulp-javascript]]
+== JavaScrpt
+
+* browserify: http://4uing.net/blog/gulp-browserify/[gulpでBrowserifyを使う]を参照
+* watchify: http://4uing.net/blog/gulp-browserify/[gulpでBrowserifyを使う]を参照
+* webpack-stream: http://4uing.net/blog/gulp-webpack/[gulpでWebPackを使う]を参照
+* gulp-uglify: minify
+* gulp-jshint
+* jshint-stylish
+
+[[gulp-jshint]]
+=== gulp-jshint, jshint-stylish
+
+jshint-stylishはgulp-jshintの出力を見やすくするためのもの。
+
+[source,js]
+----
+gulp.task('jshint', function () {
+  return gulp.src('**/*.js')
+  .pipe($.jshint())
+  .pipe($.jshint.reporter('jshint-stylish'));
+});
+----
+
+最近はAltJSを使うことが多いのであまり使うことはないかな。
+
+
+
+[[AngularJS]]
+== AngularJS
+* gulp-angular-templatecache: テンプレートファイルを$templateCacheにする
+* gulp-ng-annotate
+
+[[gulp-ng-annotate]]
+=== gulp-ng-annotate
+
+AngularJSでuglifyしても問題ないようにアノテーションを追加してくれます。
+
+[source,js]
+----
+angular.module("app").controller("MyCtrl", function($scope) {});
+----
+
+これが次のようになります。
+
+[source,js]
+----
+angular.module("app").controller("MyCtrl", ["$scope", function($scope) {}]);
+----
+
+自分でアノテーションを書くのは面倒なのでAngularJSを使うときにはこれを使うこともあります。
+
+
+
+[[css]]
+== CSS
+
+* gulp-less
+* gulp-autoprefixer: ベンダプレフィックスをつける
+* gulp-minify-css: minify
+
+
+[[gulp-less]]
+=== gulp-less
+
+LESSをCSSに変換します。ソースマップをつけるには、gulp-sourcemapsを使う必要があります。
+
+[source,js]
+----
+var watch = false;
+gulp.task('build:less', function() {
+  var src = 'src/**/*.less';
+  var dist = 'dist'
+
+  if(watch) {
+    return gulp.src(src)
+    .pipe($.plumber())
+    .pipe($.sourcemaps.init())
+    .pipe($.less())
+    .pipe($.autoprefixer())
+    .pipe($.sourcemaps.write())
+    .pipe(gulp.dest(dist));
+  } else {
+    return gulp.src(src)
+    .pipe($.less())
+    .pipe($.autoprefixer())
+    .pipe($.minifyCss())
+    .pipe(gulp.dest(dist));
+  }
+});
+----
+
+pluginsでautoprefixを使おうとするとなぜかエラーになったので、ソースマップの出力後にプレフィックスをつけています。
+
+
+
+[[vinyl]]
+== vinyl
+
+browserifyを使うときに使う。
+
+* vinyl-source-stream
+* vinyl-transform
+* vinyl-buffer
+
+
+[[vinyl-source-stream]]
+=== vinyl-source-stream
+
+vinylのstreamに変換します。
+
+[source,js]
+----
+var stream = require('vinyl-source-stream');
+var browserify = require('browserify');
+var src = 'src/main.js';
+
+browserify(src)
+  .bundle()
+  .pipe(source(src))
+  .pipe(gulp.dest('dist'));
+----
+
+[[vinyl-transform]]
+=== vinyl-transform
+
+vinyl-source-streamと同じくvinylのstreamに変換します。ファイル名を引数に取れるので複数のファイルに対応できます。
+
+[source,js]
+----
+var transform = require('vinyl-transform');
+var browserify = require('browserify');
+
+gulp.task('js', function() {
+  return gulp.src('**/*.js')
+  .pipe(transform(function(filename) {
+    return browserify(filename, {
+    debug: true
+    }).bundle();
+  }))
+  .pipe(gulp.dest('dist'));
+});
+----
+
+browserifyでファイルを複数指定するようなことはないとおもうけど、フォルダ構成をそのまま維持させたたいとかなら便利なのかもしれない。
+
+[[vinyl-buffer]]
+=== vinyl-buffer
+
+vinylのstreamをbufferに変換します。vinyl-source-streamやvinyl-transformはstreamに変換するので`.pipe`で別の処理を加えるときにはこれをつかってbufferに変換する必要があります。
+
+例えば次のような記述はエラーになります。
+
+[source,js]
+----
+browserify(src)
+  .bundle()
+  .pipe(source(src))
+  .pipe($.uglify())
+  .pipe(gulp.dest(dist));
+----
+
+これはstreamを渡しているせいで、これを動作させるには次のようにvinyl-bufferを使うといい。
+
+[source,js]
+----
+var buffer = require('vinyl-buffer');
+
+browserify(src)
+  .bundle()
+  .pipe(source(src))
+  .pipe(buffer())
+  .pipe($.uglify())
+  .pipe(gulp.dest(dist));
+----
+
+
+[[task]]
+== タスク
+
+* lazypipe
+* run-sequence
+
+[[lazypipe]]
+=== lazypipe
+
+別々のタスクで同じ流れの処理があるとき、それぞれのタスクで同じ記述を避けたいときに使う。使いそうであまり使った記憶がない。
+
+[source,js]
+----
+var lessMapTasks = lazypipe()
+  .pipe($.sourcemaps.init())
+  .pipe($.less())
+  .pipe($.sourcemaps.write());
+
+gulp.task('build:less', function() {
+  return gulp.src(src)
+    .pipe(lessMapTasks())
+    .pipe(gulp.dest(dist));
+});
+----
+
+具体的にどういうときに使うのかちょっといい場面が思いつかない。
+
+[[run-sequence]]
+=== run-sequence
+
+タスクの実行順序を指定します。
+
+[source,js]
+----
+gulp.task('build', function(callback) {
+  runSequence('clean', ['js', 'less'], callback);
+});
+----
+
+
+
+[[util]]
+== ユーティリティ
+
+* gulp-util
+* gulp-if
+* gulp-exit
+* gulp-exec
+* gulp-debug: vinylのstreamの状態を確認する
+
+[[gulp-util]]
+=== gulp-util
+
+ログを綺麗に出力したり、ストリームをそのまま何もせず返したりなんかができる。
+
+[source,js]
+----
+$.util.log($.util.colors.cyan('ここはCyanで表示されます。'));
+
+var watch;
+gulp.task('watch:less', function() {
+  watch = true;
+
+  return gulp.src(src)
+    .pipe(watch ? $.plumber() : $.util.noob())
+    .pipe($.less())
+    .pipe(gulp.dest(dist));
+});
+----
+
+[[gulp-if]]
+=== gulp-if
+
+gulp-ifを使ってgulp-utilのサンプルを書き換えると以下のようになります。
+
+[source,js]
+----
+return gulp.src(src)
+  .pipe($.if(watch, $.plumber()))
+  .pipe($.less())
+  .pipe(gulp.dest(dist));
+----
+
+[[gulp-exit]]
+=== gulp-exit
+
+処理を抜ける。以下はgulp-utilのサンプルに追記したもの。
+
+[source,js]
+----
+return gulp.src(src)
+  .pipe($.less())
+  .pipe(gulp.dest('dist'))
+  .pipe($.if(minify, $.exit()))
+  .pipe($.minifyCss())
+  .pipe($.rename({suffix: '.min'}))
+  .pipe(gulp.dest(dist));
+----
+
+`minify`が`false`のとき、`*.min.css`も出力しています。これを`watch`で使うと監視も停止してしまうので注意が必要です。
+
+[[gulp-exec]]
+=== gulp-exec
+
+shellのコマンドを実行します。
+
+[source,js]
+----
+gulp.src('build.js', {read: false})
+  .pipe($.exec('node <%= file.path %>'));
+----
+
+例えば`node build.js`したときプラグインを使うとビルドが終わるまで待つことなく次のタスクに移行します。ビルドの終了まで待機させたいときには`require('child_process').exec`を使います。
+
+[source,js]
+----
+var exec = require('child_process').exec;
+
+gulp.task('build:metalsmith', function(cb) {
+  exec('node build.js', function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
+});
+----
+
+
+
+[[other]]
+== その他
+
+* gulp-load-plugins
+* gulp-plumber: エラーでwatchがとまるのを防ぐ。gulp-lessのサンプル参照
+* gulp-sourcemaps: ソースマップの作成。gulp-lessのサンプル参照
+* minimist
+* gulp-webserver
+
+[[gulp-load-plugins]]
+=== gulp-load-plugins
+
+`gulp-`や`gulp.`などのプレフィックスがつたパッケージをまとめてロードします。このページのすべてのサンプルで使用しています。
+
+[source,js]
+----
+var $ = require('gulp-load-plugins')();
+----
+
+
+
+[[minimist]]
+=== minimist
+
+コマンドの解析。自分はgulpでオプションを作っても忘れるので使うことはないかな。
+
+[source,js]
+----
+var argv = require('minimist')(process.argv.slice(2));
+var release = !!argv.release;
+
+console.log('[RELEASE]', release);
+----
+
+`gulp --rerease`で`release`がtrueになります。
+
+[[gulp-webserver]]
+=== gulp-webserver
+
+サーバをたてられることに加えてライブロードも可能。
+
+[source,js]
+----
+gulp.task('serve', function() {
+  return gulp.src('build')
+    .pipe($.webserver({
+      livereload: true,
+      directoryListing: true,
+      open: true
+    }));
+----
+
+出力先のフォルダを監視しておけば、ビルド終了後にブラウザを再読み込みしてくれます。
+
+
+
+[[bibliography]]
+== 参照文献
+
+[bibliography]
+* https://github.com/greypants/gulp-starter[gulp-starter]
+* https://medium.com/@sogko/gulp-browserify-the-gulp-y-way-bb359b3f9623[gulp + browserify, the gulp-y way]

@@ -1,0 +1,60 @@
+.admonitionblock {
+  .icon {
+    width: 3.5rem;
+    background-color: #eee;
+    vertical-align: middle;
+
+    .title {
+      font-size: 0;
+      text-align: center;
+
+      &::before {
+        display: inline-block;
+        font-size: 1.5rem;
+        font-family: @font-icon;
+      }
+    }
+  }
+
+  .content {
+    .title {
+      font-size: @font-size-small;
+      font-weight: bold;
+    }
+  }
+
+  &.note {
+    .icon .title::before {
+        content: '\0E14F';
+        color: @base-color2;
+    }
+  }
+
+  &.important {
+    .icon .title::before {
+        content: '\0E614';
+        color: @base-color1;
+    }
+  }
+
+  &.tip {
+    .icon .title::before {
+        content: '\0E869';
+        color: @base-color3;
+    }
+  }
+
+  &.caution {
+    .icon .title::before {
+        content: '\0E000';
+        color: @base-color03;
+    }
+  }
+
+  &.warning {
+    .icon .title::before {
+        content: '\0E002';
+        color: @base-color4;
+    }
+  }
+}

@@ -1,0 +1,240 @@
+---
+title: flexboxのためのLESSを作成する
+description: CSSのflexboxについての解説とflexboxを使うためのLESSファイルの作成をしていきます。
+date: 2015-03-18
+updated: 2015-04-17
+tags: CSS, LESS
+---
+
+PolymerやAngular Material Designでも使われているので、すでになじみのあるであろうflexboxなんだけれども、実際に自分でCSSを書くとなると参考になる文書がまだ少ない印象。XAMLに近い感じで、floatやpositionを使うよりも簡単でわかりやすく柔軟なレイアウトが実現できます。
+
+この記事ではflexboxの学習をしつつLESSの作成をしていきますが、それにあたって参考にするのはlink:https://github.com/Polymer/layout[Polymerのlayout]です。以前は独自の属性を使っていたのだけども、今年になってからクラスベースのものに変更されています。
+
+ベンダプレフィックスはautoprefixerを使用するため、このページではすべて省略しています。
+
+
+
+[[display]]
+== display
+
+[source,less]
+----
+.layout {
+    &.horizontal,
+    &.horizontal-reverse,
+    &.vertical,
+    &.vertical-reverse {
+        display: flex;
+    }
+
+    &.inline {
+        display: inline-flex;
+    }
+}
+----
+
+flexboxを使うための指定です。`flex`と`inline-flex`の違いは`block`と`inline-block`の違いを考えるとわかりやすい。
+
+
+
+[[flex-direction]]
+== flex-direction
+
+[source,less]
+----
+.layout {
+    &.horizontal {
+        flex-direction: row;
+    }
+    &.horizontal-reverse {
+        flex-direction: row-reverse;
+    }
+    &.vertical {
+        flex-direction: column;
+    }
+    &.vertical-reverse {
+        flex-direction: column-reverse;
+    }
+}
+----
+
+子要素の配置される方向、初期値は`row`。`writing mode`によって結果が異なる、つまり文字の流れる方向が左から右かその逆かでレイアウトが変更されるんだけども、基本的に日本語をつかう場面で気にすることはないはず。仕様書では一般的な日本語環境で`flex-direction`が`row`のときの水平方向を`main axis`、垂直方向を`cross axis`と表現されています。
+
+* `row`は指定した要素の子要素が水平方向に並ぶ
+* `row-reverse`にすると並び順のソートが逆になる
+* `column`は指定した要素の子要素が垂直方向に並ぶ
+* `column-reverse`にすると並び順のソートが逆になる
+
+ディスプレイの幅によってこの`row`と`column`を変更する、というのは今後よくみる一般的な手法になるんじゃないおもう。
+
+
+
+[[flex-wrap]]
+== flex-wrap
+
+[source,less]
+----
+.layout {
+    &.wrap {
+        flex-wrap: wrap;
+    }
+    &.wrap-reverse {
+        flex-wrap: wrap-reverse;
+    }
+}
+----
+
+おさまりきらなかった子要素の折り返しの処理方法を指定します。初期値は`no-wrap`で折り返しをせず、一列に収めるようなレイアウトになります。
+
+- `wrap`は子要素を`writing mode`に沿った形で折り返す
+- `wrap-reverse`は子要素を`writing mode`の流れとは逆方向に折り返す
+
+`wrap`は写真のギャラリーのようなものに使うことが多くなりそう。
+
+
+
+[[flex]]
+== flex
+
+[source,less]
+----
+.flex-auto {
+    flex: 1 1 auto;
+}
+.flex-none {
+    flex: none;
+}
+.flex {
+    flex: 1;
+}
+
+.generate-flex(12);
+.generate-flex(@n, @i: 1) when (@i =< @n) {
+    .flex-@{i} {
+        flex: @i;
+    }
+    .generate-flex(@n, (@i + 1));
+}
+----
+
+他言語でこういったレイアウトに親しみがない場合ちょっとわかりにくいかもしれません。左から`flex-grow flex-shrin flex-basis`の順です。
+
+[[flex-grow]]
+=== flex-grow
+
+列に余白ができたとき、空白を埋める子要素の比率です。
+
+初期値が`0`で、これは本来の要素の大きさそのままになります。省略されると`0`ではなく`1`になります。
+
+`1`以上はその要素が余白を埋める比率になる。このあたりは実際に指定してみたほうが理解しやすい。もしXAMLを理解しているのであれば`Grid`の`width`に`1*`や`3*`と指定したときと同じような感じになると考えるとわかりやすい。
+
+[[flex-shrink]]
+=== flex-shrink
+
+`flex-grow`が余白ができたときの指定であれば、こちらは逆に余裕がなくなった場合の指定。`flex-wrap`を`wrap`にすると改行されることになって余裕がなくなることはないので、`flex-wrap`を`no-wrap`のときに必要になる可能性のあるプロパティになるとおもう。
+
+初期値が`1`で、他の子要素に対する比率になる。数値が大きくなるとそのぶん圧縮率が大きくなる、つまり数値が大きいほど要素が小さくなるということ。この圧縮率は`flex-basis`で指定された数値に影響をうけます。
+
+`flex-grow`と同様に`0`にすると本来の要素のサイズを維持します。
+
+[[flex-basis]]
+=== flex-basis
+
+基準になるサイズを指定します。
+
+この値を`auto`にすると`width`もしくは`height`の値が適用される。`flex-direction`が`row`であれば`width`で、`column`であれば`heigth`でmain axisに影響を受けます。
+
+Shorthandで省略されると`0%`になる。なので`flex: 0;`のような記述が単独で使用されることはありえません。
+
+
+
+[[align-items]]
+==  align-items
+
+[source,less]
+----
+.layout {
+    &.start {
+        align-items: flex-start;
+    }
+    &.center,
+    &.center-center {
+        align-items: center;
+    }
+    &.end {
+        align-items: flex-end;
+    }
+}
+----
+
+cross axis方向からの位置を指定します。`flex-direction`が`row`であれば垂直方向で、`column`であれば水平方向の位置ということになる。これはflex containersである`.layout`に指定します。
+
+
+
+[[justify-content]]
+== justify-content
+
+[source,less]
+----
+.layout {
+    &.start-justified {
+        justify-content: flex-start;
+    }
+    &.center-justified,
+    &.center-center {
+        justify-content: center;
+    }
+    &.end-justified {
+        justify-content: flex-end;
+    }
+    &.around-justified {
+        justify-content: space-around;
+    }
+    &.justified {
+        justify-content: space-between;
+    }
+}
+----
+
+main axis方向からの位置を指定します。
+
+- `space-around`は余白ができたときに両サイドを端を含めて均等にスペースをとり、両サイドの端の間隔はコンテンツのスペースの半分になる
+- `space-between`は余白ができたときに均等にスペースをとるが、両サイドの端にはスペースを作らない
+
+
+
+[[align-self]]
+== align-self
+
+[source,less]
+----
+.self-start {
+    align-self: flex-start;
+}
+.self-center {
+    align-self: center;
+}
+.self-end {
+    align-self: flex-end;
+}
+.self-stretch {
+    align-self: stretch;
+}
+----
+
+`align-items`のflex itemsバージョン。`stretch`は余白ができた場合にそれを埋めるように引き伸ばして表示します。
+
+`align-items`にもあるんだけど`baseline`はPolymerのlayoutには用意されていなかったので自分も追加しませんでした。使うような場面も思いつきません。
+
+[IMPORTANT]
+.layout.less
+https://gist.github.com/hbsnow/2f9e817af0514337fb57
+
+
+
+[[bibliography]]
+== 参照文献
+
+[bibliography]
+* http://www.w3.org/TR/css-flexbox-1/[CSS Flexible Box Layout Module Level 1]
+* https://github.com/Polymer/layout[Polymer/layout]

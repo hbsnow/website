@@ -1,0 +1,15 @@
+if title !== site.title
+	header.content-header
+		block breadcrumb
+
+		.content-header-title
+			.container
+				block content_title
+					h1#main-title= title
+
+		block content_meta
+
+.content-body
+	.container
+		block content_body
+			!= contents

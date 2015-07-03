@@ -5,19 +5,45 @@
 
 @font-size-h1: 2.2rem;
 @font-size-h2: 1.8rem;
-@font-size-h3: 1.2rem;
+@font-size-h3: 1.25rem;
 @font-size-h4: 1rem;
 @font-size-h5: 1rem;
 @font-size-h6: 0.85rem;
 
 // font-family
-@font-family-sans-serif: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+@font-family-sans-serif: 'Helvetica Neue', Helvetica, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
 @font-family-serif: Georgia, 'Times New Roman', Times, serif;
-@font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
+@font-family-monospace: 'Migu 2M', 'Migu 1M', NasuM, Menlo, Consolas, monospace;
 @font-family-base: @font-family-sans-serif;
+@font-icon: 'Material Icons';
 
 // line-height
 @line-height-base: 1.5;
 
 // baseline
 @baseline: 1.5rem;
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}

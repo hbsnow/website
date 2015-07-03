@@ -1,0 +1,31 @@
+{
+  "src": "src/",
+  "dist": "dist/",
+  "build": "build/",
+
+  "metalsmith": {
+    "src": "src/html/"
+  },
+
+  "less": {
+    "src": "src/styles/",
+    "dist": "dist/styles/"
+  },
+
+  "css": {
+    "dist": "dist/styles/",
+    "build": "build/styles/"
+  },
+
+  "js": {
+    "src": "src/scripts/",
+    "dist": "dist/scripts/",
+    "build": "build/scripts/"
+  },
+
+  "assets": {
+    "src": "src/assets/",
+    "dist": "dist/",
+    "build": "build/"
+  }
+}

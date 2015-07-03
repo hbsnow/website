@@ -1,0 +1,105 @@
+// Monokai Phoenix
+pre.highlight {
+  // prefix
+  @lang: language-;
+
+  // color
+  @base0: #111;
+  @base00: #F8F8F2;
+  @base01: #75715E;
+  @base02: #CFCFC2;
+  @base03: #E6DB74;
+  @base04: #AE81FF;
+  @base05: #F92672;
+  @base06: #66D9EF;
+  @base07: #A6E22E;
+  @base08: #FD971F;
+
+  background: @base0;
+  color: @base00;
+
+  .comment {
+    color: @base01;
+  }
+
+  .string {
+    color: @base03;
+  }
+
+  .keyword {
+    color: @base06;
+  }
+
+  .tag {
+    color: @base05;
+  }
+
+  .attr-name {
+    color: @base07;
+  }
+
+  .attr-value {
+    color: @base03;
+  }
+
+  .selector {
+     color: @base07;
+  }
+
+  .property {
+    color: @base06;
+  }
+
+  .number {
+    color: @base04;
+  }
+
+  .operator {
+    color: @base05;
+  }
+
+  .@{lang}html,
+  .@{lang}xml {
+    .tag {
+      > .punctuation {
+        color: @base00;
+      }
+    }
+  }
+
+
+  .@{lang}adoc {
+    .attributes {
+      color: @base07;
+    }
+  }
+
+  .@{lang}jade {
+    .tag {
+      > .punctuation {
+        color: @base00;
+      }
+
+      + .punctuation {
+        color: @base04;
+      }
+    }
+
+    .attributes {
+      color: @base00;
+      > .punctuation {
+        &:first-child,
+        &:last-child {
+          color: @base04;
+        }
+      }
+    }
+  }
+
+  .@{lang}less {
+    .operator {
+      color: @base00;
+    }
+  }
+
+}

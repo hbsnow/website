@@ -3,7 +3,9 @@ code, kbd, pre, samp, var {
 }
 
 code {
-  padding: 0 .2rem;
+  padding-left: 4px;
+  padding-right: 4px;
+  border-radius: @border-radius-small;
   color: @code-color;
 
   a & {
@@ -29,7 +31,7 @@ kbd {
 }
 
 pre {
-  line-height: 1.1;
+  line-height: 1.3;
   color: @pre-color;
   background-color: @pre-bgcolor;
   font-size: @font-size-small;
@@ -44,8 +46,10 @@ pre {
     background-color: transparent;
     white-space: pre;
   }
+}
 
-  @media (min-width: @screen-sm-min) {
+@media (min-width: @screen-sm-min) {
+  .sectionbody > .listingblock > .content > pre {
     position: relative;
     width: 100%;
     overflow-y: none;
@@ -59,3 +63,4 @@ pre {
     }
   }
 }
+

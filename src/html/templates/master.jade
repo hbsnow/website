@@ -1,0 +1,20 @@
+doctype html
+html(lang='ja', ng-app='mainApp')
+	head(prefix="og: http://ogp.me/ns#")
+		include partial/head
+
+	body
+		.layout.vertical
+			header#header.flex-none
+				include partial/header
+
+			main.flex-auto
+				div(ui-view)
+					!= contents
+
+			footer#footer.flex-none
+				include partial/footer
+
+			pageloader
+
+		include partial/javascript

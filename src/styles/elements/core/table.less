@@ -12,7 +12,9 @@ th {
 table {
   width: 100%;
   max-width: 100%;
+  border-collapse: collapse;
   border: 1px solid @table-border-color;
+  background-color: @table-bgcolor;
   margin-bottom: @baseline;
 
   > thead,
@@ -38,14 +40,10 @@ table {
   }
 
   > thead > tr {
-    > th {
+    > th, td {
       vertical-align: bottom;
-      border-bottom: 2px solid @table-border-color;
-    }
-
-    > th,
-    > td {
-      border-bottom-width: 2px;
+      background-color: @theme-color3;
+      color: @text-muted;
     }
   }
 
