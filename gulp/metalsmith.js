@@ -17,7 +17,7 @@ gulp.task('build:metalsmith', function(cb) {
 gulp.task('dist:metalsmith', function(cb) {
   gulp.src(paths.metalsmith.src + 'dist/**/*')
     .pipe(gulp.dest(paths.dist))
-    .on('finish', function() {
+    .on('end', function() {
       cb();
     });
 });

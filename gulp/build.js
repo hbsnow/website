@@ -105,7 +105,8 @@ gulp.task('dist', ['clean:dist'], function(cb) {
 
 gulp.task('build', ['clean'], function(cb) {
   runSequence(
-    ['metalsmith', 'webpack', 'dist:less', 'dist:js'],
+    'metalsmith',
+    ['webpack', 'dist:less', 'dist:js'],
     'critical',
     ['build:html', 'build:js', 'build:css', 'build:assets'],
     cb
