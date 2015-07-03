@@ -14,9 +14,12 @@ gulp.task('build:metalsmith', function(cb) {
   });
 });
 
-gulp.task('dist:metalsmith', function() {
-  return gulp.src(paths.metalsmith.src + 'dist/**/*')
-    .pipe(gulp.dest(paths.dist));
+gulp.task('dist:metalsmith', function(cb) {
+  gulp.src(paths.metalsmith.src + 'dist/**/*')
+    .pipe(gulp.dest(paths.dist))
+    .on('finish', function() {
+      cb();
+    });
 });
 
 gulp.task('metalsmith', function(cb) {
