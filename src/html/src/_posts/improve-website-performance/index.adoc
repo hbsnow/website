@@ -4,7 +4,6 @@ description: gulpでwebpackを使ってJavaScriptをビルドする方法の解�
 date: 2015-07-04
 updated:
 tags: JavaScript, CSS, gulp, AngularJS
-draft: true
 ---
 
 以前はGoogle Driveからテキストデータをもってきていたのでつかっていたpreloaderも静的サイトになり無用の長物となったので、その排除をするついでにある程度はパフォーマンスを向上させていきたいとおもいます。
@@ -224,7 +223,7 @@ AngularJSとその関連ライブラリにはCDNを利用することにした�
 .CloudFlareのCNAME FlatteningをGitHub Pagesで使ってみた
 http://d.hatena.ne.jp/hnw/20150301
 
-上記のサイトの手順通りにDNSの設定を行います。CDNはGitHub Pagesがやってくれているようなので、自分もCloudFlareの設定は無効にしておきました。
+上記のサイトの手順通りにDNSの設定を行います。
 
 あとはSSLの設定になりますがおそらくデフォルトでSSLの設定も有効になっているはずです。実際に有効になるには少し時間がかかるようですが、このサイトは一日まったくらいで有効になっていた気がします。ただこのSSLの設定をしてしまうと一部の環境でサイトの閲覧ができなくなるので注意が必要です。
 
