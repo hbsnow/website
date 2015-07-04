@@ -4,6 +4,7 @@ description: gulpでwebpackを使ってJavaScriptをビルドする方法の解�
 date: 2015-07-04
 updated:
 tags: JavaScript, CSS, gulp, AngularJS
+draft: true
 ---
 
 以前はGoogle Driveからテキストデータをもってきていたのでつかっていたpreloaderも静的サイトになり無用の長物となったので、その排除をするついでにある程度はパフォーマンスを向上させていきたいとおもいます。
