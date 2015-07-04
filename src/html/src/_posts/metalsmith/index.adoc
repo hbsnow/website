@@ -140,7 +140,7 @@ template: post.jade
 これはテスト投稿です。
 ----
 
-このAsciiDocの上部にある`---`で囲まれている部分がYAML front-matterです。テンプレートを使う場合にはここのメタデータにtemplateを追加して、テンプレートに使うファイルを指定するだけになります。
+このAsciiDocの上部にある`---`で囲まれている部分がYAML front-matterになります。テンプレートを使う場合にはここのメタデータにtemplateを追加して、テンプレートに使うファイルを指定するだけです。
 
 ただブログの記事のようにそのフォルダ内すべてでかならず共通になるメタデータをすべてのファイルに記述するのは面倒なので、そういったときにはmetalsmith-filemetadataをつかうのがおすすめ。
 
@@ -197,6 +197,8 @@ gulp.task('build:metalsmith', function() {
   });
 });
 ----
+
+
 
 [[gh-pages]]
 == GitHub Pagesで公開する

@@ -18,7 +18,7 @@ tags: PHP, Laravel, heroku
 今回は当時使っていたherokuにLaravel製のブログをアップロードする方法の解説です。
 
 [IMPORTANT]
-.blog-laravel5
+.hbsnow-sandbox/blog-laravel5
 https://github.com/hbsnow-sandbox/blog-laravel5
 
 

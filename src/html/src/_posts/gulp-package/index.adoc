@@ -20,6 +20,7 @@ gulpで使うプラグインは毎回大体同じなので、よく使うもの�
 * gulp-rename
 * gulp-gzip: gzipに圧縮
 * gulp-concat: ファイルの結合
+* gulp-useref: HTMLで指定されたファイルを結合
 
 [[require-dir]]
 === require-dir
@@ -80,14 +81,9 @@ gulp.task('css', function() {
 == HTML
 
 * gulp-jade: JadeをHTMLに変換する
-* gulp-inline-source
+* gulp-inline-source: link:../improve-website-performance/[サイトパフォーマンスを向上させる]を参照
 * gulp-minify-html: HTMLのminify
 * gulp-cheerio
-
-[[gulp-inline-source]]
-=== gulp-inline-source
-
-外部CSS、JavaScriptをHTMLの`head`内に埋め込みます。Tumblrなどのテーマだったり、404などのエラーページでファイルを一つにまとめてしまいたいときに便利。
 
 [[gulp-cheerio]]
 === gulp-cheerio
@@ -117,9 +113,9 @@ gulp.task('move', function() {
 [[gulp-javascript]]
 == JavaScrpt
 
-* browserify: http://4uing.net/blog/gulp-browserify/[gulpでBrowserifyを使う]を参照
-* watchify: http://4uing.net/blog/gulp-browserify/[gulpでBrowserifyを使う]を参照
-* webpack-stream: http://4uing.net/blog/gulp-webpack/[gulpでWebPackを使う]を参照
+* browserify: link:../gulp-browserify/[gulpでBrowserifyを使う]を参照
+* watchify: link:../gulp-browserify/[gulpでBrowserifyを使う]を参照
+* webpack-stream: link:../gulp-webpack/[gulpでWebPackを使う]を参照
 * gulp-uglify: minify
 * gulp-jshint
 * jshint-stylish
@@ -145,26 +141,7 @@ gulp.task('jshint', function () {
 [[AngularJS]]
 == AngularJS
 * gulp-angular-templatecache: テンプレートファイルを$templateCacheにする
-* gulp-ng-annotate
-
-[[gulp-ng-annotate]]
-=== gulp-ng-annotate
-
-AngularJSでuglifyしても問題ないようにアノテーションを追加してくれます。
-
-[source,js]
-----
-angular.module("app").controller("MyCtrl", function($scope) {});
-----
-
-これが次のようになります。
-
-[source,js]
-----
-angular.module("app").controller("MyCtrl", ["$scope", function($scope) {}]);
-----
-
-自分でアノテーションを書くのは面倒なのでAngularJSを使うときにはこれを使うこともあります。
+* gulp-ng-annotate: アノテーションを追加する
 
 
 
@@ -174,7 +151,7 @@ angular.module("app").controller("MyCtrl", ["$scope", function($scope) {}]);
 * gulp-less
 * gulp-autoprefixer: ベンダプレフィックスをつける
 * gulp-minify-css: minify
-
+* critical: link:../improve-website-performance/[サイトパフォーマンスを向上させる]を参照
 
 [[gulp-less]]
 === gulp-less

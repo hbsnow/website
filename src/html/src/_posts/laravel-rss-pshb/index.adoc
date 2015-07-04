@@ -10,6 +10,10 @@ Laravel5でRSS1.0とsitemap.xmlを配信してみます。
 
 http://localdisk.hatenablog.com/entry/2014/01/27/Response%3A%3Axml_macro_%E3%82%92%E4%BD%9C%E3%81%A3%E3%81%9F%E3%82%88[Response::xml macro を作ったよ - localdisk]を参考にすると、名前空間と属性を使う必要のないRSS2.0と名前空間をルートに指定するだけでいいAtomであれば簡単に作成できるはずなので、わざわざRSS1.0にしなくても素直にAtomを使っておけばいいとおもう。
 
+[IMPORTANT]
+.hbsnow-sandbox/blog-laravel5
+https://github.com/hbsnow-sandbox/blog-laravel5
+
 
 
 [[migration]]
@@ -20,7 +24,7 @@ http://localdisk.hatenablog.com/entry/2014/01/27/Response%3A%3Axml_macro_%E3%82%
 php artisan migrate:make articles_setup_table
 ----
 
-マイグレーションから作る。このブログで使っているものといまのところまったく同じ。今回のブログでは公開日と`create_at`が等価なので公開日にあたるキーは作成しません。
+公開日と`create_at`が等価なので公開日にあたるキーは作成しません。
 
 [source,php]
 ----

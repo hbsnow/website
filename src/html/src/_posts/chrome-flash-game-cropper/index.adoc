@@ -35,7 +35,7 @@ Google Extensionには大きく分けると以下の二種類に分類できま�
 
 Google Extensionには`manifest.json`が必須です。
 
-`default_locale`がRecommendedになってるけど言語用のフォルダを作らないとエラーになるので、他言語対応する気がそもそもまったくないのであればいらないとおもいます。
+`default_locale`がRecommendedになっていますが言語用のフォルダを作らないとエラーになるので、他言語対応する気がそもそもまったくないのであればいらないとおもいます。
 
 [source,json]
 ----
@@ -73,9 +73,9 @@ Google Extensionには`manifest.json`が必須です。
 }
 ----
 
-今回の`manifest.json`はこんな感じ。link:https://developer.chrome.com/extensions/declare_permissions[permissions]はAPIに必要になるpermissionsが書かれている。最初は何を指定していいかわからなくて困るところなんだけど、実際に作っていくと使うものはそれほど多くならないのでわかりにくいものではない。APIを見ながらその都度チェックするでもいいし、漏れがあってもデバック中に権限が足りませんという親切なエラーがでるのでそんなに問題にはなりません。エラーメッセージで検索すると直球の答えは簡単に見つかるはず。
+今回の`manifest.json`はこんな感じ。link:https://developer.chrome.com/extensions/declare_permissions[permissions]はAPIに必要になるpermissionsが書かれています。最初は何を指定していいかわからなくて困るところですが、実際に作っていくと使うものはそれほど多くならないのでわかりにくいものでははずです。APIを見ながらその都度チェックするでもいいし、漏れがあってもデバック中に権限が足りませんという親切なエラーがでるのでそんなに問題にはなりません。エラーメッセージで検索すると直球の答えは簡単に見つかるはず。
 
-URLの指定方法はlink:https://developer.chrome.com/extensions/match_patterns[Match Patterns]で確認できる。`captureVisibleTab`を使う予定だったので`<all_urls>`が指定されているんだけど、結局完成したときには使ってないので実際に使うのであれば変更しておいたほうがパフォーマンスがよくなったりするかもしれません。
+URLの指定方法はlink:https://developer.chrome.com/extensions/match_patterns[Match Patterns]で確認できます。`captureVisibleTab`を使う予定だったので`<all_urls>`が指定されていますが、結局完成したときには使ってないので実際に使うのであれば変更しておいたほうがパフォーマンスがよくなったりするかもしれません。
 
 `content_security_policy`に書かれているのはJavaScript内で`eval`を使用するための指定で、Lo-Dashなどのライブラリを使うときにも指定が必要になります。今回ライブラリは使っていないのですが`eval`を使ったので指定しています。
 
@@ -84,7 +84,7 @@ URLの指定方法はlink:https://developer.chrome.com/extensions/match_patterns
 [[background]]
 == background
 
-backgroundで指定されたファイルはChromeの起動時に実行されます。`"persistent": false`とすると必要なときにだけ実行するようになるらしいので、先述したURLの指定のパフォーマンスの話はここで関係してきそうな感じがするんだけど、まったく調べてないので全然関係ないかもしれません。
+backgroundで指定されたファイルはChromeの起動時に実行されます。`"persistent": false`とすると必要なときにだけ実行するようになるようです。
 
 [source,js]
 ----
@@ -112,15 +112,15 @@ page_actionの場合にはbackgroundから`chrome.pageAction.show`でアイコ�
 ----
 function setScript(tabId, js) {
   chrome.tabs.executeScript(tabId, {
-  file: 'js/common.js'
+    file: 'js/common.js'
   }, function() {
-  if(Array.isArray(js)) {
-    js.forEach(function(element) {
-      chrome.tabs.executeScript(tabId, {
-        file: element
+    if(Array.isArray(js)) {
+      js.forEach(function(element) {
+        chrome.tabs.executeScript(tabId, {
+          file: element
+        });
       });
-    });
-  }
+    }
   });
 }
 ----
@@ -129,7 +129,7 @@ JavaScriptのファイルが複数あって、例えば`element`で指定され�
 
 CSSの挿入には`chrome.tabs.insertCSS`を使う。使い方は`chrome.tabs.executeScript`とほとんど同じです。
 
-埋め込まれたJavaScriptとbackgroundとの受け渡しには、`chrome.runtime.onMessage.addListener`を使う。例えば`js/common.js`からbackgroundで動作する`background.js`にメッセージを渡したいときには以下のようにします。
+埋め込まれたJavaScriptとbackgroundとの受け渡しには、`chrome.runtime.onMessage.addListener`を使います。例えば`js/common.js`からbackgroundで動作する`background.js`にメッセージを渡したいときには以下のようにします。
 
 [source,js]
 ----
