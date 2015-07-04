@@ -14,7 +14,7 @@ var paths = require('./config/gulp-paths.json');
  * HTML
  */
 
-gulp.task('build:html', function(cb) {
+gulp.task('build:html', ['critical'], function(cb) {
   return gulp.src(paths.dist + '**/*.html')
     .pipe($.useref())
     .pipe($.inlineSource())
@@ -73,7 +73,8 @@ gulp.task('dist:less', function() {
  * CSS
  */
 
-gulp.task('critical', function(cb) {
+gulp.task('critical', ['metalsmith', 'webpack', 'dist:less', 'dist:js'],
+function(cb) {
   critical.generate({
     base: paths.dist,
     src: 'index.html',
@@ -104,13 +105,7 @@ gulp.task('dist', ['clean:dist'], function(cb) {
 });
 
 gulp.task('build', ['clean'], function(cb) {
-  runSequence(
-    'metalsmith',
-    ['webpack', 'dist:less', 'dist:js'],
-    'critical',
-    ['build:html', 'build:js', 'build:css', 'build:assets'],
-    cb
-  );
+  runSequence(['build:html', 'build:js', 'build:css', 'build:assets'], cb);
 });
 
 
