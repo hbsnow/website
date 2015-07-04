@@ -1,10 +1,10 @@
-module.exports = function($state, $animate) {
+var icon = module.exports = function($state, $animate) {
   return {
     restrict: 'E',
     link: function(scope, element, attribute) {
       element.html('<div class="icon"><span>' + attribute.alt + '</span></div>');
 
-      if(attribute.click === 'true') {
+      if (attribute.click === 'true') {
         element.bind('click', function() {
           element.toggleClass('active');
         });
@@ -12,3 +12,6 @@ module.exports = function($state, $animate) {
     }
   };
 };
+icon.$inject = ['$state', '$animate'];
+
+module.exports = icon;

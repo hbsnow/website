@@ -15,6 +15,8 @@
     "url": "https://github.com/hbsnow/4uing.net.git"
   },
   "dependencies": {
+    "babel-core": "^5.6.15",
+    "babel-loader": "^5.3.0",
     "critical": "^0.5.7",
     "del": "^1.2.0",
     "gulp": "^3.9.0",
@@ -52,6 +54,7 @@
     "object-assign": "^3.0.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.1.0",
+    "webpack": "^1.10.1",
     "webpack-stream": "^2.0.0"
   }
 }

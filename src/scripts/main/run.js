@@ -1,7 +1,8 @@
-module.exports = function($rootScope, $urlRouter, $state, $stateParams) {
-  //$rootScope.$state = $state;
-  //$rootScope.$stateParams = $stateParams;
+var run = function($rootScope, $urlRouter) {
   $rootScope.$on('$locationChangeSuccess', function() {
     $urlRouter.listen();
   });
 };
+run.$inject = ['$rootScope', '$urlRouter'];
+
+module.exports = run;

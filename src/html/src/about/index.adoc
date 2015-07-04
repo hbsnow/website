@@ -7,7 +7,7 @@ template: content.jade
 [[about-site]]
 == サイトについて
 
-このサイトはウェブ制作やプログラムについて公開する、最新技術を取り入れることを目的とした実験的なサイトです。そのため最新の環境でなければ正しく表示されないことや、比較的新しい環境であっても単純なエラーが発生することもあるかもしれません。もし何かお気づきのことがあればlink:#contact[作者までご連絡]頂ければ幸いです。
+このサイトはウェブ制作やプログラムについて公開する、最新技術を取り入れることを目的とした実験的なサイトです。そのため最新の環境でなければ正しく表示されないことや、比較的新しい環境であっても単純なエラーが発生することもあるかもしれません。もし何かお気づきのことがあればlink:#about-contact[作者までご連絡]頂ければ幸いです。
 
 サイトには以下のジェネレータやフレームワーク、サービスが使用されています。
 
@@ -21,7 +21,9 @@ template: content.jade
 
 またサイトを生成するために使われているコードはGitHubで公開しています。
 
-- https://github.com/hbsnow/4uing.net[hbsnow/4uing.net]
+[IMPORTANT]
+.4uing.net
+https://github.com/hbsnow/4uing.net
 
 
 
@@ -37,7 +39,7 @@ template: content.jade
 
 
 
-[[contact]]
+[[about-contact]]
 == お問い合わせ
 
 なにかございましたら、link:mailto:yuki.4uing@gmail.com[yuki.4uing@gmail.com]までご連絡ください。

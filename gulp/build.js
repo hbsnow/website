@@ -34,6 +34,7 @@ gulp.task('build:tpl', function() {
 gulp.task('webpack', function() {
   return gulp.src(paths.js.src + 'main.js')
     .pipe(webpack(require('./config/webpack.config.js')))
+    .pipe($.uglify())
     .pipe(gulp.dest(paths.js.dist))
     .pipe($.size());
 });
@@ -81,10 +82,15 @@ gulp.task('dist:less', function() {
 gulp.task('critical', ['metalsmith', 'dist:less'], function(cb) {
   critical.generate({
     base: paths.dist,
-    src: 'index.html',
+    src: 'blog/gulp-package/index.html',
     dest: 'styles/critical.css',
-    width: 320,
-    height: 480,
+    dimensions: [{
+      width: 320,
+      height: 480,
+    }, {
+      width: 1300,
+      height: 900
+    }],
     minify: true
   }, function(err, output) {
     if (err) {

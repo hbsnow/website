@@ -1,4 +1,4 @@
-module.exports = function($state, $animate, $injector, $location) {
+var pageloader = module.exports = function($state, $animate, $injector) {
   return {
     restrict: 'E',
     template: require('./pageloader.jade'),
@@ -8,14 +8,13 @@ module.exports = function($state, $animate, $injector, $location) {
 
       scope.$on('$stateChangeStart',
       function(event, toState, toParams, fromState, fromParams) {
-        if(!document.getElementsByTagName('preloader')[0]) {
+        if (!document.getElementsByTagName('preloader')[0]) {
           $animate.enter(element[0], parent, document.getElementById('footer'));
         }
       });
 
-      scope.$on('$viewContentLoaded',
-      function(event) {
-        if(!document.getElementsByTagName('preloader')[0]) {
+      scope.$on('$viewContentLoaded', function(event) {
+        if (!document.getElementsByTagName('preloader')[0]) {
           window.scroll(0, 0);
           $animate.leave(element[0]);
         }
@@ -30,3 +29,6 @@ module.exports = function($state, $animate, $injector, $location) {
     }
   };
 };
+pageloader.$inject = ['$state', '$animate', '$injector'];
+
+module.exports = pageloader;

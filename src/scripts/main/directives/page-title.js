@@ -1,4 +1,4 @@
-module.exports = function($state) {
+var pageTitle = module.exports = function($state) {
   return {
     restrict: 'A',
     link: function(scope, element) {
@@ -10,18 +10,17 @@ module.exports = function($state) {
         var current = $state.current.data.pageTitle;
         title = '4uing';
 
-        if(current === void 0) {
+        if (current === void 0) {
           title = loading;
-        } else if(current !== 'Home') {
+        } else if (current !== 'Home') {
           title = current + ' | ' + title;
         }
 
         element.html(title);
       });
 
-      scope.$on('$viewContentLoaded',
-      function(event) {
-        if(title === loading) {
+      scope.$on('$viewContentLoaded', function(event) {
+        if (title === loading) {
           title = document.querySelector('#main-title').childNodes[0].nodeValue;
           element.html(title + ' | 4uing');
         }
@@ -29,3 +28,6 @@ module.exports = function($state) {
     }
   };
 };
+pageTitle.$inject = ['$state'];
+
+module.exports = pageTitle;

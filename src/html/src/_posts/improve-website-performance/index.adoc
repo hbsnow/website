@@ -4,12 +4,17 @@ description: gulpでwebpackを使ってJavaScriptをビルドする方法の解�
 date: 2015-07-04
 updated:
 tags: JavaScript, CSS, gulp, AngularJS
-draft: true
 ---
 
 以前はGoogle Driveからテキストデータをもってきていたのでつかっていたpreloaderも静的サイトになり無用の長物となったので、その排除をするついでにある程度はパフォーマンスを向上させていきたいとおもいます。
 
-最終的な目標はlink:https://developers.google.com/speed/pagespeed/insights/[PageSpeed Insights]のモバイル対象で90点以上を獲得することです。
+最終的な目標はlink:https://developers.google.com/speed/pagespeed/insights/[PageSpeed Insights]で極力警告がでないようにすることです。
+
+[IMPORTANT]
+.hbsnow/4uing.net
+https://github.com/hbsnow/4uing.net
+
+対象のサイトといってもこのサイトになるのですが、生成のために使用されているすべてのコードはgithubで公開しています。
 
 
 
@@ -180,7 +185,9 @@ gulp.task('critical', function(cb) {
 
 ファイルの出力をまたなくていいのであればcallbackは不要ですが、今回はこの出力の後にgulp-inline-sourceを実行させるので必要になります。
 
-すべてのHTMLファイルを対象にするわけにはいかないので、トップページを対象にしました。CSSファイルを指定することもできるますが、すでにHTMLに記述してある場合には省略することができるので省略しています。`width`と`height`はviewportの設定になるので変更が必要であれば変更してください。
+すべてのHTMLファイルを対象にするわけにはいかないので、サンプルではトップページを対象にしました。実際に対象にするページがどこになるかはサイトによって変わってくるとおもいます。このサイトではおそらく一番最初にアクセスされる可能性が高いと考えられるブログの記事のページを対象にしました。
+
+対象にするCSSファイルを指定することもできますが、すでにHTMLに記述してある場合には省略することができるので省略しています。`width`と`height`はviewportの設定になるので変更が必要であれば変更してください。
 
 [source,html]
 ----
@@ -191,7 +198,7 @@ gulp.task('critical', function(cb) {
 </noscript>
 ----
 
-HTMLには出力された`critical.css`をインラインに埋め込むように`inline`を指定しておきます。すべてのCSSはJavaScriptで非同期に読み込ませるので、JavaSciript無効時のための記述も追加しています。
+HTMLには出力された`critical.css`をインラインに埋め込むように`inline`を指定しておきます。すべてのCSSはJavaScriptで非同期に読み込ませるので、JavaSciript無効時のために`<noscript>`内でCSSを読み込ませる記述も追加しています。
 
 [source,js]
 ----
