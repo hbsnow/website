@@ -14,9 +14,14 @@ var paths = require('./config/gulp-paths.json');
  * HTML
  */
 
-gulp.task('build:html', ['critical', 'webpack', 'dist:js'], function(cb) {
+gulp.task('build:html', ['metalsmith', 'dist:css'], function() {
   return gulp.src(paths.dist + '**/*.html')
     .pipe($.inlineSource())
+    .pipe(gulp.dest(paths.build));
+});
+
+gulp.task('build:tpl', function() {
+  return gulp.src(paths.dist + '**/*.tpl')
     .pipe(gulp.dest(paths.build));
 });
 
@@ -72,6 +77,7 @@ gulp.task('dist:less', function() {
  * CSS
  */
 
+// criticalがwerckerでエラーを吐くのでローカルで出力しておく
 gulp.task('critical', ['metalsmith', 'dist:less'], function(cb) {
   critical.generate({
     base: paths.dist,
@@ -89,6 +95,17 @@ gulp.task('critical', ['metalsmith', 'dist:less'], function(cb) {
   });
 });
 
+gulp.task('generate:critical', ['critical'], function() {
+  return gulp.src(paths.css.dist + 'critical.css')
+    .pipe(gulp.dest(paths.assets.src + 'styles/'))
+    .pipe($.size());
+});
+
+gulp.task('dist:css', function() {
+  return gulp.src(paths.assets.src + 'styles/**/*.css')
+    .pipe(gulp.dest(paths.css.dist))
+    .pipe($.size());
+});
 
 gulp.task('build:css', function() {
   return gulp.src(paths.css.dist + 'main.css')
@@ -105,12 +122,16 @@ gulp.task('build:css', function() {
 
 gulp.task('dist', ['clean:dist'], function(cb) {
   runSequence(
-    ['metalsmith', 'webpack', 'dist:less', 'dist:assets', 'dist:js'], cb
+    ['generate:critical', 'webpack', 'dist:assets', 'dist:js'], cb
   );
 });
 
 gulp.task('build', ['clean'], function(cb) {
-  runSequence('build:html', ['build:js', 'build:css', 'build:assets'], cb);
+  runSequence(
+    ['build:html', 'dist:less', 'webpack', 'dist:js'],
+    ['build:tpl', 'build:js', 'build:css', 'build:assets'],
+    cb
+  );
 });
 
 

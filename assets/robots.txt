@@ -1,0 +1,4 @@
+User-Agent: *
+Disallow: /*.tpl
+
+Sitemap: https://4uing.net/sitemap.xml

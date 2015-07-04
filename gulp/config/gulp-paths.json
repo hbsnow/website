@@ -24,7 +24,7 @@
   },
 
   "assets": {
-    "src": "src/assets/",
+    "src": "assets/",
     "dist": "dist/",
     "build": "build/"
   }
