@@ -14,9 +14,8 @@ var paths = require('./config/gulp-paths.json');
  * HTML
  */
 
-gulp.task('build:html', ['critical'], function(cb) {
+gulp.task('build:html', ['critical', 'webpack', 'dist:js'], function(cb) {
   return gulp.src(paths.dist + '**/*.html')
-    .pipe($.useref())
     .pipe($.inlineSource())
     .pipe(gulp.dest(paths.build));
 });
@@ -73,8 +72,7 @@ gulp.task('dist:less', function() {
  * CSS
  */
 
-gulp.task('critical', ['metalsmith', 'webpack', 'dist:less', 'dist:js'],
-function(cb) {
+gulp.task('critical', ['metalsmith', 'dist:less'], function(cb) {
   critical.generate({
     base: paths.dist,
     src: 'index.html',
@@ -82,8 +80,15 @@ function(cb) {
     width: 320,
     height: 480,
     minify: true
-  }, cb.bind(cb));
+  }, function(err, output) {
+    if (err) {
+      console.log(err);
+    }
+
+    cb();
+  });
 });
+
 
 gulp.task('build:css', function() {
   return gulp.src(paths.css.dist + 'main.css')
@@ -105,7 +110,7 @@ gulp.task('dist', ['clean:dist'], function(cb) {
 });
 
 gulp.task('build', ['clean'], function(cb) {
-  runSequence(['build:html', 'build:js', 'build:css', 'build:assets'], cb);
+  runSequence('build:html', ['build:js', 'build:css', 'build:assets'], cb);
 });
 
 
