@@ -195,7 +195,7 @@ HTMLには出力された`critical.css`をインラインに埋め込むよう�
 
 [source,js]
 ----
-gulp.task('build:html', function(cb) {
+gulp.task('build:html', function() {
   return gulp.src(paths.dist + '**/*.html')
     .pipe($.inlineSource())
     .pipe(gulp.dest(paths.build));
@@ -203,6 +203,8 @@ gulp.task('build:html', function(cb) {
 ----
 
 あとはgulp-inline-sourceを実行するだけです。
+
+ただどうもwerckerでビルドさせようとするとローカルでは問題なく動くcriticalが、`phantomjs process exited with code 127`のエラーを吐いてビルドができなかったので、`critaical.css`はローカルで出力させています。
 
 
 
