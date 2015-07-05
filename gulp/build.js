@@ -20,8 +20,8 @@ gulp.task('build:html', ['metalsmith', 'dist:css'], function() {
     .pipe(gulp.dest(paths.build));
 });
 
-gulp.task('build:tpl', function() {
-  return gulp.src(paths.dist + '**/*.tpl')
+gulp.task('build:xml', function() {
+  return gulp.src(paths.dist + '**/*.{xml,rdf,rss,tpl}')
     .pipe(gulp.dest(paths.build));
 });
 
@@ -135,7 +135,7 @@ gulp.task('dist', ['clean:dist'], function(cb) {
 gulp.task('build', ['clean'], function(cb) {
   runSequence(
     ['build:html', 'dist:less', 'webpack', 'dist:js'],
-    ['build:tpl', 'build:js', 'build:css', 'build:assets'],
+    ['build:xml', 'build:image', 'build:js', 'build:css', 'build:assets'],
     cb
   );
 });
@@ -153,5 +153,18 @@ gulp.task('dist:assets', function() {
 
 gulp.task('build:assets', function() {
   return gulp.src(paths.assets.src + '**/*')
+    .pipe(gulp.dest(paths.assets.build))
+});
+
+
+
+/**
+ * Image
+ */
+
+gulp.task('build:image', function() {
+  var src = [paths.dist + '**/*.{png,jpg,svg}'];
+
+  return gulp.src(src)
     .pipe(gulp.dest(paths.assets.build))
 });
