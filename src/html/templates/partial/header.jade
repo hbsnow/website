@@ -1,10 +1,11 @@
-h1#site-title
-	a(href='/', ui-sref='home')= site.title
+.container.layout.horizontal
+	h1#site-title.flex-none
+		a(href='/', ui-sref='home')= site.title
 
-nav#header-menu
-	icon(css-icon='menu', alt='Menu', click='true')
+	nav#header-menu.flex-auto
+		icon(css-icon='menu', alt='Menu', click='true')
 
-	ul
-		li: a(href='/blog/') Blog
-		//- li: a(href='/work/') Work
-		li: a(href='/about/') About
+		ul
+			li: a(href='/blog/') Blog
+			//- li: a(href='/work/') Work
+			li: a(href='/about/') About

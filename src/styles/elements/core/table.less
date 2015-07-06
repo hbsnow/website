@@ -1,7 +1,14 @@
+@import "../../configs/color";
+@import "../../configs/size";
+
+@table-bgcolor: @base-color2;
+@table-head-bgcolor: @base-color3;
+@table-border-color: @border-color;
+
 caption {
   padding-top: @baseline;
-  padding-bottom: @baseline;
   color: @text-muted;
+  font-size: @font-size-small;
   text-align: left;
 }
 
@@ -42,7 +49,7 @@ table {
   > thead > tr {
     > th, td {
       vertical-align: bottom;
-      background-color: @theme-color3;
+      background-color: @table-head-bgcolor;
       color: @text-muted;
     }
   }

@@ -1,15 +1,20 @@
+@import "../configs/size";
+
 .container {
   margin-left: auto;
   margin-right: auto;
-  padding-left: @baseline;
-  padding-right: @baseline;
+  padding-left: 10px;
+  padding-right: 10px;
 
   @media (min-width: @screen-sm-min) {
-    width: @container-sm;
+    padding-left: @baseline;
+    padding-right: @baseline;
   }
+
   @media (min-width: @screen-md-min) {
     width: @container-md;
   }
+
   @media (min-width: @screen-lg-min) {
     width: @container-lg;
   }

@@ -1,60 +1,72 @@
+@import "../configs/font-family";
+@import "../configs/size";
+
+@admonitionblock-icon-bgcolor: #eee;
+@admonitionblock-note-color: #00BCD4;
+@admonitionblock-important-color: #8BC34A;
+@admonitionblock-tip-color: #FFC107;
+@admonitionblock-caution-color: #FF6F00;
+@admonitionblock-warning-color: #F44336;
+
 .admonitionblock {
-  .icon {
-    width: 3.5rem;
-    background-color: #eee;
-    vertical-align: middle;
+  td {
+    &.icon {
+      width: 3.5rem;
+      background-color: @admonitionblock-icon-bgcolor;
+      vertical-align: middle;
 
-    .title {
-      font-size: 0;
-      text-align: center;
+      .title {
+        font-size: 0;
+        text-align: center;
 
-      &::before {
-        display: inline-block;
-        font-size: 1.5rem;
-        font-family: @font-icon;
+        &::before {
+          display: inline-block;
+          font-size: 1.5rem;
+          font-family: @font-icon;
+        }
+      }
+    }
+
+    &.content {
+      .title {
+        font-size: @font-size-small;
+        font-weight: bold;
       }
     }
   }
 
-  .content {
-    .title {
-      font-size: @font-size-small;
-      font-weight: bold;
-    }
-  }
-
   &.note {
-    .icon .title::before {
+    td.icon .title::before {
         content: '\0E14F';
-        color: @base-color2;
+        color: @admonitionblock-note-color;
     }
   }
 
   &.important {
-    .icon .title::before {
+    td.icon .title::before {
         content: '\0E614';
-        color: @base-color1;
+        color: @admonitionblock-important-color;
     }
   }
 
   &.tip {
-    .icon .title::before {
+    td.icon .title::before {
         content: '\0E869';
-        color: @base-color3;
+        color: @admonitionblock-tip-color;
     }
   }
 
   &.caution {
-    .icon .title::before {
+    td.icon .title::before {
         content: '\0E000';
-        color: @base-color03;
+        color: @admonitionblock-caution-color;
     }
   }
 
   &.warning {
-    .icon .title::before {
+    td.icon .title::before {
         content: '\0E002';
-        color: @base-color4;
+        color: @admonitionblock-warning-color;
     }
   }
 }

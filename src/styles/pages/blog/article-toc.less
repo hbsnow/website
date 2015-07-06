@@ -1,37 +1,26 @@
+@import "../../configs/color";
+@import "../../configs/size";
+
 #article-toc {
   position: relative;
-  border-top: 1px @border-color solid;
-  border-bottom: 1px @border-color solid;
+  border-left: 6px @theme-color1 solid;
+  margin-bottom: 3rem;
 
   &::before {
-    position: absolute;
-    top: -.5rem;
-    left: 50%;
-    width: 12rem;
-    line-height: 1rem;
-    content: 'Table of Contents';
-    text-align: center;
-    background-color: @theme-color1;
+    content: '目次';
+    font-size: @font-size-small;
     color: @text-muted;
-    margin-left: -6rem;
+    margin-left: 1.5rem;
   }
 
   ol {
     list-style-type: none;
     margin: 0;
-    padding: 3rem 0;
-    counter-reset: section;
-
-    ol {
-      padding: 0 0 0 3rem;
-    }
 
     li {
       &::before {
         display: inline-block;
         min-width: 1.5rem;
-        counter-increment: section;
-        content: counters(section, '.');
         color: @text-muted;
         margin-right: .75rem;
       }
@@ -47,10 +36,9 @@
       }
     }
   }
-}
 
-@media (max-width: @screen-xs-max) {
-  #article-toc {
+  // 小さいモニタにはToCを出力しない
+  @media (max-width: @screen-xs-max) {
     display: none;
   }
 }

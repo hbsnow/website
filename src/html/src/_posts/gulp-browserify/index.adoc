@@ -8,14 +8,14 @@ tags: JavaScript, gulp
 
 http://gulpjs.com/[gulp]でlink:http://browserify.org/[browserify]を使って、Web開発で使用するモジュールを管理する。何がいいのかというとコード内にコードの依存関係を`require`で記述できることだとおもう。
 
-同じことはwebpackでもできるので、link:../gulp-webpack/[webpackをつかうことも]あります。
+同じことはwebpackでもできるので、link:../gulp-webpack/[webpackをつかうことも]できます。
 
 
 
 [[browserify]]
 == browserify
 
-以前はgulp-browserifyを使っていたんだけれども、https://github.com/gulpjs/plugins/blob/master/src/blackList.json[BlackList]に含まれていて推奨されない方法とされているので、直接browserifyを使います。
+以前はgulp-browserifyを使っていたんだけれども、link:https://github.com/gulpjs/plugins/blob/master/src/blackList.json[BlackList]に含まれていて推奨されない方法とされているので、直接browserifyを使います。
 
 gulpのレシピにあるlink:https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md[Browserify + Uglify2 with sourcemaps]あたりが参考になりそうです。
 
@@ -28,7 +28,7 @@ npm init
 npm install gulp bower debowerify browserify vinyl-transform --save-dev
 ----
 
-Web用のパッケージはlink:http://bower.io/[bower]でしか管理されていないこともあるのでいれておきました。link:https://github.com/eugeneware/debowerify[debowerify]はbowerで取得したファイルを簡略な指定によってbrowserifyで使うためのもので`package.json`に以下を追記する必要があります。
+ウェブ用のパッケージはlink:http://bower.io/[bower]でしか管理されていないこともあるので一応いれておきました。link:https://github.com/eugeneware/debowerify[debowerify]はbowerで取得したファイルを簡略な指定によってbrowserifyで使うためのもので`package.json`に以下を追記する必要があります。
 
 [source,json]
 ----
@@ -39,7 +39,7 @@ Web用のパッケージはlink:http://bower.io/[bower]でしか管理されて�
 },
 ----
 
-bowerのファイルがプロジェクトのルート直下ではなかったので`.bowerrc`を作成してディレクトリの指定を変更しておきました。
+bowerのファイルがプロジェクトのルート直下から変更したい場合には、`.bowerrc`を作成してディレクトリの指定をします。
 
 [source,json]
 ----
@@ -121,7 +121,7 @@ function compile(watch) {
     debug: true
   };
 
-  if(watch) {
+  if (watch) {
     option.cache = {};
     option.packageCache = {};
     option.fullPaths = true;
@@ -146,9 +146,8 @@ function compile(watch) {
   return bundle();
 }
 
-gulp.task('watch:js', ['watchify'], function() {
-  //watchifyは監視しなくていい
-});
+//watchifyは監視しなくていい
+gulp.task('watch:js', ['watchify']);
 ----
 
 

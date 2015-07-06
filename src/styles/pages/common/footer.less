@@ -1,3 +1,5 @@
+@import "../../configs/zindex";
+
 #footer {
   position: relative;
   margin-top: 4.5rem;
@@ -6,13 +8,10 @@
   > .container {
     height: 4.5rem;
     line-height: 4.5rem;
-    .layout.horizontal();
-    .layout.center();
   }
 }
 
 #footer-social {
-  .flex-none();
   order: 1;
   width: 15rem;
 
@@ -31,7 +30,6 @@
 }
 
 #footer-copyright {
-  .flex();
   order: 0;
 
   p {

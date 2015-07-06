@@ -1,10 +1,13 @@
+@import "../../configs/color";
+@import "../../configs/size";
+
 #header-menu {
   position: relative;
-  text-align: center;
-  margin-bottom: 3rem;
+  text-align: right;
 
   icon {
     position: relative;
+    top: 7px;
     z-index: 1;
 
     &.active + ul {
@@ -19,63 +22,31 @@
     opacity: 0;
     transition: visibility 0s .15s, opacity .15s linear;
     position: absolute;
-    top: -1rem;
-    left: 50%;
+    top: 3px;
+    right: -7px;
     width: 12rem;
     list-style-type: none;
-    background-color: @theme-color2;
+    background-color: @base-color2;
     border-radius: @border-radius-large;
-    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .2), inset 2px 4px 0 0 rgba(255, 255, 255, .08);
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .2),
+                inset 2px 4px 0 0 rgba(255, 255, 255, .08);
     margin: 0;
     margin-left: -6rem;
-    padding: 4rem 1.5rem .75rem;
+    padding: 3rem 1.5rem .75rem;
     z-index: 0;
 
     li {
+      text-align: center;
       line-height: 2rem;
       padding-bottom: .75rem;
 
       a {
-        position: relative;
-        display: block;
         color: @base-color0;
-
-        &::before {
-          content: "";
-          position: absolute;
-          width: 100%;
-          height: 2px;
-          bottom: 0;
-          left: 0;
-          background-color: @base-color0;
-          visibility: hidden;
-          transform: scaleX(0);
-          transition: all 0.3s ease-in-out 0s;
-        }
-
-
-        &:hover::before {
-          visibility: visible;
-          transform: scaleX(1);
-        }
-      }
-
-      &.selected {
-        a {
-          font-weight: bold;
-          color: @text-muted;
-          pointer-events: none;
-          cursor: default;
-
-          &::before {
-            display: none;
-          }
-        }
       }
     }
   }
 
-  @media (min-width: @screen-xs-min) {
+  @media (min-width: @screen-sm-min) {
     icon {
       display: none;
     }
@@ -84,16 +55,21 @@
       visibility: visible;
       opacity: 1;
       position: static;
+      width: auto;
       background-color: transparent;
       box-shadow: none;
-      width: auto;
       margin: 0;
       padding: 0;
 
       li {
         display: inline-block;
         width: 6rem;
+        line-height: 3rem;
         padding: 0;
+
+        a {
+          color: @link-color-reverse;
+        }
       }
     }
   }

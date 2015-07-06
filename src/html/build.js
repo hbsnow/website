@@ -50,7 +50,7 @@ metalsmith
       }
     ]))
     .use(autotoc({
-      selector: 'h2, h3'
+      selector: 'h2'
     }))
     .use(highlight())
     .use(copy({

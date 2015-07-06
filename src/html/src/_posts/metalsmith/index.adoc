@@ -203,7 +203,7 @@ gulp.task('build:metalsmith', function() {
 [[gh-pages]]
 == GitHub Pagesで公開する
 
-作成したサイトをGitHub Pagesで公開します。masterブランチにコードと変換前のデータ、gh-pagesブランチに公開データをプッシュします。gh-pagesブランチは事前に作成する必要はありません。
+作成したサイトをGitHub Pagesで公開します。masterブランチにコードと変換前のデータ、gh-pagesブランチに公開データをプッシュします。gh-pagesブランチを事前に作成する必要はありません。
 
 [source,ps1]
 ----
@@ -213,7 +213,7 @@ git push -u origin master
 git subtree push --prefix public origin gh-pages
 ----
 
-このとき最終的にビルドしたサイトを`public`フォルダとすると、その`public`フォルダのビルド結果をmasterブランチに含めなければいけません。また毎回ローカルでビルドする必要があり少し面倒です。
+このとき最終的にビルドしたサイトを`public`フォルダとすると、その`public`フォルダのビルド結果をmasterブランチに含めなければいけません。また毎回ローカルで出力結果をビルドする必要があるので少し面倒な方法です。
 
 
 
@@ -245,7 +245,7 @@ deploy:
 
 検索でかかる情報の中には古い情報もあって、古い情報の`wercker.yml`を使うとおそらく動きません。自分はまずboxの指定から間違えていてかなりハマりました。
 
-werckerの設定はとくに難しいところはありません。
+werckerでの設定はとくに難しいところはありません。
 
 Createからリポジトリを選択して指示通りにアプリケーションを作成、Deploy targetsのDeploy target nameに`gh-pages`、
 Auto deployに`master`を指定します。Deploy pipelineに`wercker.yml`で使用する`GITHUB_TOKEN`を作成して終了です。
