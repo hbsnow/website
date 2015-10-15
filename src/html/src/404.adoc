@@ -1,7 +1,0 @@
----
-title: 404 Page Not Found
-description: お探しのページは見つかりませんでした。
-template: content.jade
----
-
-ページがみつかりませんでした。

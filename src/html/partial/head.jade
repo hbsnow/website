@@ -1,0 +1,36 @@
+- var site_title = '4uing'
+- var site_url = 'https://4uing.net/'
+- var description = 'hbsnowの制作物を公開するページです。'
+
+meta(charset='utf-8')
+
+title= site_title
+
+meta(http-equiv='X-UA-Compatible', content='IE=edge')
+meta(name='viewport', content='width=device-width, initial-scale=1')
+
+//- Data
+meta(name='author', content=page_author)
+meta(name='description', content=description)
+link(rel='canonical', href=site_url)
+
+//- OGP
+meta(property='og:type', content='website')
+meta(property='og:site_name', content=site_title)
+meta(property='og:locale', content='ja_JP')
+meta(property='og:url', content=site_url)
+meta(property='og:title', content=site_title)
+meta(property='og:description', content=description)
+
+//- Twitter Card
+meta(name='twitter:card', content='summary')
+meta(name='twitter:creator', content='@4uing')
+
+//- Icon
+link(rel='apple-touch-icon', href='/apple-touch-icon.png', type='image/png')
+
+//- CSS
+link(rel='stylesheet', href='/styles/critical.css', inline)
+
+noscript
+	link(rel='stylesheet', href='/styles/main.css')

@@ -1,0 +1,20 @@
+.Network {
+  .Network-list {
+    position: absolute;
+    top: 22rem;
+    right: 0;
+    width: 34.5rem;
+    list-style-type: none;
+    background-color: $theme-color0;
+    text-align: center;
+    margin: 0;
+    padding-left: 0;
+    transform: rotate(45deg);
+    transform-origin: bottom right;
+    z-index: $layer-network;
+  }
+
+  .Network-item {
+    display: inline-block;
+  }
+}

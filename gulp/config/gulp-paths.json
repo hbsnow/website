@@ -3,16 +3,12 @@
   "dist": "dist/",
   "build": "build/",
 
-  "metalsmith": {
+  "jade": {
     "src": "src/html/"
   },
 
-  "less": {
-    "src": "src/styles/",
-    "dist": "dist/styles/"
-  },
-
   "css": {
+    "src": "src/styles/",
     "dist": "dist/styles/",
     "build": "build/styles/"
   },

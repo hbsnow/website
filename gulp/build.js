@@ -2,11 +2,21 @@
 
 var gulp = require('gulp');
 var runSequence = require('run-sequence');
-var webpack = require('webpack-stream');
 var critical = require('critical');
 var $ = require('gulp-load-plugins')();
 
 var paths = require('./config/gulp-paths.json');
+
+var processors = [
+  require('postcss-import'),
+  require('postcss-simple-vars'),
+  require('postcss-nested'),
+  require('postcss-mixins'),
+  require('postcss-extend'),
+  require('postcss-color-function'),
+  require('postcss-calc'),
+  require('autoprefixer')
+];
 
 
 
@@ -14,15 +24,18 @@ var paths = require('./config/gulp-paths.json');
  * HTML
  */
 
-gulp.task('build:html', ['metalsmith', 'dist:css'], function() {
-  return gulp.src(paths.dist + '**/*.html')
-    .pipe($.inlineSource())
-    .pipe(gulp.dest(paths.build));
+gulp.task('dist:jade', function() {
+  return gulp.src(paths.jade.src + '*.jade')
+    .pipe($.jade())
+    .pipe(gulp.dest(paths.dist))
+    .pipe($.size());
 });
 
-gulp.task('build:xml', function() {
-  return gulp.src(paths.dist + '**/*.{xml,rdf,rss,tpl}')
-    .pipe(gulp.dest(paths.build));
+gulp.task('build:html', ['dist:jade', 'dist:js'], function() {
+  return gulp.src(paths.dist + '**/*.html')
+    .pipe($.inlineSource())
+    .pipe(gulp.dest(paths.build))
+    .pipe($.size());
 });
 
 
@@ -31,44 +44,10 @@ gulp.task('build:xml', function() {
  * JavaScript
  */
 
-gulp.task('webpack', function() {
-  return gulp.src(paths.js.src + 'main.js')
-    .pipe(webpack(require('./config/webpack.config.js')))
-    .pipe($.uglify())
-    .pipe(gulp.dest(paths.js.dist))
-    .pipe($.size());
-});
-
 gulp.task('dist:js', function() {
   return gulp.src(paths.js.src + '{loadCss,redirect}.js')
     .pipe($.uglify())
-    .pipe(gulp.dest(paths.js.dist));
-});
-
-gulp.task('build:js', function() {
-  return gulp.src(paths.js.dist + 'main.js')
-    .pipe(gulp.dest(paths.js.build));
-});
-
-
-
-/**
- * LESS
- */
-
-gulp.task('dist:less', function() {
-  return gulp.src(paths.less.src + 'main.less')
-    .pipe($.plumber({
-      errorHandler: function(err) {
-        console.log(err);
-        this.emit('end');
-      }
-    }))
-    .pipe($.sourcemaps.init())
-    .pipe($.less())
-    .pipe($.autoprefixer())
-    .pipe($.sourcemaps.write())
-    .pipe(gulp.dest(paths.less.dist))
+    .pipe(gulp.dest(paths.js.dist))
     .pipe($.size());
 });
 
@@ -79,11 +58,12 @@ gulp.task('dist:less', function() {
  */
 
 // criticalがwerckerでエラーを吐くのでローカルで出力しておく
-gulp.task('critical', ['metalsmith', 'dist:less'], function(cb) {
+gulp.task('critical', ['dist:jade', 'dist:css'], function(cb) {
   critical.generate({
     base: paths.dist,
-    src: 'blog/gulp-package/index.html',
-    dest: 'styles/critical.css',
+    src: 'index.html',
+    css: [paths.dist + 'styles/main.css'],
+    dest: '../assets/styles/critical.css',
     dimensions: [{
       width: 320,
       height: 480,
@@ -101,43 +81,29 @@ gulp.task('critical', ['metalsmith', 'dist:less'], function(cb) {
   });
 });
 
-gulp.task('generate:critical', ['critical'], function() {
-  return gulp.src(paths.css.dist + 'critical.css')
-    .pipe(gulp.dest(paths.assets.src + 'styles/'))
-    .pipe($.size());
-});
-
 gulp.task('dist:css', function() {
-  return gulp.src(paths.assets.src + 'styles/**/*.css')
+  return gulp.src(paths.css.src + 'main.css')
+    .pipe($.plumber({
+      errorHandler: function(err) {
+        console.log(err);
+        this.emit('end');
+      }
+    }))
+    .pipe($.sourcemaps.init())
+    .pipe($.postcss(processors))
+    .pipe($.sourcemaps.write())
     .pipe(gulp.dest(paths.css.dist))
     .pipe($.size());
 });
 
 gulp.task('build:css', function() {
-  return gulp.src(paths.css.dist + 'main.css')
-    .pipe($.minifyCss())
+  processors.push(require('cssnano'));
+  processors.push(require("css-mqpacker"));
+
+  return gulp.src(paths.css.src + 'main.css')
+    .pipe($.postcss(processors))
     .pipe(gulp.dest(paths.css.build))
     .pipe($.size());
-});
-
-
-
-/**
- * Build
- */
-
-gulp.task('dist', ['clean:dist'], function(cb) {
-  runSequence(
-    ['generate:critical', 'webpack', 'dist:assets', 'dist:js'], cb
-  );
-});
-
-gulp.task('build', ['clean'], function(cb) {
-  runSequence(
-    ['build:html', 'dist:less', 'webpack', 'dist:js'],
-    ['build:xml', 'build:image', 'build:js', 'build:css', 'build:assets'],
-    cb
-  );
 });
 
 
@@ -149,22 +115,31 @@ gulp.task('build', ['clean'], function(cb) {
 gulp.task('dist:assets', function() {
   return gulp.src(paths.assets.src + '**/*')
     .pipe(gulp.dest(paths.assets.dist))
+    .pipe($.size());
 });
 
 gulp.task('build:assets', function() {
   return gulp.src(paths.assets.src + '**/*')
     .pipe(gulp.dest(paths.assets.build))
+    .pipe($.size());
 });
 
 
 
 /**
- * Image
+ * Build
  */
 
-gulp.task('build:image', function() {
-  var src = [paths.dist + '**/*.{png,jpg,svg}'];
+gulp.task('dist', ['clean:dist'], function(cb) {
+  runSequence(
+    ['dist:jade', 'dist:css', 'dist:js', 'dist:assets'], cb
+  );
+});
 
-  return gulp.src(src)
-    .pipe(gulp.dest(paths.assets.build))
+gulp.task('build', ['clean'], function(cb) {
+  runSequence(
+    'build:assets',
+    ['build:html', 'build:css'],
+    cb
+  );
 });

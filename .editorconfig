@@ -1,10 +1,15 @@
-# LESS, SCSS
-[*.{less,scss}]
+# CSS
+[*.{less,scss,css}]
 indent_style: space
 indent_size: 2
 
 # JavaScript
 [*.js]
+indent_style: space
+indent_size: 2
+
+# JSON
+[*.json]
 indent_style: space
 indent_size: 2
 
