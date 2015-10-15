@@ -31,7 +31,7 @@ gulp.task('dist:jade', function() {
     .pipe($.size());
 });
 
-gulp.task('build:html', ['dist:jade', 'dist:js'], function() {
+gulp.task('build:html', ['dist:code', 'dist:jade', 'dist:js'], function() {
   return gulp.src(paths.dist + '**/*.html')
     .pipe($.inlineSource())
     .pipe(gulp.dest(paths.build))
@@ -118,6 +118,12 @@ gulp.task('dist:assets', function() {
     .pipe($.size());
 });
 
+gulp.task('dist:code', function() {
+  return gulp.src(paths.assets.src + '**/{scripts,styles}/*')
+    .pipe(gulp.dest(paths.assets.dist))
+    .pipe($.size());
+});
+
 gulp.task('build:assets', function() {
   return gulp.src(paths.assets.src + '**/*')
     .pipe(gulp.dest(paths.assets.build))
@@ -138,7 +144,7 @@ gulp.task('dist', ['clean:dist'], function(cb) {
 
 gulp.task('build', ['clean'], function(cb) {
   runSequence(
-    'build:assets',
+    ['build:assets'],
     ['build:html', 'build:css'],
     cb
   );
