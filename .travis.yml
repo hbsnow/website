@@ -24,7 +24,7 @@ deploy:
   local_dir: docs
   repo: hbsnow/hbsnow.github.io
   target_branch: master
-  deployment-file : false
+  deployment_file: false
 
 branches:
   only:
