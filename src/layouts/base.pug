@@ -1,0 +1,62 @@
+-
+  // global variables
+  var page = {
+    canonical: urlJoin(site.url, posixPath),
+    author: {
+      name: (author && author.name) || site.author.name,
+      twitter: (author && author.twitter) || (author && author.hasOwnProperty('name')) ? '' : site.author.twitter
+    },
+    title: (title && title + ' | ' + site.name) || site.name,
+    image: thumb || (image || Array.isArray(image) ? image[0] : image) || site.publisher.logo.image,
+    type: (pagetype === 'BlogPosting' || pagetype === 'Review') ? 'article' : 'webpage'
+  }
+
+  var isAmp = nodePath.parse(path).name === 'amp'
+
+  // Attributes
+  var attr = isAmp ? {
+    html: {
+      '⚡': ''
+    }
+  } : {
+    head: {
+      prefix: 'og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# ' + page.type + ': http://ogp.me/ns/' + page.type + '#'
+    }
+  }
+
+doctype html
+html(lang='ja')&attributes(attr.html)
+  head&attributes(attr.head)
+    meta(charset='utf-8')
+
+    link(rel='canonical' href=page.canonical)
+
+    if hasAmp
+      link(rel='amphtml' href=urlJoin(page.canonical, 'amp.html'))
+
+    meta(name='viewport' content='width=device-width, minimum-scale=1, initial-scale=1')
+
+    if feed && feed.hasOwnProperty('href')
+      link(rel='alternate' type='application/atom+xml')&attributes(escape(feed))
+
+    link(rel='author' href='/assets/humans.txt')
+    link(rel='icon' href=site.publisher.logo.image)
+    //- link(rel=manifest href=/assets/manifest.json)
+
+    meta(name='author' content=page.author.name)
+
+    if description
+      meta(name='description' content=description)
+
+    if tags
+      meta(name='keywords' content=tags)
+
+    title= page.title
+
+    block jsonld
+      include common/head/jsonld.pug
+
+    block head
+
+  body
+    block body

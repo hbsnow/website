@@ -1,0 +1,21 @@
+html {
+  box-sizing: border-box;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -ms-overflow-style: scrollbar;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  font-size: 16px;
+  font-family: var(--base-font);
+  background-image: linear-gradient(90deg, #0C1C83, #11BB8E);
+  margin: 0;
+}

@@ -1,0 +1,29 @@
+extends base.pug
+
+block head
+  //- Twitter Cards
+  meta(name='twitter:card' content='summary')
+  if page.author.twitter
+    meta(name="twitter:creator" content=page.author.twitter)
+
+  //- Facebook Open Graph
+  meta(property='og:title' content=page.title)
+  meta(property='og:type' content=page.type)
+  meta(property='og:image' content=page.image)
+  meta(property='og:url' content=page.canonical)
+  meta(property='og:description' content=description)
+  meta(property='og:site_name' content=site.name)
+
+  //- JS
+  script(async src='/assets/js/main.js')
+
+  //- CSS
+  link(rel='stylesheet' href='/assets/css/main.css')
+
+block body
+  header.header
+    block header
+      h1.header__title hbsnow.github.io
+
+  main.main
+    != main
