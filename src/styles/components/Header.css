@@ -1,26 +1,9 @@
-.Header {
-  position: relative;
-  text-align: right;
-  padding-right: $spacer;
-  z-index: $layer-header;
+.main-header {
+  text-align: center;
+  padding: 6rem 0;
+}
 
-  &::before {
-    position: absolute;
-    top: -4.5rem;
-    right: 0;
-    display: block;
-    width: 20rem;
-    height: 20rem;
-    content: '';
-    background-color: $theme-color2;
-    transform: skewY(45deg);
-    transform-origin: bottom right;
-    z-index: -1;
-  }
-
-  .Header-siteTitle {
-    position: relative;
-    color: $theme-color1;
-    margin-top: 4.5rem;
-  }
+.main-header__title {
+  margin: 0;
+  color: #fff;
 }

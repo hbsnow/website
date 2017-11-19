@@ -1,0 +1,15 @@
+{
+  "name": "hbsnow.github.io",
+  "short_name": "hbsnow.github.io",
+  "icons": [
+    {
+      "src": "/assets/img/avatar.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#ccc",
+  "gcm_sender_id": ""
+}

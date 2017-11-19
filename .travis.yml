@@ -1,0 +1,30 @@
+sudo: false
+
+language: node_js
+
+cache:
+  directories:
+    - node_modules
+
+notifications:
+  email: false
+
+node_js:
+  - 'stable'
+
+script:
+  - npm run build
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  on:
+    branch: master
+  local_dir: docs
+  repo: hbsnow/hbsnow.github.io
+  target_branch: master
+
+branches:
+  only:
+    - master

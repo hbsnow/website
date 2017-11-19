@@ -1,6 +1,3 @@
 'use strict';
 
-var gulp = require('gulp');
-require('require-dir')('./gulp');
-
-gulp.task('default', ['build']);
+//- 後で作る
