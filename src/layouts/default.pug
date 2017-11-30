@@ -20,10 +20,11 @@ block head
   //- CSS
   link(rel='stylesheet' href='/assets/css/main.css')
 
+
+
 block body
   header.header
-    block header
-      h1.header__title hbsnow.github.io
+    h1.header__title hbsnow.github.io
 
   main.main
-    != main
+    != contents

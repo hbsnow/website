@@ -1,3 +1,6 @@
+'use strict'
+
+const path = require('path')
 const metalsmith = require('metalsmith')
 const copy = require('metalsmith-copy')
 const branch = require('metalsmith-branch')
@@ -11,48 +14,61 @@ const posixPath = require('metalsmith-posix-path')
 const jsonMetadata = require('metalsmith-json-metadata')
 const feed = require('metalsmith-rssfeed')
 const watch = require('metalsmith-watch')
+const markdown = require('metalsmith-markdownit')
 const posthtml = require('metalsmith-posthtml')
+const rename = require('metalsmith-rename')
 const debug = require('metalsmith-debug')
 
+const htmlnano = require('htmlnano')
+const inlineAssets = require('posthtml-inline-assets')
+
+
 const configs = {
-  site: require('./configs.json'),
+  site: require('../configs.json'),
   moment: require('moment'),
   urlJoin: require('url-join'),
   escape: require('recursive-escape'),
-  nodePath: require('path')
+  nodePath: path
 }
 
 const branchPattern = {
-  docs: 'docs/*/index.{html,md,pug}',
+  tpl: '**/index.tpl.{html,md,pug}',
+  amp: '{blog,reviews}/*/index.{html,md,pug}',
+  blog: 'blog/*/index.{html,md,pug}',
   reviews: 'reviews/*/index.{html,md,pug}'
 }
 
-const watches = process.argv.every((val, index) => val === '--watch')
 
 
-const m = metalsmith(__dirname)
-m
+const watches = process.argv.some(val => val === '--watch')
+
+metalsmith(path.join(__dirname, '../'))
   .metadata(configs)
   .source('src/html')
   .destination('docs')
   .use(posixPath())
   .use(jsonMetadata())
   .use(drafts())
+
+  // コンテンツのみを含むテンプレートファイルを作成
   .use(copy({
-    pattern: branchPattern.docs,
-    transform: file => {
-      return file.replace(/index.md$/g, 'amp.md')
-    }
+    pattern: '**/index.{html,md,pug}',
+    transform: file => file.replace(/index.(html|md|pug)$/g, 'index.tpl.$1')
   }))
+
+  // AMP用ファイルの作成
   .use(copy({
-    pattern: branchPattern.reviews,
-    transform: file => {
-      return file.replace(/index.md$/g, 'amp.md')
-    }
+    pattern: branchPattern.amp,
+    transform: file => file.replace(/index.md$/g, 'amp.md')
   }))
+
   .use(collections({
-    docs: {
-      pattern: branchPattern.docs,
+    tpl: {
+      pattern: branchPattern.tpl,
+      refer: false
+    },
+    blog: {
+      pattern: branchPattern.blog,
       sortBy: 'date',
       reverse: true,
       refer: false
@@ -65,13 +81,16 @@ m
     }
   }))
   .use(collectionMetadata({
-    'collections.docs': {
-      layout: 'docs/default.pug',
+    'collections.tpl': {
+      layout: 'tpl.pug'
+    },
+    'collections.blog': {
+      layout: 'blog/default.pug',
       hasAmp: true,
       pagetype: 'BlogPosting',
       feed: {
-        href: '/docs/feed.xml',
-        title: 'hbsnow.github.io/docs'
+        href: '/blog/feed.xml',
+        title: 'hbsnow.github.io/blog'
       }
     },
     'collections.reviews': {
@@ -86,47 +105,73 @@ m
   }))
   .use(feed({
     author: configs.site.author.name,
-    collection: ['docs', 'reviews'],
+    collection: ['blog', 'reviews'],
     limit: 10,
     name: ':collection/feed.xml'
   }))
 
-
-
-// docs
-m
+  // docs
   .use(branch(branchPattern.docs)
     .use(drafts())
   )
 
-
-
-// reviews
-m
+  // reviews
   .use(branch(branchPattern.reviews)
     .use(drafts())
   )
 
-
-
-// products
-m
+  // products
   .use(branch(branchPattern.products)
     .use(drafts())
   )
 
-
-
-m
   .use(inPlace())
+  .use(markdown('commonmark', {
+    xhtmlOut: false
+  }))
   .use(layouts({
     engine: 'pug',
-    pattern: '**/*.{html,md,pug}',
+    pattern: '**/*!(.tpl).html',
     default: 'default.pug',
     directory: 'src/layouts'
   }))
   .use(debug())
-  .use(posthtml())
+
+  .use(rename([
+    [/\.tpl\.html$/, '.tpl']
+  ]))
+
+  // .html
+  .use(branch('**/index.html')
+    .use(posthtml(
+      [
+        htmlnano()
+      ],
+      {}
+    ))
+  )
+
+  // .amp
+  .use(branch('**/amp.html')
+    .use(posthtml(
+      [
+        htmlnano()
+        inlineAssets()
+      ],
+      {}
+    ))
+  )
+
+  // .tpl
+  .use(branch('**/index.tpl')
+    .use(posthtml(
+      [
+        htmlnano()
+      ],
+      {}
+    ))
+  )
+
   .use(when(
     watches,
     watch({
@@ -136,7 +181,7 @@ m
       }
     })
   ))
-  .build((err) => {
+  .build(err => {
     if (err) throw err
 
     console.log('Site build complete!!')

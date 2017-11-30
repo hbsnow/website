@@ -1,9 +1,4 @@
-
- hbsnow.github.io
-
---------------------------------------------------------------------------------
-
-
+hbsnow.github.io
 
 ■ ABOUT
 
@@ -21,7 +16,7 @@
 
   GitHub  : hbsnow
   Twitter : @hbsnow
-  Qiita   : @hbsnow
+  Qiita   : hbsnow
 
 
 
