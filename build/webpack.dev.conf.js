@@ -16,8 +16,8 @@ module.exports = merge(baseWebpackConfig, {
     port: process.env.PORT || '8080',
     open: false,
     overlay: false,
-    contentBase: path.join(__dirname, '../docs'),
-    publicPath: '/'
+    contentBase: path.join(__dirname, '../docs/'),
+    publicPath: '/assets/js/'
   },
   plugins: [
     new webpack.DefinePlugin({

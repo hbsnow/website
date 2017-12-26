@@ -1,8 +1,9 @@
 'use strict'
-const path = require('path')
+
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
+const UglifyJsPlugin  = require('uglifyjs-webpack-plugin')
 
 module.exports = merge(baseWebpackConfig, {
   devtool: false,
@@ -12,10 +13,7 @@ module.exports = merge(baseWebpackConfig, {
         NODE_ENV: '"production"'
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      },
+    new UglifyJsPlugin({
       sourceMap: false,
       uglifyOptions: {
         ecma: 8,
@@ -31,6 +29,6 @@ module.exports = merge(baseWebpackConfig, {
     new webpack.HashedModuleIdsPlugin(),
 
     // Scope Hoisting を有効化する
-    new webpack.optimize.ModuleConcatenationPlugin(),
+    new webpack.optimize.ModuleConcatenationPlugin()
   ]
 })

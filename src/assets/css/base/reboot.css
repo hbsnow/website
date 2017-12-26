@@ -1,0 +1,20 @@
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Raleway', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #FAFAFA;
+  color: rgba(0, 0, 0, .88);
+  line-height: 1.4;
+}
+
+a {
+  text-decoration: none;
+  word-wrap: break-word;
+  color: var(--color-primary);
+}
+
+a:focus {
+  outline: thin dotted invert;
+}

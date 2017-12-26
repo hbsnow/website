@@ -1,0 +1,11 @@
+/* https://material.io/color/#!/?primary.color=90CAF9&secondary.color=F48FB1 */
+:root {
+  --color: #fff;
+  --color-reverse: #000;
+  --color-primary: #a5d6a7;
+  --color-primary-light: #ffc1e3;
+  --color-primary-dark: #bf5f82;
+  --color-grey: #bdbdbd;
+  --color-grey-light: #efefef;
+  --color-grey-dark: #8d8d8d;
+}

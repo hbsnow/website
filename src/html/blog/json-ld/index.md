@@ -5,7 +5,7 @@ description: JSON-LD による構造化データの記述方法についての�
 jsonMetadata: assets/reference.json
 ---
 
-Google では構造化データを[JSON-LDで記述することを推奨](https://developers.google.com/search/docs/guides/intro-structured-data#structured-data-format)しています。ここでは AMP で必要になる JSON-LD による構造化データの記述方法について、簡単な説明をしています。
+Google では構造化データを [JSON-LD で記述することを推奨](https://developers.google.com/search/docs/guides/intro-structured-data#structured-data-format)しています。ここでは AMP で必要になる JSON-LD による構造化データの記述方法について、簡単な説明をしています。
 
 ## JSON-LD
 
@@ -74,7 +74,7 @@ IRI や blank node identifier (`_:` ではじまる文字列) を用いて一意
 }
 ```
 
-この例ではサイトのURLを追加することで、人物を一意に特定しています。
+この例ではサイトの URL を追加することで、人物を一意に特定しています。
 
 #### `@type` 
 

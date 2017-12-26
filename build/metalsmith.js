@@ -8,11 +8,11 @@ const inPlace = require('metalsmith-in-place')
 const layouts = require('metalsmith-layouts')
 const collections = require('metalsmith-collections')
 const collectionMetadata = require('metalsmith-collection-metadata')
+const fileMetadata = require('metalsmith-filemetadata')
 const when = require('metalsmith-if')
 const drafts = require('metalsmith-drafts')
 const posixPath = require('metalsmith-posix-path')
 const jsonMetadata = require('metalsmith-json-metadata')
-const feed = require('metalsmith-rssfeed')
 const watch = require('metalsmith-watch')
 const markdown = require('metalsmith-markdownit')
 const posthtml = require('metalsmith-posthtml')
@@ -22,7 +22,6 @@ const debug = require('metalsmith-debug')
 const htmlnano = require('htmlnano')
 const inlineAssets = require('posthtml-inline-assets')
 
-
 const configs = {
   site: require('../configs.json'),
   moment: require('moment'),
@@ -31,145 +30,89 @@ const configs = {
   nodePath: path
 }
 
-const branchPattern = {
-  tpl: '**/index.tpl.{html,md,pug}',
-  amp: '{blog,reviews}/*/index.{html,md,pug}',
-  blog: 'blog/*/index.{html,md,pug}',
-  reviews: 'reviews/*/index.{html,md,pug}'
-}
-
-
-
 const watches = process.argv.some(val => val === '--watch')
 
 metalsmith(path.join(__dirname, '../'))
   .metadata(configs)
   .source('src/html')
   .destination('docs')
-  .use(posixPath())
-  .use(jsonMetadata())
   .use(drafts())
 
-  // コンテンツのみを含むテンプレートファイルを作成
-  .use(copy({
-    pattern: '**/index.{html,md,pug}',
-    transform: file => file.replace(/index.(html|md|pug)$/g, 'index.tpl.$1')
-  }))
+  // 他のassetファイルまで削除されるので、Metalsmithからは削除しない
+  .clean(false)
 
-  // AMP用ファイルの作成
-  .use(copy({
-    pattern: branchPattern.amp,
-    transform: file => file.replace(/index.md$/g, 'amp.md')
-  }))
-
+  .use(posixPath())
+  .use(jsonMetadata())
   .use(collections({
-    tpl: {
-      pattern: branchPattern.tpl,
-      refer: false
-    },
     blog: {
-      pattern: branchPattern.blog,
-      sortBy: 'date',
-      reverse: true,
-      refer: false
-    },
-    reviews: {
-      pattern: branchPattern.reviews,
+      pattern: 'blog/*/index.{html,pug,md}',
       sortBy: 'date',
       reverse: true,
       refer: false
     }
   }))
   .use(collectionMetadata({
-    'collections.tpl': {
-      layout: 'tpl.pug'
-    },
     'collections.blog': {
       layout: 'blog/default.pug',
       hasAmp: true,
-      pagetype: 'BlogPosting',
-      feed: {
-        href: '/blog/feed.xml',
-        title: 'hbsnow.github.io/blog'
-      }
-    },
-    'collections.reviews': {
-      layout: 'reviews/default.pug',
-      hasAmp: true,
-      pagetype: 'Review',
-      feed: {
-        url: '/reviews/feed.xml',
-        title: 'hbsnow.github.io/reviews'
-      }
+      pagetype: 'BlogPosting'
     }
   }))
-  .use(feed({
-    author: configs.site.author.name,
-    collection: ['blog', 'reviews'],
-    limit: 10,
-    name: ':collection/feed.xml'
-  }))
 
-  // docs
-  .use(branch(branchPattern.docs)
-    .use(drafts())
-  )
-
-  // reviews
-  .use(branch(branchPattern.reviews)
-    .use(drafts())
-  )
-
-  // products
-  .use(branch(branchPattern.products)
-    .use(drafts())
-  )
-
-  .use(inPlace())
   .use(markdown('commonmark', {
     xhtmlOut: false
   }))
+  .use(inPlace())
+
+  // コンテンツのみのテンプレートファイルを作成
+  .use(copy({
+    pattern: '**/index.html',
+    transform: file => file.replace(/index.html$/g, 'index.tpl')
+  }))
+
+  // AMP用ファイルの作成
+  .use(copy({
+    pattern: 'blog/*/index.html',
+    transform: file => file.replace(/index.html$/g, 'amp.html')
+  }))
+
+  // tplとAMP用ファイルの使用するlayoutを変更
+  .use(fileMetadata([
+    {
+      pattern: '**/index.tpl',
+      metadata: {
+        layout: 'tpl.pug'
+      }
+    },
+    {
+      pattern: 'blog/*/amp.html',
+      metadata: {
+        layout: 'blog/amp.pug'
+      }
+    }
+  ]))
+
   .use(layouts({
     engine: 'pug',
-    pattern: '**/*!(.tpl).html',
+    pattern: ['**/index.{html,tpl}', '**/amp.html'],
     default: 'default.pug',
     directory: 'src/layouts'
   }))
   .use(debug())
 
-  .use(rename([
-    [/\.tpl\.html$/, '.tpl']
-  ]))
-
   // .html
   .use(branch('**/index.html')
-    .use(posthtml(
-      [
-        htmlnano()
-      ],
-      {}
-    ))
+    .use(posthtml())
   )
 
   // .amp
   .use(branch('**/amp.html')
-    .use(posthtml(
-      [
-        htmlnano()
-        inlineAssets()
-      ],
-      {}
-    ))
+    .use(posthtml())
   )
 
   // .tpl
   .use(branch('**/index.tpl')
-    .use(posthtml(
-      [
-        htmlnano()
-      ],
-      {}
-    ))
+    .use(posthtml())
   )
 
   .use(when(

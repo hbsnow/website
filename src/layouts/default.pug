@@ -15,16 +15,37 @@ block head
   meta(property='og:site_name' content=site.name)
 
   //- JS
-  script(async src='/assets/js/main.js')
+  script(defer src='//unpkg.com/maquette@3.0.1/dist/maquette.umd.js')
+  script(defer src='/assets/js/main.js')
 
   //- CSS
+  link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Raleway:400,700')
   link(rel='stylesheet' href='/assets/css/main.css')
 
-
-
 block body
-  header.header
-    h1.header__title hbsnow.github.io
+  #page.layout
+    header#header.layout__header
+      .header
+        h1.header-title hbsnow
 
-  main.main
-    != contents
+    nav#menu.layout__menu
+      .menu
+        ul
+          li: a(href='/about/') About
+
+    main#main.layout__main
+      block main
+        include common/main.pug
+
+    nav#nav.layout__nav
+      .nav
+        a.nav__back(v-bind:class="{ active: page === 'page' }" href='/')
+          img.nav__image.icon(src='/assets/img/icons/arrow_back.svg' alt='back')
+
+    footer#footer.layout__footer
+      .footer
+        ul.footer__sns
+          li: a(href='https://twitter.com/hbsnow')
+            img.icon(src='/assets/img/icons/twitter.svg' alt='Twitter')
+          li: a(href='https://github.com/hbsnow')
+            img.icon(src='/assets/img/icons/github.svg' alt='GitHub')

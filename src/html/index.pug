@@ -1,8 +1,7 @@
 ---
-title: test01
-description: wat
+description: Home
 ---
 
-p TEST
-
-p= title
+ul
+  each val in collections.blog
+    li: a(href='/' + val.posixPath)= val.title

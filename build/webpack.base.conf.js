@@ -7,7 +7,7 @@ const resolve = dir => path.join(__dirname, '../', dir)
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    main: './src/js/main.js'
+    main: './src/assets/js/main.js'
   },
   output: {
     path: path.resolve(__dirname, '../docs/assets/js/'),
@@ -17,7 +17,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.json'],
     alias: {
-      components: path.join(__dirname, 'src/js/components')
+      'vue$': 'vue/dist/vue.esm.js'
     }
   },
   module: {

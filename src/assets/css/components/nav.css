@@ -1,0 +1,15 @@
+.nav {
+}
+
+.nav__back {
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  line-height: 3rem;
+  text-align: center;
+  background: #fcf;
+}
+
+.nav__image {
+  vertical-align: middle;
+}
