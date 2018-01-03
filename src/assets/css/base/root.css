@@ -1,11 +1,18 @@
 /* https://material.io/color/#!/?primary.color=90CAF9&secondary.color=F48FB1 */
 :root {
-  --color: #fff;
-  --color-reverse: #000;
-  --color-primary: #a5d6a7;
-  --color-primary-light: #ffc1e3;
-  --color-primary-dark: #bf5f82;
+  --color: #fafafa;
+  --color-primary-text: rgba(0, 0, 0, .87);
+  --color-divider: rgba(0, 0, 0, .12);
+  --color-primary: #0097a7;
+  --color-primary-light: #56c8d8;
+  --color-primary-dark: #006978;
   --color-grey: #bdbdbd;
   --color-grey-light: #efefef;
   --color-grey-dark: #8d8d8d;
+  --font-family-system-ui: system-ui, sans-serif;
+  --font-family-heading: 'Raleway', system-ui, sans-serif;
+  --font-family-monospace: 'Ricty Diminished', 'Consolas', monospace;
+  --line-height: 1.5;
+  --line-height-sm: 1.25;
+  --line-height-lg: 1.75;
 }

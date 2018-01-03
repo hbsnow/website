@@ -1,0 +1,10 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  border-top: 1px solid var(--color-divider);
+}
+
+.main__body {
+  flex-grow: 1;
+}

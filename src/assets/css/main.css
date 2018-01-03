@@ -3,9 +3,21 @@
 @import 'base/root.css';
 @import 'base/reboot.css';
 
+@import 'svg/svg-loader.css';
+@import 'svg/svg-progress.css';
+
 @import 'components/layout.css';
 @import 'components/header.css';
-@import 'components/header-title.css';
+@import 'components/menu.css';
 @import 'components/nav.css';
+@import 'components/main.css';
 @import 'components/footer.css';
+@import 'components/progress.css';
+
+@import 'components/header-title.css';
+@import 'components/content-header';
+@import 'components/content-body';
+@import 'components/content-footer';
+@import 'components/sns.css';
+
 @import 'components/icon.css';

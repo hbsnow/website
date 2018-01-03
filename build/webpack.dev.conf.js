@@ -17,7 +17,7 @@ module.exports = merge(baseWebpackConfig, {
     open: false,
     overlay: false,
     contentBase: path.join(__dirname, '../docs/'),
-    publicPath: '/assets/js/'
+    publicPath: '/'
   },
   plugins: [
     new webpack.DefinePlugin({

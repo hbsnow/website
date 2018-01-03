@@ -1,6 +1,12 @@
 if title
-  header.content-header
-    h1#content-title.content-header__title= title
+  header.main__header
+    .content-header
+      h1#content-title.content-header__title= title
 
-.content-body
-  != contents
+.main__body
+  .content-body
+    != contents
+
+footer.main__footer
+  .content-footer
+    p page-footer

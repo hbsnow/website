@@ -1,12 +1,19 @@
 html {
-  font-size: 16px;
+  box-sizing: border-box;
+  font-family: var(--font-family-system-ui);
+  font-size: 1rem;
+  line-height: var(--line-height);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
 }
 
 body {
-  font-family: 'Raleway', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: #FAFAFA;
-  color: rgba(0, 0, 0, .88);
-  line-height: 1.4;
+  background-color: var(--color);
+  color: var(--color-primary-text);
 }
 
 a {
@@ -17,4 +24,18 @@ a {
 
 a:focus {
   outline: thin dotted invert;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading);
+  line-height: var(--line-height-sm)
+}
+
+pre, code, var, samp, kbd {
+  font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+  line-height: var(--line-height-sm)
+}
+
+pre {
+  font-size: .875rem;
 }

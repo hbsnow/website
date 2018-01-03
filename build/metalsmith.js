@@ -45,7 +45,7 @@ metalsmith(path.join(__dirname, '../'))
   .use(jsonMetadata())
   .use(collections({
     blog: {
-      pattern: 'blog/*/index.{html,pug,md}',
+      pattern: 'blog/*/index.md',
       sortBy: 'date',
       reverse: true,
       refer: false

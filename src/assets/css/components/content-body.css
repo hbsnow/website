@@ -1,0 +1,13 @@
+.content-body {
+  margin: 1rem;
+}
+
+.content-body pre > code {
+  display: block;
+  position: relative;
+  left: -1rem;
+  width: calc(100% + 2rem);
+  background-color: var(--color-grey-light);
+  overflow-x: auto;
+  padding: 1rem;
+}

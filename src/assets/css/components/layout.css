@@ -2,31 +2,33 @@
   display: grid;
   max-width: 78em;
   min-height: 100vh;
-  background-color: #EEEEEE;
-  grid-template-columns: 3rem 1fr;
+  grid-template-columns: 3rem 1fr 3rem;
   grid-auto-rows: 3rem 1fr auto;
   grid-gap: 0;
   grid-template-areas:
-    'n h'
-    'm m'
-    'f f';
+    'nav  head menu'
+    'main main main'
+    'foot foot foot';
 }
 
 .layout__header {
-  grid-area: h;
+  grid-area: head;
+}
+
+.layout__menu {
+  grid-area: menu;
 }
 
 .layout__nav {
-  grid-area: n;
+  grid-area: nav;
 }
 
 .layout__main {
-  grid-area: m;
-  background-color: #fafafa;
+  grid-area: main;
 }
 
 .layout__footer {
-  grid-area: f;
+  grid-area: foot;
 }
 
 @media (min-width: 64em) {
@@ -67,5 +69,3 @@
     width: 14rem;
   }
 }
-
-

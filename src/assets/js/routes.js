@@ -1,36 +1,40 @@
 import page from 'page'
+import fetchPage from './components/fetchPage'
 
 /**
  * routes
  */
-export default app => {
+export default () => {
+  const mainElem = document.getElementById('main')
+
   page.base('/')
 
-  // Middleware
-  // @todo これだと404が……
   page('*', async (ctx, next) => {
-    const pageName = ctx.canonicalPath.match(/^\/([a-z]+)\//)
-    app.page = pageName ? pageName[1] : 'home'
+    const pageTypeMatch = ctx.canonicalPath.match(/^\/([a-z]+)\//)
+    const pageType = pageTypeMatch ? pageTypeMatch[1] : 'home'
 
     if (ctx.init) {
       // initial loading
       next()
     } else {
-      const mainElem = document.getElementById('main')
       try {
-        const response = await fetch(ctx.canonicalPath + 'index.tpl')
-        const content = await response.text()
+        const content = await fetchPage(ctx.canonicalPath + 'index.tpl')
+        const pageTitleElem = document.getElementById('content-title')
+
         mainElem.innerHTML = content
+        const siteTitle = 'hbsnow.github.io'
+        const pageTitle = pageTitleElem ? pageTitleElem.textContent + ' | ' + siteTitle : siteTitle
 
-        // titleの変更
-        const pageTitleNode = document.getElementById('page-title')
-        document.title = pageTitleNode ? pageTitleNode.textContent : 'HOME'
-
-        await next()
+        document.title = pageTitle
       } catch (err) {
-        console.error('fetch failed:', err)
+        console.log(err)
         mainElem.innerHTML = `<p>データ取得に失敗したため、処理を中断しました。</p>`
       }
+
+      // ナビゲーションの表示切替
+      console.log(pageType)
+
+      await next()
     }
   })
 

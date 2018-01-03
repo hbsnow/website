@@ -137,8 +137,8 @@ hbsnow はこの JSON-LD で記述されている人物ですから、このよ�
 }
 ```
 
-`image` にはガイドラインが設けられていて、幅が `696px` 以上の `.jpg, .gif, .png` いずれかの画像である必要があります。最良の結果を得るには `width*height` の結果が `300,000` 以下となる、縦横比 `16:9, 4:3, 1:1` の複数の高解像度画像を複数用意する必要があります。
+`image` にはガイドラインが設けられていて、幅が `696px` 以上の `.jpg, .gif, .png` いずれかの画像である必要があります。最良の結果を得るには `width * height` の結果が `300000` 以下となる、縦横比 `16:9, 4:3, 1:1` の複数の高解像度画像を複数用意する必要があります。
 
-`publisher` は `Organization` しか指定できません。よって個人ブログのような場合には `name` にサイト名、`logo` にはバナーなどを入れるしかありません。`logo` のサイズには[ガイドラインが設けられて](https://developers.google.com/search/docs/data-types/articles#logo-guidelines)いて、`600*60px` 以下の `.jpg, .gif, .png` いずれかの画像で、背景が白、あるいは明るい色である必要があります。また、ここに指定される画像はワードマークやロゴであって、アイコンではないことに注意が必要です。
+`publisher` は `Organization` しか指定できません。よって個人ブログのような場合には `name` にサイト名、`logo` にはバナーなどを入れるしかありません。`logo` のサイズには[ガイドラインが設けられて](https://developers.google.com/search/docs/data-types/articles#logo-guidelines)いて、`600 * 60px` 以下の `.jpg, .gif, .png` いずれかの画像で、背景が白、あるいは明るい色である必要があります。また、ここに指定される画像はワードマークやロゴであって、アイコンではないことに注意が必要です。
 
-`mainEntityOfPage, dateModified, description` は recommended であり必須ではありません。
+`mainEntityOfPage, dateModified, description` は `recommended` であり必須ではありません。

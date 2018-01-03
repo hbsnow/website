@@ -1,2 +1,9 @@
 .footer {
+  background-color: #222;
+  padding: 2rem 1rem;
+}
+
+.footer__sns {
+  list-style: none;
+  padding-left: 0;
 }

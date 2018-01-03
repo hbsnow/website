@@ -1,0 +1,10 @@
+.sns {
+  display: flex;
+  justify-content: flex-end;
+  margin: 1rem 0;
+}
+
+.sns__link {
+  opacity: 1;
+  margin-left: 1rem;
+}
