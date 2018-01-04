@@ -5,6 +5,8 @@ import registerEvents from 'serviceworker-webpack-plugin/lib/browser/registerEve
 const VERSION = 1
 const CACHE_NAME = `cache-v${VERSION}`
 const STATIC_FILES = [
+  '/assets/js/main.js',
+  '/assets/css/main.css',
   '/assets/img/icons/about.svg',
   '/assets/img/icons/arrow_back.svg',
   '/assets/img/icons/twitter.svg',
@@ -43,5 +45,17 @@ self.addEventListener('install', event => {
 })
 
 self.addEventListener('fetch', event => {
-  console.log(caches)
+  event.respondWith((async () => {
+    const cache = await caches.match(event.request)
+    console.log('Cache:', cache)
+    if (cache) return cache
+
+    try {
+      const response = await fetch(event.request)
+      console.log('Response:', response)
+      if (response) return response
+    } catch (error) {
+      throw error
+    }
+  })())
 })
