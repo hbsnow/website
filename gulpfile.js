@@ -43,7 +43,7 @@ gulp.task('build:css', ['lint:css'], () => {
         'z-index': true
       })
     ]))
-    .pipe(gulp.dest('docs'))
+    .pipe(gulp.dest('docs/assets/css'))
 })
 
 gulp.task('build:js', cb => {
@@ -51,6 +51,7 @@ gulp.task('build:js', cb => {
     gulp.src('src/sw.js'),
     gulpIf(!isProduction, sourcemaps.init()),
     eslint(),
+    eslint.format(),
     minify(),
     gulpIf(!isProduction, sourcemaps.write()),
     gulp.dest('docs')

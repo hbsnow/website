@@ -9,6 +9,9 @@ module.exports = {
   env: {
     browser: true,
   },
+  globals: {
+    ServiceWorkerGlobalScope: true
+  },
   extends: 'standard',
   'rules': {
     'arrow-parens': 0,
