@@ -5,12 +5,59 @@ const webp = require('gulp-webp')
 const imagemin = require('gulp-imagemin')
 const pngquant = require('imagemin-pngquant')
 const mozjpeg = require('imagemin-mozjpeg')
-const postcss = require('gulp-postcss')
 const cached = require('gulp-cached')
 const remember = require('gulp-remember')
+const sourcemaps = require('gulp-sourcemaps')
+const eslint = require('gulp-eslint')
+const postcss = require('gulp-postcss')
+const filter = require('gulp-filter')
+const gulpIf = require('gulp-if')
+const uglifyes = require('uglify-es')
+const composer = require('gulp-uglify/composer')
+const minify = composer(uglifyes, console)
+const pump = require('pump')
 const runSequence = require('run-sequence')
 
-gulp.task('image', () => {
+const isProduction = process.env.NODE_ENV === 'production'
+
+gulp.task('lint:css', () => {
+  return gulp.src('src/assets/css/**/*.css')
+    .pipe(postcss([
+      require('doiuse')({}),
+      require('stylelint')(),
+      require('postcss-reporter')({
+        clearReportedMessages: true
+      })
+    ]))
+})
+
+gulp.task('build:css', ['lint:css'], () => {
+  return gulp.src('src/assets/css/main.css')
+    .pipe(postcss([
+      require('postcss-import')(),
+      require('autoprefixer')(),
+      require('cssnano')({
+        'postcss-discard-unused': true,
+        'postcss-merge-idents': true,
+        'postcss-reduce-idents': true,
+        'z-index': true
+      })
+    ]))
+    .pipe(gulp.dest('docs'))
+})
+
+gulp.task('build:js', cb => {
+  pump([
+    gulp.src('src/sw.js'),
+    gulpIf(!isProduction, sourcemaps.init()),
+    eslint(),
+    minify(),
+    gulpIf(!isProduction, sourcemaps.write()),
+    gulp.dest('docs')
+  ], cb)
+})
+
+gulp.task('build:image', () => {
   return gulp.src([
       'src/+(assets)/**/*.+(png|jpg|svg)',
       'src/html/**/*.+(png|jpg|svg)'
@@ -28,13 +75,7 @@ gulp.task('image', () => {
         imagemin.optipng()
       ]))
     .pipe(gulp.dest('docs'))
-})
-
-gulp.task('webp', () => {
-  return gulp.src([
-      'src/+(assets)/**/*.+(png|jpg)',
-      'src/html/**/*.+(png|jpg)'
-    ])
+    .pipe(filter(['*', '!**/*.svg']))
     .pipe(webp())
     .pipe(gulp.dest('docs'))
 })
@@ -48,30 +89,13 @@ gulp.task('copy', () => {
     .pipe(gulp.dest('docs/assets'))
 })
 
-gulp.task('build:assets', cb => {
-  runSequence(['image', 'webp'], cb)
+gulp.task('watch', ['build'], () => {
+  gulp.watch('src/assets/css/**/*.css', ['build:css'])
+  gulp.watch('src/assets/sw.js', ['build:js'])
 })
 
-gulp.task('lint:css', () => {
-  const plugins = [
-    require('doiuse')({
-      browsers: [
-        'last 2 Chrome versions',
-        'last 2 and_chr versions',
-        'last 2 ff versions',
-        'last 2 Edge versions',
-        'last 1 Safari versions',
-        'last 1 ios_saf versions'
-      ]
-    })
-  ]
-
-  return gulp.src('src/assets/**/*.css')
-    .pipe(cached('css-lint-cache'))
-    .pipe(postcss(plugins))
-    .pipe(remember('css-lint-cache'))
-})
-
-gulp.task('watch:lint:css', ['lint:css'], () => {
-  gulp.watch('src/assets/css/**/*.css', ['lint:css'])
+gulp.task('build', cb => {
+  runSequence(
+    ['build:image', 'copy', 'build:css', 'build:js'],
+  cb)
 })

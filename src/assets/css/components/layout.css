@@ -35,8 +35,7 @@
   .layout {
     grid-template-columns: 14rem 1fr;
     grid-auto-rows: 1fr;
-    grid-template-areas:
-      '. m';
+    grid-template-areas: '. m';
   }
 
   .layout__header,

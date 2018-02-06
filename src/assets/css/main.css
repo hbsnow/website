@@ -1,11 +1,14 @@
 @import 'normalize.css';
 
+/* base */
 @import 'base/root.css';
 @import 'base/reboot.css';
 
+/* images */
 @import 'svg/svg-loader.css';
 @import 'svg/svg-progress.css';
 
+/* components */
 @import 'components/layout.css';
 @import 'components/header.css';
 @import 'components/menu.css';
@@ -13,11 +16,9 @@
 @import 'components/main.css';
 @import 'components/footer.css';
 @import 'components/progress.css';
-
 @import 'components/header-title.css';
 @import 'components/content-header';
 @import 'components/content-body';
 @import 'components/content-footer';
 @import 'components/sns.css';
-
 @import 'components/icon.css';

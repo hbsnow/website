@@ -1,7 +1,6 @@
 'use strict'
 
 const path = require('path')
-const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin')
 
 const resolve = dir => path.join(__dirname, '../', dir)
 
@@ -36,12 +35,5 @@ module.exports = {
         include: resolve('src')
       }
     ]
-  },
-  plugins: [
-    new ServiceWorkerWebpackPlugin({
-      entry: path.resolve(__dirname, '../src/assets/js/sw.js')
-      // Service-Worker-Allowedの設定ができるならassetsの中にいれたい
-      // publicPath: '/assets/js/'
-    })
-  ]
+  }
 }

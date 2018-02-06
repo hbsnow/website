@@ -1,8 +1,8 @@
 /* https://material.io/color/#!/?primary.color=90CAF9&secondary.color=F48FB1 */
 :root {
   --color: #fafafa;
-  --color-primary-text: rgba(0, 0, 0, .87);
-  --color-divider: rgba(0, 0, 0, .12);
+  --color-primary-text: rgba(0, 0, 0, 0.87);
+  --color-divider: rgba(0, 0, 0, 0.12);
   --color-primary: #0097a7;
   --color-primary-light: #56c8d8;
   --color-primary-dark: #006978;

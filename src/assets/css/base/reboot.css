@@ -26,16 +26,25 @@ a:focus {
   outline: thin dotted invert;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-family-heading);
-  line-height: var(--line-height-sm)
+  line-height: var(--line-height-sm);
 }
 
-pre, code, var, samp, kbd {
+pre,
+code,
+var,
+samp,
+kbd {
   font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
-  line-height: var(--line-height-sm)
+  line-height: var(--line-height-sm);
 }
 
 pre {
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
