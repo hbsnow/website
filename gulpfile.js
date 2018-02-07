@@ -33,6 +33,7 @@ gulp.task('lint:css', () => {
 
 gulp.task('build:css', ['lint:css'], () => {
   return gulp.src('src/assets/css/main.css')
+    .pipe(gulpIf(!isProduction, sourcemaps.init()))
     .pipe(postcss([
       require('postcss-import')(),
       require('autoprefixer')(),
@@ -43,6 +44,7 @@ gulp.task('build:css', ['lint:css'], () => {
         'z-index': true
       })
     ]))
+    .pipe(gulpIf(!isProduction, sourcemaps.write()))
     .pipe(gulp.dest('docs/assets/css'))
 })
 
