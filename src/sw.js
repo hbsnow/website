@@ -11,6 +11,7 @@ const STATIC_FILES = [
 
 if ('ServiceWorkerGlobalScope' in self && self instanceof ServiceWorkerGlobalScope) {
   self.addEventListener('install', event => {
+    console.log('sw.js install')
     event.waitUntil((async () => {
       const cache = await caches.open(CACHE_NAME)
       await cache.addAll(STATIC_FILES)
@@ -18,13 +19,12 @@ if ('ServiceWorkerGlobalScope' in self && self instanceof ServiceWorkerGlobalSco
   })
 
   self.addEventListener('activate', event => {
-    console.log('activate')
+    console.log('sw.js activate')
     event.waitUntil((async () => {
       const cachedFiles = await caches.keys()
 
       await Promise.all(cachedFiles.map(cacheFile => {
         if (cacheFile !== CACHE_NAME) {
-          console.log('Removing Cached Files from Cache - ', cacheFile)
           return caches.delete(cacheFile)
         }
       }))
@@ -34,29 +34,22 @@ if ('ServiceWorkerGlobalScope' in self && self instanceof ServiceWorkerGlobalSco
   self.addEventListener('fetch', event => {
     event.respondWith((async () => {
       const cache = await caches.match(event.request)
-      console.log('Cache:', cache)
       if (cache) return cache
 
       try {
         const response = await fetch(event.request)
-        console.log('Response:', response)
         if (response) return response
       } catch (error) {
         throw error
       }
     })())
   })
-} else {
-  navigator.serviceWorker.register('/sw.js').then(reg => {
-    if (reg.installing) {
-      console.log('Service worker installing')
-    } else if (reg.waiting) {
-      console.log('Service worker installed')
-    } else if (reg.active) {
-      console.log('Service worker active')
-    }
-  }).catch(error => {
-    // registration failed
-    console.log('Registration failed with ' + error)
+} else if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js', {
+      scope: '/'
+    }).catch(error => {
+      console.log(error)
+    })
   })
 }
