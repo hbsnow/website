@@ -26,15 +26,15 @@ export default () => {
         const pageTitle = pageTitleElem ? pageTitleElem.textContent + ' | ' + siteTitle : siteTitle
 
         document.title = pageTitle
-      } catch (err) {
-        console.log(err)
+      } catch (error) {
+        console.error(error)
         mainElem.innerHTML = `<p>データ取得に失敗したため、処理を中断しました。</p>`
       }
 
       // ナビゲーションの表示切替
       console.log(pageType)
 
-      await next()
+      next()
     }
   })
 
