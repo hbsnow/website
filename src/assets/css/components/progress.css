@@ -1,11 +1,34 @@
 .progress {
   position: fixed;
-  top: 0;
+  top: -4px;
   left: 0;
   width: 100%;
   height: 4px;
 }
 
-.progress > svg {
+.progress--active {
+  top: 0;
+}
+
+.progress__svg {
   display: block;
+}
+
+.progress__bar {
+  stroke-dasharray: 0, 100;
+  stroke-dashoffset: 0;
+  stroke: var(--color-primary);
+}
+
+.progress--active .progress__bar {
+  stroke-dasharray: 100, 100;
+  transition: stroke-dasharray 5s ease;
+}
+
+.progress--finish .progress__bar {
+  transition: stroke-dasharray 0.2s linear;
+}
+
+.progress__base {
+  stroke: var(--color-grey);
 }

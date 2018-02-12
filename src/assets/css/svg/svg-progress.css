@@ -1,9 +1,0 @@
-.svg-progress__bar {
-  stroke-dasharray: 0, 100;
-  stroke-dashoffset: 0;
-  stroke: var(--color-primary);
-}
-
-.svg-progress__base {
-  stroke: var(--color-grey);
-}
