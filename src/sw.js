@@ -32,6 +32,8 @@ if ('ServiceWorkerGlobalScope' in self && self instanceof ServiceWorkerGlobalSco
   })
 
   self.addEventListener('fetch', event => {
+    if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') return
+
     event.respondWith((async () => {
       const cache = await caches.match(event.request)
       if (cache) return cache
