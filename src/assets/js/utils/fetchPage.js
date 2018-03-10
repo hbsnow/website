@@ -24,6 +24,6 @@ export default async filepath => {
 
     return content
   } catch (error) {
-    console.error(`fetch failed: ${error}`)
+    throw new Error(`fetch failed: ${error}`)
   }
 }

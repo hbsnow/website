@@ -12,7 +12,8 @@
             "last 1 Safari versions",
             "last 1 ios_saf versions"
           ]
-        }
+        },
+        "modules": false
       }
     ]
   ]

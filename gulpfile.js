@@ -87,13 +87,14 @@ gulp.task('copy', () => {
   return gulp.src([
     'src/assets/**/*.{txt,xml,json}',
     'src/assets/**/README.md',
-    'src/assets/**/CNAME'
+    'src/assets/**/CNAME',
+    'src/assets/**/{ga}.js',
   ])
     .pipe(gulp.dest('docs/assets'))
 })
 
 gulp.task('watch', ['build'], () => {
-  gulp.watch('src/assets/css/**/*.css', ['build:css'])
+  gulp.watch('src/assets/css/**/*.css', ['build:css', 'list:css'])
   gulp.watch('src/sw.js', ['build:js'])
 })
 

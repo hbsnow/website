@@ -12,8 +12,8 @@ html {
 }
 
 body {
-  background-color: var(--color);
-  color: var(--color-primary-text);
+  background-color: var(--color-dark);
+  color: var(--color-light);
 }
 
 a {
@@ -33,7 +33,7 @@ h4,
 h5,
 h6 {
   font-family: var(--font-family-heading);
-  line-height: var(--line-height-sm);
+  margin: 0 0 1rem;
 }
 
 pre,
@@ -47,4 +47,14 @@ kbd {
 
 pre {
   font-size: 0.875rem;
+  margin: 0 0 1rem;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+ul,
+ol {
+  margin: 0 0 1rem;
 }

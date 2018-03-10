@@ -4,6 +4,7 @@
   left: 0;
   width: 100%;
   height: 4px;
+  transition: top 0.2s ease;
 }
 
 .progress--active {

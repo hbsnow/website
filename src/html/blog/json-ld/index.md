@@ -2,10 +2,11 @@
 title: AMP で必要となる JSON-LD による構造化データ
 tags: amp
 description: JSON-LD による構造化データの記述方法についての解説。
-jsonMetadata: assets/reference.json
 ---
 
-Google では構造化データを [JSON-LD で記述することを推奨](https://developers.google.com/search/docs/guides/intro-structured-data#structured-data-format)しています。ここでは AMP で必要になる JSON-LD による構造化データの記述方法について、簡単な説明をしています。
+Google では構造化データを [JSON-LD で記述することを推奨](https://developers.google.com/search/docs/guides/intro-structured-data#structured-data-format)しています。
+
+そのため、ここでは AMP で必要になる JSON-LD による構造化データの記述方法についての簡単な説明をしていきます。
 
 ## JSON-LD
 
@@ -13,11 +14,11 @@ JSON-LD は、Linked Data を JSON で記述するための軽量シンタック
 
 ### keywords
 
-JSON-LD にはいくつかの keyword がありますが、ここで紹介しているのは AMP で必要になる keyword のみに限定しています。その他の keyword については [最新の JSON-LD の仕様書](https://json-ld.org/spec/latest/json-ld/#syntax-tokens-and-keywords) で確認してください。
+JSON-LD にはいくつかの keyword がありますが、ここで紹介しているのは AMP で必要になる keyword のみに限定しています。その他の keyword については[最新の JSON-LD の仕様書](https://json-ld.org/spec/latest/json-ld/#syntax-tokens-and-keywords) で確認してください。
 
 #### `@context`
 
-JSON-LD 全体で使用される省略名を定義するために使用します。
+`@context` は JSON-LD 全体で使用される、省略名を定義するために使用します。例えば、下記の JSON-LD
 
 ```json
 {
@@ -25,7 +26,7 @@ JSON-LD 全体で使用される省略名を定義するために使用します
 }
 ```
 
-例えば、上記の JSON-LD は以下のように記述することができます。
+これは次のように記述することができます。
 
 ```json
 {
@@ -38,7 +39,7 @@ JSON-LD 全体で使用される省略名を定義するために使用します
 
 ここでの `name` は term と呼ばれ、このように識別子を短い記法で表現することができるようになります。
 
-また、これは次のように記述することもできます。
+また、次のように記述することもできます。
 
 ```json
 {
@@ -49,7 +50,7 @@ JSON-LD 全体で使用される省略名を定義するために使用します
 }
 ```
 
-この例のように単純なものであれば、さらに簡略化できます。
+この例のように単純なものであれば、さらに簡略化して書くこともできます。
 
 ```json
 {
@@ -82,6 +83,8 @@ node あるいは typed value の型を指定するときに使用します。
 
 node 型は人物や場所、イベント、Webページなどの記述されているものの型を指定し、typed value 型は整数、浮動小数点数、または日付など、特定の値のデータ型を指定します。
 
+hbsnow は私の名前ですから、次のように記述することになります。
+
 ```json
 {
   "@context": {
@@ -93,13 +96,11 @@ node 型は人物や場所、イベント、Webページなどの記述されて
 }
 ```
 
-hbsnow はこの JSON-LD で記述されている人物ですから、このようになるでしょう。
-
-## Google 構造化テストツール
+## バリデーション
 
 [Google 構造化テストツール](https://search.google.com/structured-data/testing-tool) では実際にサイトで利用するときにエラーがないかの確認をすることができます。
 
-実際に AMP で JSON-LD を使用する場合には、いくつか必須項目があり、それらは公式の [Google Search のドキュメント](https://developers.google.com/search/docs/guides/)で確認することができます。
+実際に AMP で JSON-LD を使用する場合には、いくつかの記述が必須となる項目があり、それらは公式の [Google Search のドキュメント](https://developers.google.com/search/docs/guides/)で確認することができます。
 
 ## AMP で使用する場合のサンプル
 
@@ -115,7 +116,7 @@ hbsnow はこの JSON-LD で記述されている人物ですから、このよ�
   },
   "headline": "サンプル",
   "image": [
-    "https://example.com/blog/example/assets/image1x1.png",
+    "https://example.com/blog/example/assets/image@1x1.png",
     "https://example.com/blog/example/assets/image@4x3.png",
     "https://example.com/blog/example/assets/image@16x9.png"
   ],
