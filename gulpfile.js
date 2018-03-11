@@ -20,32 +20,15 @@ const runSequence = require('run-sequence')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-gulp.task('lint:css', () => {
-  return gulp.src('src/assets/css/**/*.css')
-    .pipe(postcss([
-      require('doiuse')({}),
-      require('stylelint')(),
-      require('postcss-reporter')({
-        clearReportedMessages: true
-      })
-    ]))
-})
-
-gulp.task('build:css', ['lint:css'], () => {
-  return gulp.src('src/assets/css/main.css')
-    .pipe(gulpIf(!isProduction, sourcemaps.init()))
-    .pipe(postcss([
-      require('postcss-import')(),
-      require('autoprefixer')(),
-      require('cssnano')({
-        'postcss-discard-unused': true,
-        'postcss-merge-idents': true,
-        'postcss-reduce-idents': true,
-        'z-index': true
-      })
-    ]))
-    .pipe(gulpIf(!isProduction, sourcemaps.write()))
-    .pipe(gulp.dest('docs/assets/css'))
+gulp.task('build:css', cb => {
+  pump([
+    gulp.src('src/assets/css/**/*.css'),
+    postcss({
+      modules: true
+    }),
+    filter(['**', '!**/_*.css']),
+    gulp.dest('docs/assets/css')
+  ], cb)
 })
 
 gulp.task('build:js', cb => {
@@ -78,7 +61,7 @@ gulp.task('build:image', () => {
         imagemin.optipng()
       ]))
     .pipe(gulp.dest('docs'))
-    .pipe(filter(['*', '!**/*.svg']))
+    .pipe(filter(['**', '!**/*.svg']))
     .pipe(webp())
     .pipe(gulp.dest('docs'))
 })
@@ -94,7 +77,7 @@ gulp.task('copy', () => {
 })
 
 gulp.task('watch', ['build'], () => {
-  gulp.watch('src/assets/css/**/*.css', ['build:css', 'list:css'])
+  gulp.watch('src/assets/css/**/*.css', ['build:css'])
   gulp.watch('src/sw.js', ['build:js'])
 })
 

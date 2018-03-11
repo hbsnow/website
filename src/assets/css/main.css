@@ -1,24 +1,23 @@
 @import 'normalize.css';
 
 /* base */
-@import 'base/root.css';
-@import 'base/reboot.css';
+@import 'base/_root.css';
+@import 'base/_reboot.css';
 
 /* images */
-@import 'svg/svg-loader.css';
+@import 'svg/_svg-loader.css';
 
 /* components */
-@import 'components/layout.css';
-@import 'components/header.css';
-@import 'components/menu.css';
-@import 'components/nav.css';
-@import 'components/main.css';
-@import 'components/footer.css';
-@import 'components/progress.css';
-@import 'components/header-title.css';
-@import 'components/content-header';
-@import 'components/content-body';
-@import 'components/content-footer';
-@import 'components/sns.css';
-@import 'components/icon.css';
-@import 'components/language.css';
+@import 'components/_layout.css';
+@import 'components/_header.css';
+@import 'components/_menu.css';
+@import 'components/_nav.css';
+@import 'components/_main.css';
+@import 'components/_footer.css';
+@import 'components/_progress.css';
+@import 'components/_header-title.css';
+@import 'components/_content-header';
+@import 'components/_content-body';
+@import 'components/_content-footer';
+@import 'components/_sns.css';
+@import 'components/_icon.css';
