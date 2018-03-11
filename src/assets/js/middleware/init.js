@@ -9,12 +9,14 @@ export default async (ctx, next) => {
     next()
   } else {
     progress.active()
+
     try {
       ctx.state.content = await fetchPage(`${ctx.canonicalPath}index.tpl`)
     } catch (error) {
       console.error(error)
       ctx.state.content = `<p>データ取得に失敗したため、処理を中断しました。</p>`
     }
+
     ctx.save()
     progress.finish()
 

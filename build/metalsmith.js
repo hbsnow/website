@@ -32,7 +32,7 @@ const configs = {
 
 const watches = process.argv.some(val => val === '--watch')
 
-metalsmith(path.join(__dirname, '../'))
+const Metalsmith = metalsmith(path.join(__dirname, '../'))
   .metadata(configs)
   .source('src/html')
   .destination('docs')
@@ -59,9 +59,21 @@ metalsmith(path.join(__dirname, '../'))
     }
   }))
 
-  .use(markdown('commonmark', {
-    xhtmlOut: false
-  }))
+const md = markdown('commonmark', {
+  html: false,
+  xhtmlOut: false,
+  quotes: '',
+  highlight: (str, lang) => {
+    const parsed = path.parse(lang)
+    const ext = parsed.ext.slice(1) || parsed.name
+    return `<pre class="codeblock codeblock--${ext}" data-name="${lang}">
+  <code class="${ext}">${md.parser.utils.escapeHtml(str)}</code>
+</pre>`
+  }
+})
+
+Metalsmith
+  .use(md)
   .use(inPlace())
 
   // コンテンツのみのテンプレートファイルを作成
