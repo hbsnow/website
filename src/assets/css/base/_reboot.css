@@ -14,12 +14,34 @@ html {
 body {
   background-color: var(--color-dark);
   color: var(--color-light);
+  overflow-y: scroll;
+}
+
+body::-webkit-scrollbar {
+  width: 0.625rem;
+  background-color: var(--color-grey-light);
+  border-left: 1px solid var(--color-divider);
+}
+
+body::-webkit-scrollbar-thumb {
+  border-radius: 0.625rem;
+  background-color: var(--color-grey);
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-grey-dark);
 }
 
 a {
+  display: inline-block;
   text-decoration: none;
   word-wrap: break-word;
   color: var(--color-primary);
+  padding: 0.125rem 0.25rem;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 a:focus {
@@ -33,7 +55,7 @@ h4,
 h5,
 h6 {
   font-family: var(--font-family-heading);
-  margin: 0 0 1rem;
+  margin: 1.5rem 0;
 }
 
 pre,
@@ -45,16 +67,25 @@ kbd {
   line-height: var(--line-height-sm);
 }
 
+code {
+  display: inline-block;
+  background-color: var(--color-grey-light);
+  border: 1px solid var(--color-divider);
+  word-break: break-word;
+  margin: 0 1px;
+  padding: 1px 2px;
+}
+
 pre {
   font-size: 0.875rem;
-  margin: 0 0 1rem;
+  margin: 1.5rem 0;
 }
 
 p {
-  margin: 0 0 1rem;
+  margin: 1rem 0;
 }
 
 ul,
 ol {
-  margin: 0 0 1rem;
+  margin: 1rem 0;
 }

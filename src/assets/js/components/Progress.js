@@ -9,13 +9,12 @@ export default class {
   }
 
   finish () {
-    this.rootElem.classList.add('progress--finish')
-
-    const progressTransitionEndHandler = event => {
+    const transitionEndHandler = event => {
       this.rootElem.classList.remove('progress--active', 'progress--finish')
-      event.target.removeEventListener('transitionend', progressTransitionEndHandler)
+      event.target.removeEventListener('transitionend', transitionEndHandler)
     }
 
-    this.barElem.addEventListener('transitionend', progressTransitionEndHandler, false)
+    this.rootElem.classList.add('progress--finish')
+    this.barElem.addEventListener('transitionend', transitionEndHandler, false)
   }
 }

@@ -14,9 +14,10 @@ const drafts = require('metalsmith-drafts')
 const posixPath = require('metalsmith-posix-path')
 const jsonMetadata = require('metalsmith-json-metadata')
 const watch = require('metalsmith-watch')
-const markdown = require('metalsmith-markdownit')
+const markdown = require('./metalsmith-markdown')
 const posthtml = require('metalsmith-posthtml')
 const rename = require('metalsmith-rename')
+const git = require('metalsmith-git')
 const debug = require('metalsmith-debug')
 
 const htmlnano = require('htmlnano')
@@ -58,22 +59,8 @@ const Metalsmith = metalsmith(path.join(__dirname, '../'))
       pagetype: 'BlogPosting'
     }
   }))
-
-const md = markdown('commonmark', {
-  html: false,
-  xhtmlOut: false,
-  quotes: '',
-  highlight: (str, lang) => {
-    const parsed = path.parse(lang)
-    const ext = parsed.ext.slice(1) || parsed.name
-    return `<pre class="codeblock codeblock--${ext}" data-name="${lang}">
-  <code class="${ext}">${md.parser.utils.escapeHtml(str)}</code>
-</pre>`
-  }
-})
-
-Metalsmith
-  .use(md)
+  .use(git())
+  .use(markdown())
   .use(inPlace())
 
   // コンテンツのみのテンプレートファイルを作成

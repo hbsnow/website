@@ -4,4 +4,5 @@ description: Home
 
 ul
   each val in collections.blog
+    - console.log(val)
     li: a(href='/' + val.posixPath)= val.title

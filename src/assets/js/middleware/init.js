@@ -1,25 +1,25 @@
-import fetchPage from '../utils/fetchPage'
+import Document from '../class/Utils/Document'
 import Progress from '../components/Progress'
 
 const progress = new Progress(document.getElementById('progress'))
 
 export default async (ctx, next) => {
-  if (ctx.init) {
-    // initial loading
-    next()
-  } else {
+  ctx.state.referrer = location.pathname
+
+  if (!ctx.init) {
     progress.active()
 
     try {
-      ctx.state.content = await fetchPage(`${ctx.canonicalPath}index.tpl`)
+      ctx.state.content = await Document.fetch(`${ctx.canonicalPath}index.tpl`)
     } catch (error) {
       console.error(error)
       ctx.state.content = `<p>データ取得に失敗したため、処理を中断しました。</p>`
     }
 
-    ctx.save()
     progress.finish()
-
-    next()
   }
+
+  ctx.save()
+
+  next()
 }

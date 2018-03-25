@@ -1,11 +1,13 @@
 import hljs from '../lib/highlight'
 
 export default class {
-  constructor (elem) {
-    this.elem = elem
+  constructor (node) {
+    this.node = node
   }
 
   run () {
-    hljs.initHighlightingOnLoad()
+    this.node.forEach(node => {
+      hljs.highlightBlock(node)
+    })
   }
 }

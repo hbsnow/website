@@ -25,26 +25,27 @@ block head
 block body
   .layout
     header.layout__header
-      .header
+      .header#header
         h1.header-title hbsnow
 
     main.layout__main
-      .main#main
+      .main
         block main
           include common/main.pug
 
     nav.layout__menu
-      .menu
+      .menu#menu
         a.menu__link(href='/about/')
           img.icon(src='/assets/img/icons/about.svg' alt='About')
 
     nav.layout__nav
-      .nav
-        a.nav__link(v-bind:class="{ active: page === 'page' }" href='/')
-          img.nav__image.icon(src='/assets/img/icons/arrow_back.svg' alt='back')
+      .nav#nav
+        .nav__icon#nav-icon
+          a.nav__link(href='/')
+            img.nav__image.icon(src='/assets/img/icons/arrow-white.svg' alt='back')
 
     footer.layout__footer
-      .footer
+      .footer#footer
         .footer__copyright
           p © 2017 #[a(href="http://hbsnow.github.io") hbsnow]
 

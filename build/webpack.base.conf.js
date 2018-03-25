@@ -33,6 +33,19 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: resolve('src')
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader',
+        include: resolve('src')
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+          'postcss-loader'
+        ]
       }
     ]
   }

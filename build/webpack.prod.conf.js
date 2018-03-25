@@ -6,13 +6,9 @@ const baseWebpackConfig = require('./webpack.base.conf')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = merge(baseWebpackConfig, {
+  mode: 'production',
   devtool: false,
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    }),
     new UglifyJsPlugin({
       sourceMap: false,
       uglifyOptions: {

@@ -6,6 +6,7 @@ const merge = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
 
 module.exports = merge(baseWebpackConfig, {
+  mode: 'development',
   devtool: 'eval-source-map',
   devServer: {
     clientLogLevel: 'warning',
@@ -20,12 +21,6 @@ module.exports = merge(baseWebpackConfig, {
     publicPath: '/'
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"development"'
-      }
-    }),
-
     new webpack.HotModuleReplacementPlugin(),
 
     // IDの生成 (recommended for development)

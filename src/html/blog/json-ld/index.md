@@ -4,40 +4,41 @@ tags: amp
 description: JSON-LD による構造化データの記述方法についての解説。
 ---
 
-Google では構造化データを [JSON-LD で記述することを推奨](https://developers.google.com/search/docs/guides/intro-structured-data#structured-data-format)しています。
+JSON-LD とは、[Linked Data](https://www.w3.org/DesignIssues/LinkedData.html) を JSON で記述するための軽量シンタックスです。
 
-そのため、ここでは AMP で必要になる JSON-LD による構造化データの記述方法についての簡単な説明をしていきます。
+Google では構造化データを、この [JSON-LD で記述することを推奨](https://developers.google.com/search/docs/guides/intro-structured-data#structured-data-format)しています。
 
-## JSON-LD
+## JSON-LD の keywords
 
-JSON-LD は、Linked Data を JSON で記述するための軽量シンタックスです。
+JSON-LD にはいくつかの keyword がありますが、ここで紹介しているのは AMP で必要になる keyword のみに限定しています。その他の keyword については[最新の JSON-LD の SPEC](https://json-ld.org/spec/latest/json-ld/#syntax-tokens-and-keywords) で確認してください。
 
-### keywords
+### @context
 
-JSON-LD にはいくつかの keyword がありますが、ここで紹介しているのは AMP で必要になる keyword のみに限定しています。その他の keyword については[最新の JSON-LD の仕様書](https://json-ld.org/spec/latest/json-ld/#syntax-tokens-and-keywords) で確認してください。
+`@context` は JSON-LD 全体で使用される、省略名を定義するために使用します。
 
-#### `@context`
-
-`@context` は JSON-LD 全体で使用される、省略名を定義するために使用します。例えば、下記の JSON-LD
+例えば、下記の JSON-LD は人間にとってわかりやすい記述とは言えません。
 
 ```json
 {
-   "http://schema.org/name": "hbsnow",
+  "http://schema.org/name": "Jhon Doe",
+  "@type": "http://schema.org/Person"
 }
 ```
 
-これは次のように記述することができます。
+`@context` を使用することで、人にとってわかりやすく記述することができます。
 
 ```json
 {
   "@context": {
-    "name": "http://schema.org/name"
+    "name": "http://schema.org/name",
+    "Person": "http://schema.org/Person",
   },
-  "name": "hbsnow"
+  "@type": "Person",
+  "name": "Jhon Doe"
 }
 ```
 
-ここでの `name` は term と呼ばれ、このように識別子を短い記法で表現することができるようになります。
+ここでの `name` や `Person` は term と呼ばれ、識別子を短い記法で表現することができるようになります。
 
 また、次のように記述することもできます。
 
@@ -46,63 +47,76 @@ JSON-LD にはいくつかの keyword がありますが、ここで紹介して
   "@context": {
     "schema": "http://schema.org"
   },
-  "schema:name": "hbsnow"
+  "@type": "schema:Person",
+  "schema:name": "Jhon Doe"
 }
 ```
 
-この例のように単純なものであれば、さらに簡略化して書くこともできます。
+この例のように term の定義が一つであれば、`@vocab` を使用さらに簡略化して書くこともできます。
 
 ```json
 {
   "@context": "http://schema.org",
-  "name": "hbsnow"
+  "@type": "Person",
+  "name": "Jhon Doe"
 }
 ```
 
-#### `@id`
-
-IRI や blank node identifier (`_:` ではじまる文字列) を用いて一意に識別するために使用します。
-
-先ほどの例では hbsnow という人物が複数いた場合、それがどの hbsnow なのかがわかりません。
+逆に複雑であれば、これらの定義を外部ファイルにすることもできます。
 
 ```json
 {
-  "@context": {
-    "name": "http://schema.org/name"
-  },
-  "@id": "https://hbsnow.github.io",
-  "name": "hbsnow"
+  "@context": "http://example.org/contexts/person.jsonld",
+  "@type": "Person",
+  "name": "Jhon Doe"
+}
+```
+
+```person.jsonld
+{
+  "@vocab": "http://schema.org/"
+}
+```
+
+#### @id
+
+IRI や blank node identifier (`_:` ではじまる文字列) を用いて一意に識別するために使用します。
+
+先ほどの例では Jhon Doe という人物が複数いた場合、それがどの Jhon Doe なのかがわかりません。
+
+```json
+{
+  "@context": "http://schema.org",
+  "@type": "Person",
+  "@id": "https://example.org/jhon_doe",
+  "name": "Jhon Doe"
 }
 ```
 
 この例ではサイトの URL を追加することで、人物を一意に特定しています。
 
-#### `@type` 
+#### @type
 
 node あるいは typed value の型を指定するときに使用します。
 
 node 型は人物や場所、イベント、Webページなどの記述されているものの型を指定し、typed value 型は整数、浮動小数点数、または日付など、特定の値のデータ型を指定します。
 
-hbsnow は私の名前ですから、次のように記述することになります。
+Jhon Doe は私の名前ですから、次のように記述することになります。
 
 ```json
 {
   "@context": {
     "name": "http://schema.org/name"
   },
-  "@id": "https://example.com/hbsnow",
+  "@id": "https://example.com/Jhon Doe",
   "@type": "http://schema.org/Person",
-  "name": "hbsnow"
+  "name": "Jhon Doe"
 }
 ```
 
-## バリデーション
-
-[Google 構造化テストツール](https://search.google.com/structured-data/testing-tool) では実際にサイトで利用するときにエラーがないかの確認をすることができます。
-
-実際に AMP で JSON-LD を使用する場合には、いくつかの記述が必須となる項目があり、それらは公式の [Google Search のドキュメント](https://developers.google.com/search/docs/guides/)で確認することができます。
-
 ## AMP で使用する場合のサンプル
+
+AMP で JSON-LD を使用する場合には、いくつかの記述が必須となる項目があり、それらは公式の [Google Search のドキュメント](https://developers.google.com/search/docs/guides/)で確認することができます。
 
 ### ブログ記事
 
@@ -132,14 +146,24 @@ hbsnow は私の名前ですから、次のように記述することになり�
   },
   "datePublished": "2017-11-12",
   "dateModified": "2017-11-21",
-  "author": "hbsnow",
+  "author": "Jhon Doe",
   "description": "サンプルページです。"
   }
 }
 ```
 
-`image` にはガイドラインが設けられていて、幅が `696px` 以上の `.jpg, .gif, .png` いずれかの画像である必要があります。最良の結果を得るには `width * height` の結果が `300000` 以下となる、縦横比 `16:9, 4:3, 1:1` の複数の高解像度画像を複数用意する必要があります。
+`image` にはガイドラインが設けられていて、幅が `696px` 以上の jpg, gif, png いずれかの画像形式であり、これら画像の最良の結果を得るためには `width * height` の結果が `300000` 以下となる、縦横比 `16:9, 4:3, 1:1` の複数の高解像度画像を複数用意する必要があります。
 
-`publisher` は `Organization` しか指定できません。よって個人ブログのような場合には `name` にサイト名、`logo` にはバナーなどを入れるしかありません。`logo` のサイズには[ガイドラインが設けられて](https://developers.google.com/search/docs/data-types/articles#logo-guidelines)いて、`600 * 60px` 以下の `.jpg, .gif, .png` いずれかの画像で、背景が白、あるいは明るい色である必要があります。また、ここに指定される画像はワードマークやロゴであって、アイコンではないことに注意が必要です。
+`publisher` は `Organization` しか指定できません。よって個人ブログのような場合には `name` にサイト名、`logo` にはバナーなどを入れるしかないように思えます。`logo` のサイズには[ガイドラインが設けられて](https://developers.google.com/search/docs/data-types/articles#logo-guidelines)いて、`600 * 60px` 以下の `.jpg, .gif, .png` いずれかの画像で、背景が白、あるいは明るい色である必要があります。また、ここに指定される画像はワードマークやロゴであって、アイコンではないことに注意が必要です。
 
-`mainEntityOfPage, dateModified, description` は `recommended` であり必須ではありません。
+`mainEntityOfPage`, `dateModified`,` description` は `recommended` であり必須ではありません。
+
+## バリデーション
+
+[Google 構造化テストツール](https://search.google.com/structured-data/testing-tool) では実際にサイトで利用するときにエラーがないかの確認をすることができます。
+
+## 参考
+
+- [JSON-LD 1.1](https://json-ld.org/spec/latest/json-ld/)
+- [Introduction to Structured Data | Search | Google Developers](https://developers.google.com/search/docs/guides/intro-structured-data)
+- [Article | Search | Google Developers](https://developers.google.com/search/docs/data-types/article)

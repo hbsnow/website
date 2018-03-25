@@ -4,11 +4,12 @@
   left: 0;
   width: 100%;
   height: 4px;
-  transition: top 0.2s ease;
+  transform: translateY(0);
+  transition: transform 0.2s ease;
 }
 
 .progress--active {
-  top: 0;
+  transform: translateY(4px);
 }
 
 .progress__svg {
