@@ -63,7 +63,7 @@ const Metalsmith = metalsmith(path.join(__dirname, '../'))
       }
     })
   )
-  .use(git())
+  .use(git({ pattern: 'blog/*/index.html' }))
   .use(markdown())
   .use(inPlace())
 
