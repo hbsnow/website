@@ -1,5 +1,5 @@
 export default class {
-  static timeout (ms, promise) {
+  static timeout(ms, promise) {
     return new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
         reject(new Error('timeout'))
@@ -18,7 +18,7 @@ export default class {
     })
   }
 
-  static async fetch (filepath) {
+  static async fetch(filepath) {
     try {
       const response = await this.timeout(5000, fetch(filepath))
       const content = await response.text()

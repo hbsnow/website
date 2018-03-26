@@ -9,22 +9,14 @@ module.exports = merge(baseWebpackConfig, {
   mode: 'production',
   devtool: false,
   plugins: [
+    // IDの生成 (recommended for production)
+    // Scope Hoisting を有効化する
     new UglifyJsPlugin({
       sourceMap: false,
-      uglifyOptions: {
-        ecma: 8,
-        output: {
-          comments: false,
-          beautify: false
-        }
-      },
+      uglifyOptions: { ecma: 8, output: { comments: false, beautify: false } },
       parallel: true
     }),
-
-    // IDの生成 (recommended for production)
     new webpack.HashedModuleIdsPlugin(),
-
-    // Scope Hoisting を有効化する
     new webpack.optimize.ModuleConcatenationPlugin()
   ]
 })

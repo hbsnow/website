@@ -1,5 +1,5 @@
 export default class {
-  static fadeOut (fadeOutElem, className, removeElem = false) {
+  static fadeOut(fadeOutElem, className, removeElem = false) {
     fadeOutElem.classList.add(className)
     this.animationend(fadeOutElem, className, () => {
       if (!removeElem) return
@@ -8,12 +8,12 @@ export default class {
     })
   }
 
-  static fadeIn (fadeInElem, className) {
+  static fadeIn(fadeInElem, className) {
     fadeInElem.classList.add(className)
     this.animationend(fadeInElem, className)
   }
 
-  static animationend (elem, className, onCompleted = false) {
+  static animationend(elem, className, onCompleted = false) {
     const handler = event => {
       elem.classList.remove(className)
       event.target.removeEventListener('animationend', handler)

@@ -44,85 +44,93 @@ const Metalsmith = metalsmith(path.join(__dirname, '../'))
 
   .use(posixPath())
   .use(jsonMetadata())
-  .use(collections({
-    blog: {
-      pattern: 'blog/*/index.md',
-      sortBy: 'date',
-      reverse: true,
-      refer: false
-    }
-  }))
-  .use(collectionMetadata({
-    'collections.blog': {
-      layout: 'blog/default.pug',
-      hasAmp: true,
-      pagetype: 'BlogPosting'
-    }
-  }))
+  .use(
+    collections({
+      blog: {
+        pattern: 'blog/*/index.md',
+        sortBy: 'date',
+        reverse: true,
+        refer: false
+      }
+    })
+  )
+  .use(
+    collectionMetadata({
+      'collections.blog': {
+        layout: 'blog/default.pug',
+        hasAmp: true,
+        pagetype: 'BlogPosting'
+      }
+    })
+  )
   .use(git())
   .use(markdown())
   .use(inPlace())
 
   // コンテンツのみのテンプレートファイルを作成
-  .use(copy({
-    pattern: '**/index.html',
-    transform: file => file.replace(/index.html$/g, 'index.tpl')
-  }))
+  .use(
+    copy({
+      pattern: '**/index.html',
+      transform: file => file.replace(/index.html$/g, 'index.tpl')
+    })
+  )
 
   // AMP用ファイルの作成
-  .use(copy({
-    pattern: 'blog/*/index.html',
-    transform: file => file.replace(/index.html$/g, 'amp.html')
-  }))
+  .use(
+    copy({
+      pattern: 'blog/*/index.html',
+      transform: file => file.replace(/index.html$/g, 'amp.html')
+    })
+  )
 
   // tplとAMP用ファイルの使用するlayoutを変更
-  .use(fileMetadata([
-    {
-      pattern: '**/index.tpl',
-      metadata: {
-        layout: 'tpl.pug'
+  .use(
+    fileMetadata([
+      {
+        pattern: '**/index.tpl',
+        metadata: {
+          layout: 'tpl.pug'
+        }
+      },
+      {
+        pattern: 'blog/*/amp.html',
+        metadata: {
+          layout: 'blog/amp.pug'
+        }
       }
-    },
-    {
-      pattern: 'blog/*/amp.html',
-      metadata: {
-        layout: 'blog/amp.pug'
-      }
-    }
-  ]))
+    ])
+  )
 
-  .use(layouts({
-    engine: 'pug',
-    pattern: ['**/index.{html,tpl}', '**/amp.html'],
-    default: 'default.pug',
-    directory: 'src/layouts'
-  }))
+  .use(
+    layouts({
+      engine: 'pug',
+      pattern: ['**/index.{html,tpl}', '**/amp.html'],
+      default: 'default.pug',
+      directory: 'src/layouts'
+    })
+  )
   .use(debug())
 
   // .html
-  .use(branch('**/index.html')
-    .use(posthtml())
-  )
+  .use(branch('**/index.html').use(posthtml()))
 
   // .amp
-  .use(branch('**/amp.html')
-    .use(posthtml())
-  )
+  .use(branch('**/amp.html').use(posthtml()))
 
   // .tpl
-  .use(branch('**/index.tpl')
-    .use(posthtml())
-  )
+  .use(branch('**/index.tpl').use(posthtml()))
 
-  .use(when(
-    watches,
-    watch({
-      paths: {
-        '${source}/**/*': true,
-        'src/layouts/**/*': '**/*'
-      }
-    })
-  ))
+  .use(
+    when(
+      watches,
+      watch({
+        paths: {
+          '${source}/**/*': true,
+          'src/layouts/**/*': '**/*'
+        }
+      })
+    )
+  )
   .build(err => {
     if (err) throw err
 

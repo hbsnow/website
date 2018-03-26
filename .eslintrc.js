@@ -7,12 +7,12 @@ module.exports = {
     sourceType: 'module'
   },
   env: {
-    browser: true,
+    browser: true
   },
   globals: {
     ServiceWorkerGlobalScope: true
   },
-  extends: 'standard',
+  extends: ['prettier', 'prettier/standard'],
   rules: {
     'arrow-parens': 0,
     'generator-star-spacing': 0,

@@ -1,2 +1,1 @@
-export default ctx => {
-}
+export default ctx => {}

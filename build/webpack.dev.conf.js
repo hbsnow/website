@@ -21,11 +21,9 @@ module.exports = merge(baseWebpackConfig, {
     publicPath: '/'
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-
     // IDの生成 (recommended for development)
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
-
     new webpack.NoEmitOnErrorsPlugin()
   ]
 })

@@ -17,7 +17,7 @@
   --color-code: #d73a49;
   --font-family-system-ui: system-ui, sans-serif;
   --font-family-heading: 'Raleway', system-ui, sans-serif;
-  --font-family-monospace: 'Consolas', monospace;
+  --font-family-monospace: 'Menlo', 'Consolas', monospace;
   --line-height: 1.5;
   --line-height-sm: 1.25;
   --line-height-lg: 1.75;

@@ -1,14 +1,14 @@
 export default class {
-  constructor (rootElem) {
+  constructor(rootElem) {
     this.rootElem = rootElem
     this.barElem = rootElem.querySelector('.progress__bar')
   }
 
-  active () {
+  active() {
     this.rootElem.classList.add('progress--active')
   }
 
-  finish () {
+  finish() {
     const transitionEndHandler = event => {
       this.rootElem.classList.remove('progress--active', 'progress--finish')
       event.target.removeEventListener('transitionend', transitionEndHandler)

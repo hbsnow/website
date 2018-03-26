@@ -15,11 +15,8 @@ export default async (ctx, next) => {
       console.error(error)
       ctx.state.content = `<p>データ取得に失敗したため、処理を中断しました。</p>`
     }
-
     progress.finish()
   }
-
   ctx.save()
-
   next()
 }

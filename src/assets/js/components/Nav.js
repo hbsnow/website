@@ -1,10 +1,10 @@
 export default class {
-  constructor (elem, activeClassName) {
+  constructor(elem, activeClassName) {
     this.elem = elem
     this.activeClassName = activeClassName
   }
 
-  changeClass (path) {
+  changeClass(path) {
     if (path === '/') {
       this.elem.classList.remove(this.activeClassName)
     } else {

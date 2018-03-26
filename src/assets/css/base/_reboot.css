@@ -63,7 +63,7 @@ code,
 var,
 samp,
 kbd {
-  font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+  font-family: var(--font-family-monospace);
   line-height: var(--line-height-sm);
 }
 
