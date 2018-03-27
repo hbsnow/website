@@ -1,0 +1,6 @@
+@keyframes move-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}

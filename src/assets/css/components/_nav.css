@@ -1,0 +1,28 @@
+.nav {
+  background-color: var(--color-dark);
+}
+
+.nav__icon {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s, visibility 0s ease 0.6s;
+}
+
+.nav__icon--active {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.nav__link {
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav__image {
+  vertical-align: middle;
+  transform: rotate(-90deg);
+}

@@ -1,0 +1,11 @@
+.menu {
+  background-color: var(--color-dark);
+}
+
+.menu__link {
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  align-items: center;
+  justify-content: center;
+}
