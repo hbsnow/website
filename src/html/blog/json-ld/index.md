@@ -1,5 +1,5 @@
 ---
-title: AMP で必要となる JSON-LD による構造化データ
+title: JSON-LD による構造化データ
 tags: amp
 description: JSON-LD による構造化データの記述方法についての解説。
 ---
@@ -78,6 +78,12 @@ JSON-LD にはいくつかの keyword がありますが、ここで紹介して
 }
 ```
 
+#### @type
+
+node あるいは typed value の型を指定するときに使用します。
+
+node 型は人物や場所、イベント、Webページなどの記述されているものの型を指定し、typed value 型は整数、浮動小数点数、または日付など、特定の値のデータ型を指定します。
+
 #### @id
 
 IRI や blank node identifier (`_:` ではじまる文字列) を用いて一意に識別するために使用します。
@@ -94,25 +100,6 @@ IRI や blank node identifier (`_:` ではじまる文字列) を用いて一意
 ```
 
 この例ではサイトの URL を追加することで、人物を一意に特定しています。
-
-#### @type
-
-node あるいは typed value の型を指定するときに使用します。
-
-node 型は人物や場所、イベント、Webページなどの記述されているものの型を指定し、typed value 型は整数、浮動小数点数、または日付など、特定の値のデータ型を指定します。
-
-Jhon Doe は私の名前ですから、次のように記述することになります。
-
-```json
-{
-  "@context": {
-    "name": "http://schema.org/name"
-  },
-  "@id": "https://example.com/Jhon Doe",
-  "@type": "http://schema.org/Person",
-  "name": "Jhon Doe"
-}
-```
 
 ## AMP で使用する場合のサンプル
 

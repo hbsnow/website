@@ -1,7 +1,7 @@
 .content-header {
   background-color: var(--color-primary);
   color: var(--color-reverse-text);
-  padding: 1rem;
+  padding: 1.5rem 1rem;
 }
 
 .content-header__title {
