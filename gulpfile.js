@@ -75,8 +75,7 @@ gulp.task('copy', () => {
 
 gulp.task('watch', ['build'], () => {
   gulp.watch('src/assets/css/**/*.css', ['build:css'])
-  gulp.watch('src/sw.js', ['build:js']),
-    gulp.watch(['**/*.js', '!**/node_modules/**/*'], ['format:js'])
+  gulp.watch('src/sw.js', ['build:js'])
 })
 
 gulp.task('build', cb => {

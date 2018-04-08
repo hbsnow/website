@@ -2,7 +2,10 @@
 description: Home
 ---
 
-ul
+ul.post-list
   each val in collections.blog
-    - console.log(val)
-    li: a(href='/' + val.posixPath)= val.title
+    - var date = moment(val.createDate)
+    li.post-list__item
+      a.post-list__link(href='/' + val.posixPath)
+        div.post-list__date= date.format('YYYY')
+        div.post-list__title= val.title

@@ -1,4 +1,4 @@
-@import 'normalize.css';
+/* @import 'normalize.css'; */
 
 /* base */
 @import 'base/_root.css';
@@ -10,9 +10,6 @@
 @import 'animation/_move-from-bottom.css';
 @import 'animation/_move-from-left.css';
 @import 'animation/_move-from-right.css';
-
-/* images */
-@import 'svg/_svg-loader.css';
 
 /* components */
 @import 'components/_layout.css';
@@ -26,6 +23,8 @@
 @import 'components/_content-body';
 @import 'components/_content-footer';
 @import 'components/_sns.css';
-@import 'components/_icon.css';
 @import 'components/_codeblock.css';
 @import 'components/_hljs.css';
+@import 'components/_svg.css';
+@import 'components/_post-list.css';
+@import 'components/_container.css';

@@ -20,6 +20,7 @@
   height: 3rem;
   align-items: center;
   justify-content: center;
+  margin: 0 0 0 auto;
 }
 
 .nav__image {

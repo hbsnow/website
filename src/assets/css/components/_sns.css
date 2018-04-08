@@ -1,10 +1,27 @@
 .sns {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
   margin: 1rem 0;
 }
 
+.sns__item {
+  width: 10rem;
+}
+
 .sns__link {
+  display: flex;
+}
+
+.sns__icon {
+  margin-right: 0.25rem;
+}
+
+.sns__name {
   opacity: 1;
-  margin-left: 1rem;
+}
+
+@media (min-width: 40em) {
+  .sns {
+    flex-direction: row;
+  }
 }

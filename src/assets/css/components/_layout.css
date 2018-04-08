@@ -1,11 +1,10 @@
 .layout {
   display: grid;
-  max-width: 78em;
   min-height: 100vh;
   grid-template:
     'nav  head menu' 3rem
     'main main main' 1fr
-    'foot foot foot' auto / 3rem 1fr 3rem;
+    'foot foot foot' auto / 1fr minmax(auto, 48rem) 1fr;
 }
 
 .layout__header {
@@ -31,39 +30,4 @@
 .layout__footer {
   grid-area: foot;
   z-index: 100;
-}
-
-@media (min-width: 64em) {
-  .layout {
-    grid-template: '. menu' 14rem 1fr / 1fr;
-  }
-
-  .layout__header,
-  .layout__nav,
-  .layout__footer {
-    position: fixed;
-  }
-
-  .layout__header {
-    top: 0;
-    width: 14rem;
-  }
-
-  .layout__nav {
-    top: calc(50vh - 1.5rem);
-    left: auto;
-    width: 3em;
-    height: 3rem;
-    margin-left: 12.5rem;
-  }
-
-  .layout__main {
-    width: auto;
-    min-height: 100vh;
-  }
-
-  .layout__footer {
-    bottom: 0;
-    width: 14rem;
-  }
 }
