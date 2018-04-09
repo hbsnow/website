@@ -17,7 +17,6 @@ const watch = require('metalsmith-watch')
 const markdown = require('./metalsmith-markdown')
 const posthtml = require('metalsmith-posthtml')
 const rename = require('metalsmith-rename')
-const git = require('metalsmith-git')
 const debug = require('metalsmith-debug')
 
 const htmlnano = require('htmlnano')
