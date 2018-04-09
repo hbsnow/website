@@ -2,11 +2,12 @@
 title: JSON-LD による構造化データ
 tags: amp
 description: JSON-LD による構造化データの記述方法についての解説。
+createDate: 2017-12-01
 ---
 
 JSON-LD とは、[Linked Data](https://www.w3.org/DesignIssues/LinkedData.html) を JSON で記述するための軽量シンタックスです。
 
-Google では構造化データを、この [JSON-LD で記述することを推奨](https://developers.google.com/search/docs/guides/intro-structured-data#structured-data-format)しています。
+Google では構造化データを、この [JSON-LD で記述することを推奨](https://developers.google.com/search/docs/guides/intro-structured-data#structured-data-format)されています。
 
 ## JSON-LD の keywords
 
@@ -16,7 +17,7 @@ JSON-LD にはいくつかの keyword がありますが、ここで紹介して
 
 `@context` は JSON-LD 全体で使用される、省略名を定義するために使用します。
 
-例えば、下記の JSON-LD は人間にとってわかりやすい記述とは言えません。
+例えば、下記の JSON-LD は同じ長い文字列が繰り返し出現し、冗長な記述です。
 
 ```json
 {
@@ -25,13 +26,13 @@ JSON-LD にはいくつかの keyword がありますが、ここで紹介して
 }
 ```
 
-`@context` を使用することで、人にとってわかりやすく記述することができます。
+これは `@context` を使用することで、シンプルに記述することができます。
 
 ```json
 {
   "@context": {
     "name": "http://schema.org/name",
-    "Person": "http://schema.org/Person",
+    "Person": "http://schema.org/Person"
   },
   "@type": "Person",
   "name": "Jhon Doe"
@@ -82,7 +83,7 @@ JSON-LD にはいくつかの keyword がありますが、ここで紹介して
 
 node あるいは typed value の型を指定するときに使用します。
 
-node 型は人物や場所、イベント、Webページなどの記述されているものの型を指定し、typed value 型は整数、浮動小数点数、または日付など、特定の値のデータ型を指定します。
+node 型は人物や場所、イベント、Web ページなどの記述されているものの型を指定し、typed value 型は整数、浮動小数点数、または日付など、特定の値のデータ型を指定します。
 
 #### @id
 
@@ -143,7 +144,7 @@ AMP で JSON-LD を使用する場合には、いくつかの記述が必須と�
 
 `publisher` は `Organization` しか指定できません。よって個人ブログのような場合には `name` にサイト名、`logo` にはバナーなどを入れるしかないように思えます。`logo` のサイズには[ガイドラインが設けられて](https://developers.google.com/search/docs/data-types/articles#logo-guidelines)いて、`600 * 60px` 以下の `.jpg, .gif, .png` いずれかの画像で、背景が白、あるいは明るい色である必要があります。また、ここに指定される画像はワードマークやロゴであって、アイコンではないことに注意が必要です。
 
-`mainEntityOfPage`, `dateModified`,` description` は `recommended` であり必須ではありません。
+`mainEntityOfPage`, `dateModified`,`description` は `recommended` であり必須ではありません。
 
 ## バリデーション
 
@@ -151,6 +152,6 @@ AMP で JSON-LD を使用する場合には、いくつかの記述が必須と�
 
 ## 参考
 
-- [JSON-LD 1.1](https://json-ld.org/spec/latest/json-ld/)
-- [Introduction to Structured Data | Search | Google Developers](https://developers.google.com/search/docs/guides/intro-structured-data)
-- [Article | Search | Google Developers](https://developers.google.com/search/docs/data-types/article)
+* [JSON-LD 1.1](https://json-ld.org/spec/latest/json-ld/)
+* [Introduction to Structured Data | Search | Google Developers](https://developers.google.com/search/docs/guides/intro-structured-data)
+* [Article | Search | Google Developers](https://developers.google.com/search/docs/data-types/article)

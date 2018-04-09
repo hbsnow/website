@@ -35,28 +35,33 @@ block body
 
     nav.layout__menu
       .menu#menu
-        a.menu__link(href='/about/')
-          img.icon(src='/assets/img/icons/about.svg' alt='About')
+        .menu__icon#menu-icon
+          a.menu__link(href='/about/')
+            .svg-icon.svg-icon--light
+              include ./svg/about.svg
 
     nav.layout__nav
       .nav#nav
         .nav__icon#nav-icon
           a.nav__link(href='/')
-            img.nav__image.icon(src='/assets/img/icons/arrow-white.svg' alt='back')
+            .svg-icon.svg-icon--light
+              include ./svg/arrow.svg
 
     footer.layout__footer
       .footer#footer
-        .footer__copyright
-          p © 2017 #[a(href="http://hbsnow.github.io") hbsnow]
-
         .footer__sns
-          .sns
-            .sns__item
-              a.sns__link(href='https://twitter.com/hbsnow')
-                img.sns__icon.icon(src='/assets/img/icons/twitter.svg' alt='Twitter')
-            .sns__item
-              a.sns__link(href='https://github.com/hbsnow')
-                img.sns__icon.icon(src='/assets/img/icons/github.svg' alt='GitHub')
+          .container
+            .sns
+              .sns__item
+                a.sns__link(href='https://github.com/hbsnow')
+                  .sns__icon
+                    include ./svg/github.svg
+                  .sns__name @hbsnow
+              .sns__item
+                a.sns__link(href='https://twitter.com/hbsnow')
+                  .sns__icon
+                    include ./svg/twitter.svg
+                  .sns__name @hbsnow
 
   .progress#progress
     include svg/progress.svg

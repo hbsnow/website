@@ -1,0 +1,12 @@
+.svg-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.svg-icon--light .svg-icon__fill {
+  fill: var(--color-light);
+}
+
+.svg-icon__none {
+  fill: none;
+}

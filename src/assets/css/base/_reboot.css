@@ -15,6 +15,7 @@ body {
   background-color: var(--color-dark);
   color: var(--color-light);
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 body::-webkit-scrollbar {
