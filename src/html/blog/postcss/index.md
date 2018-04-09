@@ -82,6 +82,6 @@ module.exports = ctx => {
 - [autoprefixer](https://github.com/postcss/autoprefixer)
 - [cssnano](http://cssnano.co/)
 
-フォーマッタには [prettier](https://github.com/prettier/prettier) を使うので、PostCSS では関知しません。
+フォーマッタには [prettier](https://github.com/prettier/prettier) を使うので、PostCSS ではフォーマットをしません。
 
-doiuse についてはそもそもエディタの仕事である気もするので、不要な気もしますがレポートで出てくれる方が意識できるので基本的に入れることにしています。コメントアウトでも書いていますが、何故か一つでも何かしらの設定がないと、`.browserslistrc` の設定を読み込んでくれないので注意が必要です。
+doiuse についてはコメントアウトでも書いていますが、何故か一つでも何かしらの設定がないと、`.browserslistrc` の設定を読み込んでくれないので注意が必要です(そのうち修正されると思いますが……)。
