@@ -5,7 +5,7 @@ description: PostCSS の設定ファイル。
 createDate: 2018-04-08
 ---
 
-PostCSSのビルドでは [PostCSS CLI](https://github.com/postcss/postcss-cli) を使わず、gulp-postcssを使います。理由は後述。
+PostCSS のビルドでは [PostCSS CLI](https://github.com/postcss/postcss-cli) を使わず、gulp-postcss を使います。理由は後述。
 
 ```gulpfile.js
 const gulp = require('gulp')
@@ -28,7 +28,7 @@ gulp.task('build:css', cb => {
 
 Sass のように `@import` されるファイルには prefix として `_` をつけて、出力しないような処理をしています。
 
-出力したいファイルを `src/main.css` のように決め打ちしてしまうと、`@import` したファイルを [doiuse](https://github.com/anandthakker/doiuse) や [stylelint](https://github.com/stylelint/stylelint) にかけることができません。[postcss-import](https://github.com/postcss/postcss-import) で結合後に LINT を実行することは可能ですが、結合してしまったあとでは、レポートされる行数が当然結合後の行数を示すことになり、使い物になりません。PostCSS CLIを使わないのはこれが一番の理由です。
+出力したいファイルを `src/main.css` のように決め打ちしてしまうと、`@import` したファイルを [doiuse](https://github.com/anandthakker/doiuse) や [stylelint](https://github.com/stylelint/stylelint) にかけることができません。[postcss-import](https://github.com/postcss/postcss-import) で結合後に LINT を実行することは可能ですが、結合してしまったあとでは、レポートされる行数が当然結合後の行数を示すことになり、使い物になりません。PostCSS CLI を使わないのはこれが理由です。
 
 ```.postcssrc.js
 const path = require('path')
@@ -74,14 +74,14 @@ module.exports = ctx => {
 
 使用するプラグインは以下の通り。
 
-- [doiuse](https://github.com/anandthakker/doiuse)
-- [stylelint](https://github.com/stylelint/stylelint)
-- [postcss-reporter](https://github.com/postcss/postcss-reporter)
-- [postcss-import](https://github.com/postcss/postcss-import)
-- [postcss-flexbugs-fixes](https://github.com/luisrudge/postcss-flexbugs-fixes)
-- [autoprefixer](https://github.com/postcss/autoprefixer)
-- [cssnano](http://cssnano.co/)
+* [doiuse](https://github.com/anandthakker/doiuse)
+* [stylelint](https://github.com/stylelint/stylelint)
+* [postcss-reporter](https://github.com/postcss/postcss-reporter)
+* [postcss-import](https://github.com/postcss/postcss-import)
+* [postcss-flexbugs-fixes](https://github.com/luisrudge/postcss-flexbugs-fixes)
+* [autoprefixer](https://github.com/postcss/autoprefixer)
+* [cssnano](http://cssnano.co/)
 
-フォーマッタには [prettier](https://github.com/prettier/prettier) を使うので、PostCSS ではフォーマットをしません。
+フォーマッタには [prettier](https://github.com/prettier/prettier) を使うので、PostCSS ではフォーマットをしていません。
 
 doiuse についてはコメントアウトでも書いていますが、何故か一つでも何かしらの設定がないと、`.browserslistrc` の設定を読み込んでくれないので注意が必要です(そのうち修正されると思いますが……)。

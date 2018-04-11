@@ -10,3 +10,7 @@
 .svg-icon__none {
   fill: none;
 }
+
+.svg-icon--nav {
+  transform: rotate(-90deg);
+}
