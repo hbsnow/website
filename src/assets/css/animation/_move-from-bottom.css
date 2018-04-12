@@ -1,6 +1,6 @@
 @keyframes move-from-bottom {
   from {
     opacity: 0;
-    transform: translateY(100%);
+    transform: translateY(25%);
   }
 }

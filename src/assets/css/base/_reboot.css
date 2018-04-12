@@ -12,10 +12,13 @@ html {
 }
 
 body {
+  display: flex;
+  justify-content: center;
   background-color: var(--color-dark);
   color: var(--color-light);
   overflow-y: scroll;
   overflow-x: hidden;
+  margin: 0;
 }
 
 body::-webkit-scrollbar {

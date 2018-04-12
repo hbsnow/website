@@ -12,12 +12,16 @@
   display: flex;
 }
 
+.sns__link:hover {
+  text-decoration: none;
+}
+
 .sns__icon {
-  margin-right: 0.25rem;
+  margin-right: 0.5rem;
 }
 
 .sns__name {
-  opacity: 1;
+  color: var(--color-light);
 }
 
 @media (min-width: 40em) {
