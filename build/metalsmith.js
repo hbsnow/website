@@ -99,24 +99,49 @@ const Metalsmith = metalsmith(path.join(__dirname, '../'))
     ])
   )
 
-  .use(
-    layouts({
-      engine: 'pug',
-      pattern: ['**/index.{html,tpl}', '**/amp.html'],
-      default: 'default.pug',
-      directory: 'src/layouts'
-    })
-  )
   .use(debug())
 
   // .html
-  .use(branch('**/index.html').use(posthtml()))
+  .use(
+    branch('**/index.html')
+      .use(
+        layouts({
+          engine: 'pug',
+          pattern: ['**/*'],
+          default: 'default.pug',
+          directory: 'src/layouts'
+        })
+      )
+      .use(posthtml())
+  )
 
   // .amp
-  .use(branch('**/amp.html').use(posthtml()))
+  .use(
+    branch('**/amp.html')
+      .use(
+        layouts({
+          engine: 'pug',
+          pattern: ['**/*'],
+          default: 'amp.pug',
+          directory: 'src/layouts'
+        })
+      )
+      .use(posthtml())
+  )
 
   // .tpl
-  .use(branch('**/index.tpl').use(posthtml()))
+  .use(
+    branch('**/index.tpl')
+      .use(posthtml())
+      .use(
+        layouts({
+          engine: 'pug',
+          pattern: ['**/*'],
+          default: 'default.pug',
+          directory: 'src/layouts'
+        })
+      )
+  )
 
   .use(
     when(

@@ -1,17 +1,20 @@
+block config
+  -
+    var isAmp = false
+
 -
   // global variables
   var page = {
     canonical: urlJoin(site.url, posixPath),
     author: {
       name: (author && author.name) || site.author.name,
-      twitter: (author && author.twitter) || (author && author.hasOwnProperty('name')) ? '' : site.author.twitter
+      twitter: (author && author.twitter) ||
+        (author && author.hasOwnProperty('name')) ? '' : site.author.twitter
     },
     title: (title && title + ' | ' + site.name) || site.name,
     image: thumb || (image || Array.isArray(image) ? image[0] : image) || site.publisher.logo.image,
     type: (pagetype === 'BlogPosting' || pagetype === 'Review') ? 'article' : 'webpage'
   }
-
-  var isAmp = nodePath.parse(path).name === 'amp'
 
   // Attributes
   var attr = isAmp ? {
@@ -59,4 +62,47 @@ html(lang='ja')&attributes(attr.html)
     block head
 
   body
-    block body
+    .layout
+      header.layout__header
+        .header#header
+          h1.header__title hbsnow
+
+      main.layout__main
+        .main
+          block main
+            include common/main.pug
+
+      nav.layout__menu
+        .menu#menu
+          .menu__icon#menu-icon
+            a.menu__link(href='/about/')
+              .svg-icon.svg-icon--light
+                include ./svg/about.svg
+
+      nav.layout__nav
+        .nav#nav
+          .nav__icon#nav-icon
+            a.nav__link(href='/')
+              .svg-icon.svg-icon--light.svg-icon--nav
+                include ./svg/arrow.svg
+
+      footer.layout__footer
+        .footer#footer
+          .footer__sns
+            .container
+              .sns
+                .sns__item
+                  a.sns__link(href='https://github.com/hbsnow')
+                    .sns__icon
+                      .svg-icon.svg-icon--light
+                        include ./svg/github.svg
+                    .sns__name @hbsnow
+                .sns__item
+                  a.sns__link(href='https://twitter.com/hbsnow')
+                    .sns__icon
+                      .svg-icon.svg-icon--light
+                        include ./svg/twitter.svg
+                    .sns__name @hbsnow
+
+    block foot
+

@@ -1,40 +1,8 @@
-doctype html
-html(⚡ lang='ja')
-  head
-    meta(charset='utf-8')
+extends base.pug
 
-    link(rel='canonical' href=canonical)
+block config
+  -
+    var isAmp = true
 
-    title hbsnow.github.io
-
-    meta(name='author' content='hbsnow')
-    meta(name='description' content=description)
-    meta(name='viewport' content='width=device-width, minimum-scale=1, initial-scale=1')
-
-    link(rel='icon' href='/favicon.ico')
-
-    link(rel='stylesheet', href='../../dest/main.css', amp-custom)
-
-    //- JSON-LD
-    script(type='application/ld+json')
-      block json_ld
-        .
-          {
-            "@context": "http://schema.org",
-            "@type": "Person",
-            "name": "hbsnow",
-            "url": "https://hbsnow.github.io/",
-            "image": "https://hbsnow.github.io/images/avatar.svg"
-          }
-
-    //- AMP
-    //- include ../common/head/amp.html
-
-  body
-    .page
-      header.page-header
-        block header
-          h1.header__title hbsnow.github.io
-
-      main.main
-        block main
+block head
+  include common/head/amp.html

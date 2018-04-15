@@ -10,7 +10,7 @@ module.exports = () => {
     quotes: ''
   })
 
-  md.parser.renderer.rules.fence = function(tokens, idx, options, env, slf) {
+  md.parser.renderer.rules.fence = (tokens, idx, options, env, slf) => {
     const token = tokens[idx]
     const info = token.info
       ? md.parser.utils.unescapeAll(token.info).trim()

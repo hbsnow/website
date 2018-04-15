@@ -4,7 +4,7 @@ description: Home
 
 ul.post-list
   each val in collections.blog
-    - var date = moment(val.createDate)
+    - var date = moment(val.datePublished)
     li.post-list__item
       a.post-list__link(href='/' + val.posixPath)
         div.post-list__date= date.format('YYYY')

@@ -2,7 +2,7 @@
 title: PostCSS の設定ファイル
 tags: postcss, sass
 description: PostCSS の設定ファイル。
-createDate: 2018-04-08
+datePublished: 2018-04-08
 ---
 
 PostCSS のビルドでは [PostCSS CLI](https://github.com/postcss/postcss-cli) を使わず、gulp-postcss を使います。理由は後述。
