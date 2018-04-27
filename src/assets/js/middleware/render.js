@@ -25,6 +25,7 @@ export default (ctx, next) => {
   }
 
   const fadeOutElem = document.getElementsByClassName('main')[0]
+  if (fadeOutElem.parentNode.childElementCount > 1) return
   Animation.fadeOut(fadeOutElem, 'main--out', true)
 
   const div = document.createElement('div')
