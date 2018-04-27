@@ -22,6 +22,48 @@ block head
   link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Raleway:700&text=hbsnow')
   link(rel='stylesheet' href='/assets/css/main.css')
 
-block foot
+block body
+  .layout
+    header.layout__header
+      .header#header
+        h1.header__title hbsnow
+
+    main.layout__main
+      .main
+        block main
+          include common/main.pug
+
+    nav.layout__menu
+      .menu#menu
+        .menu__icon#menu-icon
+          a.menu__link(href='/about/')
+            .svg-icon.svg-icon--light
+              include ./svg/about.svg
+
+    nav.layout__nav
+      .nav#nav
+        .nav__icon#nav-icon
+          a.nav__link(href='/')
+            .svg-icon.svg-icon--light.svg-icon--nav
+              include ./svg/arrow.svg
+
+    footer.layout__footer
+      .footer#footer
+        .footer__sns
+          .container
+            .sns
+              .sns__item
+                a.sns__link(href='https://github.com/hbsnow')
+                  .sns__icon
+                    .svg-icon.svg-icon--light
+                      include ./svg/github.svg
+                  .sns__name @hbsnow
+              .sns__item
+                a.sns__link(href='https://twitter.com/hbsnow')
+                  .sns__icon
+                    .svg-icon.svg-icon--light
+                      include ./svg/twitter.svg
+                  .sns__name @hbsnow
+
   .progress#progress
     include svg/progress.svg

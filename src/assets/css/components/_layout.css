@@ -1,6 +1,6 @@
 .layout {
   display: grid;
-  width: calc(100vw - 1rem);
+  width: 98vw;
   min-height: 100vh;
   grid-template:
     'nav  head menu' 3rem

@@ -6,3 +6,16 @@ block config
 
 block head
   include common/head/amp.html
+  link(rel='stylesheet' href='/assets/css/amp.css')
+
+block body
+  .layout
+    header.layout__header
+      h1.header__title
+        a(href='/') hbsnow
+
+    main.layout__main
+      include common/main.pug
+
+    footer.layout__footer
+      p Written by #[a(href='/') hbsnow].

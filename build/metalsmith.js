@@ -93,7 +93,7 @@ const Metalsmith = metalsmith(path.join(__dirname, '../'))
       {
         pattern: 'blog/*/amp.html',
         metadata: {
-          layout: 'blog/amp.pug'
+          layout: 'amp.pug'
         }
       }
     ])
@@ -132,15 +132,15 @@ const Metalsmith = metalsmith(path.join(__dirname, '../'))
   // .tpl
   .use(
     branch('**/index.tpl')
-      .use(posthtml())
       .use(
         layouts({
           engine: 'pug',
           pattern: ['**/*'],
-          default: 'default.pug',
+          default: 'tpl.pug',
           directory: 'src/layouts'
         })
       )
+      .use(posthtml())
   )
 
   .use(
