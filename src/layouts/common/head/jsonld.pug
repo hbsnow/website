@@ -1,12 +1,10 @@
 script(type='application/ld+json')
   block jsonld
     -
-      var jsonld = []
-
       //- pagetype
-      var jsonldPagetype = {
+      var jsonld = {
         '@context': 'http://schema.org',
-        '@type': pagetype,
+        '@type': pagetype || 'WebPage',
         headline: title + ' | ' + site.name || site.name,
         publisher: {
           '@type': 'Organization',
@@ -18,63 +16,25 @@ script(type='application/ld+json')
             width: site.publisher.width || 600
           }
         },
-        datePublished: datePublished,
         description: description || site.description
       }
 
-      if (!pagtype) {
-        jsonldPagetype = {
-          dateModified: dateModified,
-        }
-      } else {
-
+      if (datePublished) {
+        Object.assign({}, jsonld, {
+          datePublished: datePublished
+        })
       }
 
-      /*json_ld.push()
+      if (dateModified) {
+        Object.assign({}, jsonld, {
+          dateModified: dateModified
+        })
+      }
 
       if (image) {
         json_ld[0] = Object.assign(json_ld, {
           image: image
         })
-      }*/
-
-      //- Breadcrumbs
-      var pageBreadcrumb = {
-        "@context": "http://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [{
-          "@type": "ListItem",
-          "position": 1,
-          "item": {
-            "@id": "https://example.com/books",
-            "name": "Books",
-            "image": "http://example.com/images/icon-book.png"
-          }
-        },{
-          "@type": "ListItem",
-          "position": 2,
-          "item": {
-            "@id": "https://example.com/books/authors",
-            "name": "Authors",
-            "image": "http://example.com/images/icon-author.png"
-          }
-        },{
-          "@type": "ListItem",
-          "position": 3,
-          "item": {
-            "@id": "https://example.com/books/authors/annleckie",
-            "name": "Ann Leckie",
-            "image": "http://example.com/images/author-leckie-ann.png"
-          }
-        },{
-          "@type": "ListItem",
-          "position": 4,
-          "item": {
-            "@id": "https://example.com/books/authors/ancillaryjustice",
-            "name": "Ancillary Justice",
-            "image": "http://example.com/images/cover-ancillary-justice.png"
-          }
-        }]
       }
 
     != JSON.stringify(jsonld)

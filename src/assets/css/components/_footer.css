@@ -1,5 +1,11 @@
 .footer {
-  background-color: var(--color-light);
-  border-top: 1px solid var(--color-divider);
-  padding: 1rem;
+  background-color: var(--color-dark);
+}
+
+.footer__item {
+  padding: 1rem 0;
+}
+
+.footer__item--contact {
+  border-bottom: 1px solid var(--color-divider-reverse);
 }

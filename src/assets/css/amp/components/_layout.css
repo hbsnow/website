@@ -1,0 +1,13 @@
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 54em;
+  margin: 0 auto;
+}
+
+.layout__header,
+.layout__main,
+.layout__footer {
+  width: 100%;
+  padding: 0 0.5rem;
+}

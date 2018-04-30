@@ -56,7 +56,6 @@ const Metalsmith = metalsmith(path.join(__dirname, '../'))
   .use(
     collectionMetadata({
       'collections.blog': {
-        layout: 'blog/default.pug',
         hasAmp: true,
         pagetype: 'BlogPosting'
       }
@@ -93,30 +92,55 @@ const Metalsmith = metalsmith(path.join(__dirname, '../'))
       {
         pattern: 'blog/*/amp.html',
         metadata: {
-          layout: 'blog/amp.pug'
+          layout: 'amp.pug'
         }
       }
     ])
   )
 
-  .use(
-    layouts({
-      engine: 'pug',
-      pattern: ['**/index.{html,tpl}', '**/amp.html'],
-      default: 'default.pug',
-      directory: 'src/layouts'
-    })
-  )
   .use(debug())
 
   // .html
-  .use(branch('**/index.html').use(posthtml()))
+  .use(
+    branch('**/index.html')
+      .use(
+        layouts({
+          engine: 'pug',
+          pattern: ['**/*'],
+          default: 'default.pug',
+          directory: 'src/layouts'
+        })
+      )
+      .use(posthtml())
+  )
 
   // .amp
-  .use(branch('**/amp.html').use(posthtml()))
+  .use(
+    branch('**/amp.html')
+      .use(
+        layouts({
+          engine: 'pug',
+          pattern: ['**/*'],
+          default: 'amp.pug',
+          directory: 'src/layouts'
+        })
+      )
+      .use(posthtml())
+  )
 
   // .tpl
-  .use(branch('**/index.tpl').use(posthtml()))
+  .use(
+    branch('**/index.tpl')
+      .use(
+        layouts({
+          engine: 'pug',
+          pattern: ['**/*'],
+          default: 'tpl.pug',
+          directory: 'src/layouts'
+        })
+      )
+      .use(posthtml())
+  )
 
   .use(
     when(

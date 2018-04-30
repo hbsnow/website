@@ -11,5 +11,4 @@
 ## TODO
 
 * feed, sitemap.xml の出力
-* amp ページの layouts
-* metalsmith で watch 時に collection の記事が重複する
+* metalsmith で watch 時に markdown を編集すると collection の記事が重複する

@@ -1,17 +1,20 @@
+block config
+  -
+    var isAmp = false
+
 -
   // global variables
   var page = {
     canonical: urlJoin(site.url, posixPath),
     author: {
       name: (author && author.name) || site.author.name,
-      twitter: (author && author.twitter) || (author && author.hasOwnProperty('name')) ? '' : site.author.twitter
+      twitter: (author && author.twitter) ||
+        (author && author.hasOwnProperty('name')) ? '' : site.author.twitter
     },
     title: (title && title + ' | ' + site.name) || site.name,
     image: thumb || (image || Array.isArray(image) ? image[0] : image) || site.publisher.logo.image,
     type: (pagetype === 'BlogPosting' || pagetype === 'Review') ? 'article' : 'webpage'
   }
-
-  var isAmp = nodePath.parse(path).name === 'amp'
 
   // Attributes
   var attr = isAmp ? {

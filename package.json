@@ -23,6 +23,7 @@
     "clean": "rimraf ./docs"
   },
   "dependencies": {
+    "animejs": "^2.2.0",
     "autoprefixer": "^8.2.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.2",
@@ -84,6 +85,7 @@
     "postcss-reporter": "^5.0.0",
     "posthtml-inline-assets": "^2.0.0",
     "prettier": "^1.11.1",
+    "pug-loader": "^2.4.0",
     "pump": "^3.0.0",
     "recursive-escape": "^2.0.1",
     "rimraf": "^2.6.2",

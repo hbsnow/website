@@ -1,4 +1,4 @@
-/* @import 'normalize.css'; */
+@charset "utf-8";
 
 /* base */
 @import 'base/_root.css';
@@ -19,9 +19,9 @@
 @import 'components/_main.css';
 @import 'components/_footer.css';
 @import 'components/_progress.css';
-@import 'components/_content-header';
-@import 'components/_content-body';
-@import 'components/_content-footer';
+@import 'components/_content-header.css';
+@import 'components/_content-body.css';
+@import 'components/_content-footer.css';
 @import 'components/_sns.css';
 @import 'components/_codeblock.css';
 @import 'components/_hljs.css';

@@ -1,7 +1,11 @@
 import Document from '../class/Utils/Document'
 import Progress from '../components/Progress'
+import errorHtml from '../pug/error.pug'
 
-const progress = new Progress(document.getElementById('progress'))
+const progress = new Progress(
+  document.querySelector('.progress__svg'),
+  document.querySelector('.progress__bar')
+)
 
 export default async (ctx, next) => {
   ctx.state.referrer = location.pathname
@@ -13,7 +17,7 @@ export default async (ctx, next) => {
       ctx.state.content = await Document.fetch(`${ctx.canonicalPath}index.tpl`)
     } catch (error) {
       console.error(error)
-      ctx.state.content = `<p>データ取得に失敗したため、処理を中断しました。</p>`
+      ctx.state.content = errorHtml()
     }
     progress.finish()
   }

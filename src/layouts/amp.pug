@@ -1,40 +1,24 @@
-doctype html
-html(⚡ lang='ja')
-  head
-    meta(charset='utf-8')
+extends base.pug
 
-    link(rel='canonical' href=canonical)
+block config
+  -
+    var isAmp = true
 
-    title hbsnow.github.io
+block head
+  include common/head/amp.html
+  link(rel='stylesheet' href='/assets/css/amp.css')
 
-    meta(name='author' content='hbsnow')
-    meta(name='description' content=description)
-    meta(name='viewport' content='width=device-width, minimum-scale=1, initial-scale=1')
+block body
+  .layout
+    header.layout__header
+      .header
+        h1.header__title
+          a(href='/') hbsnow
 
-    link(rel='icon' href='/favicon.ico')
+    main.layout__main
+      include common/main.pug
 
-    link(rel='stylesheet', href='../../dest/main.css', amp-custom)
-
-    //- JSON-LD
-    script(type='application/ld+json')
-      block json_ld
-        .
-          {
-            "@context": "http://schema.org",
-            "@type": "Person",
-            "name": "hbsnow",
-            "url": "https://hbsnow.github.io/",
-            "image": "https://hbsnow.github.io/images/avatar.svg"
-          }
-
-    //- AMP
-    //- include ../common/head/amp.html
-
-  body
-    .page
-      header.page-header
-        block header
-          h1.header__title hbsnow.github.io
-
-      main.main
-        block main
+    footer.layout__footer
+      .footer
+        p この記事は #[a(href='/about') hbsnow] が書いています。
+        p 何かご意見がございましたら、#[a(href='https://github.com/hbsnow/website/issues') GitHub の Issue] までご連絡ください。

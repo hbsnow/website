@@ -25,6 +25,7 @@ module.exports = {
       },
       { test: /\.js$/, loader: 'babel-loader', include: resolve('src') },
       { test: /\.json$/, loader: 'json-loader', include: resolve('src') },
+      { test: /\.pug$/, loader: 'pug-loader', include: resolve('src') },
       {
         test: /\.css$/,
         use: [
