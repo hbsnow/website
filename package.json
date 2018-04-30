@@ -23,6 +23,7 @@
     "clean": "rimraf ./docs"
   },
   "dependencies": {
+    "animejs": "^2.2.0",
     "autoprefixer": "^8.2.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.2",

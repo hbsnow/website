@@ -1,11 +1,9 @@
 .codeblock {
   position: relative;
-  left: -1rem;
-  width: calc(100% + 2rem);
-  border-top: 1px solid var(--color-divider);
-  border-bottom: 1px solid var(--color-divider);
+  left: 0;
+  width: 100%;
   background-color: var(--color-grey-light);
-  margin: 2.5rem 0 2rem;
+  margin: 2rem 0;
 }
 
 .codeblock__title {
@@ -16,9 +14,8 @@
   font-weight: bold;
   letter-spacing: calc(1rem / 16);
   vertical-align: top;
-  border: 1px solid var(--color-divider);
   margin-left: 1rem;
-  margin-top: -0.75rem;
+  margin-top: 0.75rem;
   padding: 0.125rem 1rem;
 }
 
@@ -30,12 +27,6 @@
   display: block;
   background-color: transparent;
   border: 0;
-  padding: 0.25rem 1rem 1rem;
+  padding: 0.75rem 1rem 1rem;
   overflow-x: auto;
-}
-
-@media (min-width: 56rem) {
-  .codeblock {
-    border: 1px solid var(--color-divider);
-  }
 }

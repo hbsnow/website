@@ -1,4 +1,10 @@
 @charset "utf-8";
 
+/* base */
+@import 'amp/base/_root.css';
+@import 'amp/base/_reboot.css';
+
 /* components */
 @import 'amp/components/_layout.css';
+@import 'amp/components/_footer.css';
+@import 'amp/components/_codeblock.css';

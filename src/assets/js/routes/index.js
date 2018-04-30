@@ -1,3 +1,1 @@
-export default ctx => {
-  console.log('index')
-}
+export default ctx => {}

@@ -1,20 +1,49 @@
+import anime from 'animejs'
+
 export default class {
-  constructor(rootElem) {
-    this.rootElem = rootElem
-    this.barElem = rootElem.querySelector('.progress__bar')
+  constructor(elem, elemBar) {
+    this.elem = elem
+    this.elemBar = elemBar
+
+    this.activeAnimation = this.createActiveAnimation()
+    this.finishAnimation = this.createFinishAnimation()
+  }
+
+  createActiveAnimation() {
+    return anime({
+      targets: this.elemBar,
+      strokeDashoffset: [anime.setDashoffset, 0],
+      easing: 'easeInQuad',
+      duration: 5000,
+      autoplay: false
+    })
+  }
+
+  createFinishAnimation() {
+    return anime
+      .timeline({
+        autoplay: false
+      })
+      .add({
+        targets: this.elemBar,
+        strokeDashoffset: [anime.setDashoffset, 0],
+        easing: 'linear',
+        duration: 300
+      })
+      .add({
+        targets: this.elem,
+        opacity: 0,
+        easing: 'linear',
+        duration: 300
+      })
   }
 
   active() {
-    this.rootElem.classList.add('progress--active')
+    this.activeAnimation.restart()
   }
 
   finish() {
-    const transitionEndHandler = event => {
-      this.rootElem.classList.remove('progress--active', 'progress--finish')
-      event.target.removeEventListener('transitionend', transitionEndHandler)
-    }
-
-    this.rootElem.classList.add('progress--finish')
-    this.barElem.addEventListener('transitionend', transitionEndHandler, false)
+    this.activeAnimation.pause()
+    this.finishAnimation.restart()
   }
 }

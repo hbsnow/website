@@ -2,8 +2,9 @@
 :root {
   --color-text: rgba(0, 0, 0, 0.87);
   --color-text-light: rgba(0, 0, 0, 0.54);
-  --color-reverse-text: #fff;
+  --color-text-reverse: #fff;
   --color-divider: rgba(0, 0, 0, 0.12);
+  --color-divider-reverse: rgba(255, 255, 255, 0.32);
   --color-primary: #f06292;
   --color-primary-light: #ff94c2;
   --color-primary-dark: #ba2d65;
@@ -14,7 +15,6 @@
   --color-grey-dark: #8d8d8d;
   --color-dark: #263238;
   --color-black: #000;
-  --color-code: #d73a49;
   --font-family-system-ui: system-ui, sans-serif;
   --font-family-heading: 'Raleway', system-ui, sans-serif;
   --font-family-monospace: 'Menlo', 'Consolas', monospace;

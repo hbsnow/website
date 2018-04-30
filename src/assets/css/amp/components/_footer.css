@@ -1,0 +1,5 @@
+.footer {
+  border: 3px solid var(--color-divider);
+  margin: 1rem 0 2rem;
+  padding: 0 1rem;
+}

@@ -49,21 +49,27 @@ block body
 
     footer.layout__footer
       .footer#footer
-        .footer__sns
-          .container
-            .sns
-              .sns__item
-                a.sns__link(href='https://github.com/hbsnow')
-                  .sns__icon
-                    .svg-icon.svg-icon--light
-                      include ./svg/github.svg
-                  .sns__name @hbsnow
-              .sns__item
-                a.sns__link(href='https://twitter.com/hbsnow')
-                  .sns__icon
-                    .svg-icon.svg-icon--light
-                      include ./svg/twitter.svg
-                  .sns__name @hbsnow
+        .container
+          .footer__items
+            .footer__item.footer__item--contact
+              p このサイト内の記事は #[a(href='/about/') hbsnow] が書いています。
+              p 何かご意見がございましたら、#[a(href='https://github.com/hbsnow/website/issues') GitHub の Issue] までご連絡ください。
+
+            .footer__item.footer__item--sns
+              .container
+                .sns
+                  .sns__item
+                    a.sns__link(href='https://github.com/hbsnow')
+                      .sns__icon
+                        .svg-icon.svg-icon--light
+                          include ./svg/github.svg
+                      .sns__name @hbsnow
+                  .sns__item
+                    a.sns__link(href='https://twitter.com/hbsnow')
+                      .sns__icon
+                        .svg-icon.svg-icon--light
+                          include ./svg/twitter.svg
+                      .sns__name @hbsnow
 
   .progress#progress
     include svg/progress.svg

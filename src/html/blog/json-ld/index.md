@@ -3,6 +3,7 @@ title: JSON-LD による構造化データ
 tags: amp
 description: JSON-LD による構造化データの記述方法についての解説。
 datePublished: 2017-12-01
+dateModified: 2017-12-12
 ---
 
 JSON-LD とは、[Linked Data](https://www.w3.org/DesignIssues/LinkedData.html) を JSON で記述するための軽量シンタックスです。Google は構造化データを、この [JSON-LD で記述することを推奨](https://developers.google.com/search/docs/guides/intro-structured-data#structured-data-format)しています。
@@ -13,7 +14,7 @@ JSON-LD にはいくつかの keyword がありますが、ここで紹介して
 
 ### @context
 
-`@context` は JSON-LD 全体で使用される、省略名を定義するために使用します。
+`@context` は JSON-LD 全体で使用される省略名を定義するために使用します。
 
 例えば、下記の JSON-LD は同じ長い文字列が繰り返し出現し、冗長な記述です。
 

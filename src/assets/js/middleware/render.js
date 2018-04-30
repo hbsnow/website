@@ -3,7 +3,16 @@ import Nav from '../components/Nav'
 import configs from '../../../../configs'
 import compareUrlHierarchy from 'compare-url-hierarchy'
 
-const nav = new Nav(document.getElementById('nav-icon'), 'nav__icon--active')
+const nav = new Nav(
+  document.getElementById('nav-icon'),
+  'nav__icon--active',
+  '/'
+)
+const menu = new Nav(
+  document.getElementById('menu-icon'),
+  'menu__icon--active',
+  '/about/'
+)
 
 const toFadeType = (referrer, path) => {
   const hierarchy = compareUrlHierarchy(referrer, path)
@@ -18,6 +27,7 @@ const toFadeType = (referrer, path) => {
 
 export default (ctx, next) => {
   nav.changeClass(ctx.path)
+  menu.changeClass(ctx.path)
 
   if (ctx.init) {
     next()

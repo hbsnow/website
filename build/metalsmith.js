@@ -56,7 +56,6 @@ const Metalsmith = metalsmith(path.join(__dirname, '../'))
   .use(
     collectionMetadata({
       'collections.blog': {
-        layout: 'blog/default.pug',
         hasAmp: true,
         pagetype: 'BlogPosting'
       }
