@@ -3,6 +3,7 @@ description: Home
 ---
 
 ul.post-list
+  - console.log(collections.blog)
   each val in collections.blog
     - var date = moment(val.datePublished)
     li.post-list__item

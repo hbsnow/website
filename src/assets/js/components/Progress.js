@@ -11,21 +11,21 @@ export default class {
 
   createActiveAnimation() {
     return anime
-    .timeline({
-      autoplay: false
-    })
-    .add({
-      targets: this.elem,
-      opacity: [0, 1],
-      easing: 'linear',
-      duration: 200
-    })
-    .add({
-      targets: this.elemBar,
-      strokeDashoffset: [anime.setDashoffset, 0],
-      easing: 'easeInQuad',
-      duration: 5000
-    })
+      .timeline({
+        autoplay: false
+      })
+      .add({
+        targets: this.elem,
+        opacity: 1,
+        easing: 'linear',
+        duration: 200
+      })
+      .add({
+        targets: this.elemBar,
+        strokeDashoffset: [anime.setDashoffset, 0],
+        easing: 'easeInQuad',
+        duration: 5000
+      })
   }
 
   createFinishAnimation() {
@@ -41,14 +41,13 @@ export default class {
       })
       .add({
         targets: this.elem,
-        opacity: [1, 0],
+        opacity: 0,
         easing: 'linear',
         duration: 300
       })
   }
 
   active() {
-    console.log('hoge')
     this.activeAnimation.restart()
   }
 

@@ -16,7 +16,6 @@ const jsonMetadata = require('metalsmith-json-metadata')
 const watch = require('metalsmith-watch')
 const markdown = require('./metalsmith-markdown')
 const posthtml = require('metalsmith-posthtml')
-const rename = require('metalsmith-rename')
 const debug = require('metalsmith-debug')
 
 const htmlnano = require('htmlnano')
@@ -34,15 +33,12 @@ const watches = process.argv.some(val => val === '--watch')
 
 const Metalsmith = metalsmith(path.join(__dirname, '../'))
   .metadata(configs)
-  .source('src/html')
+  .source('src/htdocs')
   .destination('docs')
-  .use(drafts())
 
   // 他のassetファイルまで削除されるので、Metalsmithからは削除しない
   .clean(false)
 
-  .use(posixPath())
-  .use(jsonMetadata())
   .use(
     collections({
       blog: {
@@ -56,13 +52,15 @@ const Metalsmith = metalsmith(path.join(__dirname, '../'))
   .use(
     collectionMetadata({
       'collections.blog': {
-        hasAmp: true,
         pagetype: 'BlogPosting'
       }
     })
   )
-  .use(markdown())
+  .use(drafts())
+  .use(posixPath())
+  .use(jsonMetadata())
   .use(inPlace())
+  .use(markdown())
 
   // コンテンツのみのテンプレートファイルを作成
   .use(
