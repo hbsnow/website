@@ -6,5 +6,8 @@
 
 /* components */
 @import 'amp/components/_layout.css';
+@import 'amp/components/_container.css';
+@import 'amp/components/_header.css';
 @import 'amp/components/_footer.css';
+@import 'amp/components/_content-header.css';
 @import 'amp/components/_codeblock.css';

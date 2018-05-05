@@ -9,3 +9,11 @@
   line-height: 3;
   margin: 0;
 }
+
+.header__link {
+  color: var(--color-text-reverse);
+}
+
+.header__link:hover {
+  text-decoration: none;
+}

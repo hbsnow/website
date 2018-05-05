@@ -1,4 +1,4 @@
-extends base.pug
+extends common/base.pug
 
 block config
   -
@@ -6,19 +6,21 @@ block config
 
 block head
   include common/head/amp.html
-  link(rel='stylesheet' href='/assets/css/amp.css')
+  link(rel='stylesheet' href='/assets/css/amp.css' amp-custom inline)
 
 block body
   .layout
     header.layout__header
-      .header
-        h1.header__title
-          a(href='/') hbsnow
+      .container
+        .header
+          h1.header__title
+            a.header__link(href='/') hbsnow
 
     main.layout__main
       include common/main.pug
 
     footer.layout__footer
-      .footer
-        p この記事は #[a(href='/about') hbsnow] が書いています。
-        p 何かご意見がございましたら、#[a(href='https://github.com/hbsnow/website/issues') GitHub の Issue] までご連絡ください。
+      .container
+        .footer
+          p この記事は #[a(href='/about') hbsnow] が書いています。
+          p 何かご意見がございましたら、#[a(href='https://github.com/hbsnow/website/issues') GitHub の Issue] までご連絡ください。

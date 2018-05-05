@@ -10,6 +10,8 @@ module.exports = () => {
     quotes: ''
   })
 
+  md.parser.use(require('markdown-it-table').markdownItTable)
+
   md.parser.renderer.rules.fence = (tokens, idx, options, env, slf) => {
     const token = tokens[idx]
     const info = token.info

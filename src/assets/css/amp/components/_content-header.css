@@ -1,0 +1,14 @@
+.content-header__data {
+  font-size: 0.875rem;
+  vertical-align: middle;
+}
+
+.content-header__sepalate {
+  display: inline-block;
+  width: 0;
+  height: 1rem;
+  border: 0;
+  border-left: 2px solid var(--color-divider);
+  margin: 0 0.5rem;
+  vertical-align: middle;
+}

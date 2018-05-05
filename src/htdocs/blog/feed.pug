@@ -1,0 +1,27 @@
+---
+layout: none.pug
+---
+
+-
+  var atomUrl = url.parse(site.url)
+  var atomSelf = url.resolve(site.url, 'blog/feed.xml')
+  var atomUpdated = collections.blog[0].datePublished
+
+doctype xml
+feed(xmlns='http://www.w3.org/2005/Atom' xml:lang='ja')
+  id tag:#[=atomUrl.hostname],2017:feed
+  title= site.name
+  updated= moment(atomUpdated).format('YYYY-MM-DDTHH:mm:ss+09:00')
+  link(rel='alternate' href=site.url)/
+  link(rel='self' type='application/atom+xml' href=atomSelf)/
+  author
+    name= site.author.name
+
+  each val in collections.blog
+    - var entryUrl = url.resolve(site.url, val.posixPath)
+    entry
+      id= entryUrl
+      title= val.title
+      link(rel='alternate' href=entryUrl)/
+      updated=  moment(val.datePublished).format('YYYY-MM-DDTHH:mm:ss+09:00')
+      summary= val.description

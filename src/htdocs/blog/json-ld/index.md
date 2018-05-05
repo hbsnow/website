@@ -44,10 +44,20 @@ JSON-LD にはいくつかの keyword がありますが、ここで紹介して
 ```json
 {
   "@context": {
-    "schema": "http://schema.org"
+    "schema": "http://schema.org/"
   },
   "@type": "schema:Person",
   "schema:name": "Jhon Doe"
+}
+```
+
+```json
+{
+  "@context": {
+    "@vocab": "http://schema.org/"
+  },
+  "@type": "Person",
+  "name": "Jhon Doe"
 }
 ```
 
@@ -138,11 +148,29 @@ AMP で JSON-LD を使用する場合には、いくつかの記述が必須と�
 }
 ```
 
-`image` にはガイドラインが設けられていて、幅が `696px` 以上の jpg, gif, png いずれかの画像形式であり、これら画像の最良の結果を得るためには `width * height` の結果が `300000` 以下となる、縦横比 `16:9, 4:3, 1:1` の複数の高解像度画像を複数用意する必要があります。
+`image` には以下の条件があります。
 
-`publisher` は `Organization` しか指定できません。よって個人ブログのような場合には `name` にサイト名、`logo` にはバナーなどを入れるしかないように思えます。`logo` のサイズには[ガイドラインが設けられて](https://developers.google.com/search/docs/data-types/articles#logo-guidelines)いて、`600 * 60px` 以下の `.jpg, .gif, .png` いずれかの画像で、背景が白、あるいは明るい色である必要があります。また、ここに指定される画像はワードマークやロゴであって、アイコンではないことに注意が必要です。
+| 内容     | 制限          |
+| -------- | ------------- |
+| 幅       | 696px 以上    |
+| 画像形式 | jpg, gif, png |
 
-`mainEntityOfPage`, `dateModified`,`description` は `recommended` であり必須ではありません。
+また最良の結果を得るためには `width * height` の結果が `300000` 以下となる、縦横比 `16:9, 4:3, 1:1` の複数の高解像度画像を複数用意する必要があります。
+
+`publisher` は `Organization` しか指定できません。よって個人ブログのような場合には `name` にサイト名、`logo` にはバナーなどを入れるしかないように思えます。
+
+`logo` にも、 `image` と同じように条件があります。
+
+| 内容     | 制限                 |
+| -------- | -------------------- |
+| 幅       | 600px 以下           |
+| 高さ     | 60px 以下            |
+| 画像形式 | jpg, gif, png        |
+| 背景色   | 白、あるいは明るい色 |
+
+また、ここに指定される画像はワードマークやロゴであって、アイコンではないことに注意が必要です。
+
+`mainEntityOfPage`, `dateModified`, `description` は `recommended` であり必須ではありません。
 
 ## バリデーション
 

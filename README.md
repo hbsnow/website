@@ -2,13 +2,14 @@
 
 [![Build Status](https://travis-ci.org/hbsnow/website.svg?branch=master)](https://travis-ci.org/hbsnow/website)
 
-## 規約
+## YAML Formatter
 
-### 画像
-
-* 画像の元データは、`png, jpg, svg` のいずれかであること。
-
-## TODO
-
-* feed, sitemap.xml の出力
-* metalsmith で watch 時に markdown を編集すると collection の記事が重複する
+```
+---
+title: タイトル
+tags: foo, bar
+description: 記事の説明
+datePublished: 公開日
+dateModified: 更新日
+---
+```
