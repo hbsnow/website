@@ -7,7 +7,6 @@
   "scripts": {
     "prebuild": "npm run clean",
     "build": "run-p build:*",
-    "build:html": "gulp build:html",
     "build:webpack": "webpack --config build/webpack.prod.conf.js",
     "build:gulp": "NODE_ENV=production gulp build",
     "prewatch": "npm run clean && npm run prettier",
