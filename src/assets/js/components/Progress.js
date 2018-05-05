@@ -10,13 +10,22 @@ export default class {
   }
 
   createActiveAnimation() {
-    return anime({
-      targets: this.elemBar,
-      strokeDashoffset: [anime.setDashoffset, 0],
-      easing: 'easeInQuad',
-      duration: 5000,
-      autoplay: false
-    })
+    return anime
+      .timeline({
+        autoplay: false
+      })
+      .add({
+        targets: this.elem,
+        opacity: 1,
+        easing: 'linear',
+        duration: 200
+      })
+      .add({
+        targets: this.elemBar,
+        strokeDashoffset: [anime.setDashoffset, 0],
+        easing: 'easeInQuad',
+        duration: 5000
+      })
   }
 
   createFinishAnimation() {

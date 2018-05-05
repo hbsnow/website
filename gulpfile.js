@@ -8,8 +8,11 @@ const mozjpeg = require('imagemin-mozjpeg')
 const sourcemaps = require('gulp-sourcemaps')
 const eslint = require('gulp-eslint')
 const postcss = require('gulp-postcss')
+const frontMatter = require('gulp-front-matter')
 const filter = require('gulp-filter')
 const gulpIf = require('gulp-if')
+const inlineSource = require('gulp-inline-source')
+const cached = require('gulp-cached')
 const uglifyes = require('uglify-es')
 const composer = require('gulp-uglify/composer')
 const minify = composer(uglifyes, console)
@@ -17,6 +20,7 @@ const pump = require('pump')
 const runSequence = require('run-sequence')
 
 const isProduction = process.env.NODE_ENV === 'production'
+let watch = false
 
 gulp.task('build:css', cb => {
   pump(
@@ -62,22 +66,47 @@ gulp.task('build:image', () => {
     .pipe(gulp.dest('docs'))
 })
 
+gulp.task('build:html', cb => {
+  pump(
+    [
+      gulp.src('src/htdocs/**/*'),
+      frontMatter({
+        property: 'frontMatter'
+      }).on('data', file => {
+        Object.assign(file, file.frontMatter)
+        delete file.frontMatter
+      }),
+      require('./build/metalsmith')(),
+      inlineSource({
+        rootpath: 'docs'
+      }),
+      gulp.dest('docs')
+    ],
+    cb
+  )
+})
+
 gulp.task('copy', () => {
   return gulp
     .src([
       'src/assets/**/*.{txt,xml,json}',
-      'src/assets/**/README.md',
-      'src/assets/**/CNAME',
-      'src/assets/**/{ga}.js'
+      'src/assets/README.md',
+      'src/assets/CNAME'
     ])
     .pipe(gulp.dest('docs/assets'))
 })
 
 gulp.task('watch', ['build'], () => {
+  gulp.watch('src/htdocs/**/*', ['build:html'])
+  gulp.watch('src/layouts/**/*', ['build:html'])
   gulp.watch('src/assets/css/**/*.css', ['build:css'])
   gulp.watch('src/sw.js', ['build:js'])
 })
 
 gulp.task('build', cb => {
-  runSequence(['build:image', 'copy', 'build:css', 'build:js'], cb)
+  runSequence(
+    ['build:image', 'copy', 'build:css', 'build:js'],
+    'build:html',
+    cb
+  )
 })

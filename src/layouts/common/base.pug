@@ -5,7 +5,7 @@ block config
 -
   // global variables
   var page = {
-    canonical: urlJoin(site.url, posixPath),
+    canonical: url.resolve(site.url, posixPath),
     author: {
       name: (author && author.name) || site.author.name,
       twitter: (author && author.twitter) ||
@@ -57,7 +57,7 @@ html(lang='ja')&attributes(attr.html)
 
     title= page.title
 
-    include common/head/jsonld.pug
+    include head/jsonld.pug
 
     block head
 

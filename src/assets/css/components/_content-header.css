@@ -1,7 +1,6 @@
 .content-header {
   background-color: var(--color-primary);
   color: var(--color-text-reverse);
-  padding: 1.5rem 1rem;
 }
 
 .content-header__title {
@@ -10,7 +9,7 @@
 }
 
 .content-header__metadata {
-  padding: 0.5rem 0 0;
+  padding: 0.5rem 0;
 }
 
 .content-header__data {

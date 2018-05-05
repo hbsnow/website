@@ -24,4 +24,5 @@
 
 .progress__base {
   stroke: var(--color-grey);
+  opacity: 0;
 }

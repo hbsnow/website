@@ -6,20 +6,19 @@ if title
 
         if datePublished
           .content-header__metadata
-            .container
-              .content-header__date
-                - var published = moment(datePublished).format('YYYY-MM-DD')
+            .content-header__date
+              - var published = moment(datePublished).format('YYYY-MM-DD')
+              span.content-header__data
+                time.content-header__published(datetime=published)= published
+
+              if dateModified
+                - var modified = moment(dateModified).format('YYYY-MM-DD')
+                hr.content-header__sepalate
+
                 span.content-header__data
-                  time.content-header__published(datetime=published)= published
-
-                if dateModified
-                  - var modified = moment(dateModified).format('YYYY-MM-DD')
-                  hr.content-header__sepalate
-
-                  span.content-header__data
-                    time.content-header__modified(datetime=modified)= modified
-                    |
-                    | に更新
+                  time.content-header__modified(datetime=modified)= modified
+                  |
+                  | に更新
 
 .main__body
   .content-body
