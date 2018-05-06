@@ -15,6 +15,6 @@
   padding: 1rem;
 }
 
-.footer__item:nth-child(n+2) {
+.footer__item:nth-child(n + 2) {
   border-top: 1px solid var(--color-divider-reverse);
 }
