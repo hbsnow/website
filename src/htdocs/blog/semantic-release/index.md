@@ -1,12 +1,12 @@
 ---
-title: semantic-release による npm publish と ChangeLog の自動化
+title: semantic-release による npm publish と ChangeLog 出力の自動化
 tags: postcss, sass
-description: semantic-releaseでnpm publishとChangeLogの生成を自動化する。
+description: semantic-release で npm publish と ChangeLog の生成を自動化する。
 datePublished: 2017-09-03
 dateModifer:  2018-05-05
 ---
 
-npm にパッケージの公開、あるいはその更新をするとき、`npm publish` 日常的に使用することがないので、手順であったり、そもそも手順どころか `npm publish` すること自体忘れるということがあります。ここではこの自動化に [semantic-release](https://www.npmjs.com/package/semantic-release) を使った方法を紹介します。単にリリースする以外にも ChangeLog の出力だったり Tag をつけてくれたりといったことも自動化してくれます。
+npm にパッケージの公開、あるいはその更新をするとき、その手順であったり、そもそも手順どころか `npm publish` すること自体忘れるということがあります。ここではこの自動化に [semantic-release](https://www.npmjs.com/package/semantic-release) を使った方法を紹介します。
 
 ## 環境設定
 
@@ -16,6 +16,8 @@ semantic-release-cli setup
 ```
 
 設定は [semantic-release-cli](https://www.npmjs.com/package/semantic-release-cli) によって、インタラクティブに作成することができます。環境の設定以外にも、すでに package.json のあるプロジェクトに必要な `script` の記述の追加や、.travis.yml の生成しもてくれます。
+
+また、単にリリースする以外にも ChangeLog の出力や Tag をつけてくれたりといったことも自動化してくれます。
 
 ## 使い方
 
