@@ -1,0 +1,11 @@
+if pagetype === 'Amp'
+  include pagetype/amp.pug
+
+else if pagetype === 'Feed'
+  include pagetype/feed.pug
+
+else if pagetype === 'Template'
+  include pagetype/template.pug
+
+else
+  include pagetype/default.pug

@@ -1,11 +1,11 @@
-extends common/base.pug
+extends ../common/base.pug
 
 block config
   -
     var isAmp = true
 
 block head
-  include common/head/amp.html
+  include ../common/head/amp.html
   link(rel='stylesheet' href='/assets/css/amp.css' amp-custom inline)
 
 block body
@@ -17,7 +17,7 @@ block body
             a.header__link(href='/') hbsnow
 
     main.layout__main
-      include common/main.pug
+      include ../common/main.pug
 
     footer.layout__footer
       .container

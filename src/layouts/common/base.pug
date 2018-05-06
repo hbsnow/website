@@ -1,9 +1,10 @@
 block config
   -
-    var isAmp = false
+    var isAmp = pagetype === 'Amp'
 
 -
   // global variables
+  var type = (pagetype === 'BlogPosting' || pagetype === 'Review') ? 'article' : 'webpage'
   var page = {
     canonical: url.resolve(site.url, posixPath),
     author: {
@@ -13,7 +14,7 @@ block config
     },
     title: (title && title + ' | ' + site.name) || site.name,
     image: thumb || (image || Array.isArray(image) ? image[0] : image) || site.publisher.logo.image,
-    type: (pagetype === 'BlogPosting' || pagetype === 'Review') ? 'article' : 'webpage'
+    type: type
   }
 
   // Attributes
@@ -39,13 +40,11 @@ html(lang='ja')&attributes(attr.html)
 
     meta(name='viewport' content='width=device-width, minimum-scale=1, initial-scale=1')
 
-    if feed && feed.hasOwnProperty('href')
-      link(rel='alternate' type='application/atom+xml')&attributes(escape(feed))
-
     link(rel='author' href='/assets/humans.txt')
     //- link(rel=manifest href=/assets/manifest.json)
     //- link(rel='icon' href='/assets/favicon.ico')
     link(rel='apple-touch-icon' sizes='180x180' href='/assets/apple-touch-icon.png')
+    link(rel='alternate' type='application/atom+xml' href='/blog/feed.xml')
 
     meta(name='author' content=page.author.name)
 
