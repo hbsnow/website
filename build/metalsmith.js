@@ -65,13 +65,13 @@ module.exports = () => {
         {
           pattern: '**/index.tpl',
           metadata: {
-            layout: 'tpl.pug'
+            pagetype: 'Template'
           }
         },
         {
           pattern: 'blog/*/amp.html',
           metadata: {
-            layout: 'amp.pug'
+            pagetype: 'Amp'
           }
         }
       ])
@@ -80,7 +80,7 @@ module.exports = () => {
       layouts({
         engine: 'pug',
         pattern: ['**/*'],
-        default: 'default.pug',
+        default: 'start.pug',
         directory: 'src/layouts'
       })
     )

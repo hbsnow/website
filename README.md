@@ -11,8 +11,17 @@ tags: foo, bar
 description: 記事の説明
 datePublished: 公開日
 dateModified: 更新日
+pagetype: webpage
 ---
 ```
+
+### pagetype
+
+* BlogPosting
+* Review
+* Amp
+* Feed
+* Template
 
 ## Commit Message
 

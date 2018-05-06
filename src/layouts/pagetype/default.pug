@@ -1,4 +1,4 @@
-extends common/base.pug
+extends ../common/base.pug
 
 block head
   //- Twitter Cards
@@ -32,21 +32,21 @@ block body
     main.layout__main
       .main
         block main
-          include common/main.pug
+          include ../common/main.pug
 
     nav.layout__menu
       .menu#menu
         .menu__icon#menu-icon
           a.menu__link(href='/about/')
             .svg-icon.svg-icon--light
-              include ./svg/about.svg
+              include ../svg/about.svg
 
     nav.layout__nav
       .nav#nav
         .nav__icon#nav-icon
           a.nav__link(href='/')
             .svg-icon.svg-icon--light.svg-icon--nav
-              include ./svg/arrow.svg
+              include ../svg/arrow.svg
 
     footer.layout__footer
       .footer#footer
@@ -62,15 +62,15 @@ block body
                   a.sns__link(href='https://github.com/hbsnow')
                     .sns__icon
                       .svg-icon.svg-icon--light
-                        include ./svg/github.svg
+                        include ../svg/github.svg
                     .sns__name @hbsnow
 
                 .sns__item
                   a.sns__link(href='https://twitter.com/hbsnow')
                     .sns__icon
                       .svg-icon.svg-icon--light
-                        include ./svg/twitter.svg
+                        include ../svg/twitter.svg
                     .sns__name @hbsnow
 
   .progress#progress
-    include svg/progress.svg
+    include ../svg/progress.svg
