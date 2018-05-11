@@ -11,13 +11,13 @@ datePublished: 2018-05-11
 
 [Quick Start](https://docs.docker.com/compose/wordpress/) を参考に、起動するまで手順を進めます。日本語の翻訳もありますが、内容がかなり古いこともあるので英語版を推奨。
 
-`docker-compose.yml` をコピーし、`docker-compose up -d` を入力するだけ。`docker-compose help up` でわかるが、`-d` で detached mode、バックグラウンドで実行しています。
+`docker-compose.yml` をコピーし、`docker-compose up -d` を入力するだけ。`docker-compose help up` でわかりますが、`-d` で detached mode、バックグラウンドで実行しています。
 
-終了したい場合には、`docker-compose down` で終了。データベースを削除したい場合には `docker-compose down --volumes` とオプションをつける。
+終了したい場合には、`docker-compose down` を入力してください。データベースを削除したい場合には `docker-compose down --volumes` とオプションをつけます。
 
 ## ファイルの永続化
 
-とりあえず動作させて、コードの開発だけを行うのであれば上記の `docker-compose.yml` でさほど困ることはないが、起動のたびに `wp-content` 内のデータが消えるのは開発環境として好ましいくないことも多い。
+とりあえず動作させて、ちょっとした確認だけを行うだけであれば上記の `docker-compose.yml` でさほど困ることはありませんが、起動のたびに `wp-content` 内のデータが消えるのは開発環境として好ましいくないことも多いので、該当のディレクトリを永続化させます。
 
 [volumes](https://docs.docker.com/compose/compose-file/#volumes) の項目を参考に、ホストとコンテナをマッピングします。
 
@@ -26,11 +26,9 @@ volumes:
   - ./wp-content:/var/www/html/wp-content
 ```
 
-上記の例では、`wp-content` ディレクトリをマッピングしています。
-
 ## WP-CLI
 
-公式の指示通りにコマンドを入力。container 名は `docker ps` で取得できるので、適宜置き換えること。
+公式の指示通りにコマンドを入力するたけです。container 名は `docker ps` で取得できるので、適宜置き換えてください。
 
 ```bash
 docker run -it --rm \
@@ -39,7 +37,7 @@ docker run -it --rm \
     wordpress:cli user list
 ```
 
-上記コマンドでインストール時に設定したユーザが表示されれば成功。
+上記コマンドでインストール時に設定したユーザが表示されれば成功です。
 
 ## phpMyAdmin
 
