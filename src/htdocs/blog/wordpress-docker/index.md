@@ -9,11 +9,11 @@ datePublished: 2018-05-11
 
 ## とりあえず動かす
 
-[Quick Start](https://docs.docker.com/compose/wordpress/) を参考に、起動するまで手順を進めます。日本語の翻訳もありますが、内容がかなり古いこともあるので英語版を推奨。
+[Quick Start](https://docs.docker.com/compose/wordpress/) を参考に、起動するまで手順を進めます。日本語の翻訳もありますが、内容がかなり古いこともあるので英語版がおすすめです。
 
-`docker-compose.yml` をコピーし、`docker-compose up -d` を入力するだけ。`docker-compose help up` でわかりますが、`-d` で detached mode、バックグラウンドで実行しています。
+動かすまでの手順としては `docker-compose.yml` をコピーし、`docker-compose up -d` を入力するだけになります。`docker-compose help up` で調べることができますが、`-d` は detached mode、バックグラウンドで実行していることを意味しています。
 
-終了したい場合には、`docker-compose down` を入力してください。データベースを削除したい場合には `docker-compose down --volumes` とオプションをつけます。
+終了したい場合には、`docker-compose down` を入力してください。データベースの削除をしたい場合には `docker-compose down --volumes` とオプションをつけます。
 
 ## ファイルの永続化
 
@@ -54,3 +54,7 @@ phpmyadmin:
     PMA_USER: wordpress
     PMA_PASSWORD: wordpress
 ```
+
+## サンプル
+
+- [hbsnow-sandbox/wordpress-docker](https://github.com/hbsnow-sandbox/wordpress-docker)
