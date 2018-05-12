@@ -89,12 +89,11 @@ gulp.task('build:html', cb => {
 gulp.task('copy', () => {
   return gulp
     .src([
-      'src/assets/**/*.{txt,xml,json}',
-      'src/google0940d7ef8477bb0f.html',
-      'src/assets/README.md',
-      'src/assets/CNAME'
+      'src/+(assets)/**/*.+(txt|xml|json)',
+      'src/*.+(html|txt|xml|json)',
+      'src/README.md'
     ])
-    .pipe(gulp.dest('docs/assets'))
+    .pipe(gulp.dest('docs'))
 })
 
 gulp.task('watch', ['build'], () => {
