@@ -90,6 +90,7 @@ gulp.task('copy', () => {
   return gulp
     .src([
       'src/assets/**/*.{txt,xml,json}',
+      'src/google0940d7ef8477bb0f.html',
       'src/assets/README.md',
       'src/assets/CNAME'
     ])
