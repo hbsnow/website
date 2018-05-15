@@ -57,4 +57,4 @@ phpmyadmin:
 
 ## サンプル
 
-- [hbsnow-sandbox/wordpress-docker](https://github.com/hbsnow-sandbox/wordpress-docker)
+* [hbsnow-sandbox/wordpress-docker](https://github.com/hbsnow-sandbox/wordpress-docker)
