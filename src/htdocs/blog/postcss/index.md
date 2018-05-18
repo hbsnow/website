@@ -59,7 +59,10 @@ module.exports = ctx => {
         : {
             'postcss-import': {},
             'postcss-flexbugs-fixes': {},
-            autoprefixer: {},
+            'postcss-gap-properties': {},
+            autoprefixer: {
+              grid: true
+            },
             cssnano: {
               'postcss-discard-unused': true,
               'postcss-merge-idents': true,
@@ -79,6 +82,7 @@ module.exports = ctx => {
 * [postcss-reporter](https://github.com/postcss/postcss-reporter)
 * [postcss-import](https://github.com/postcss/postcss-import)
 * [postcss-flexbugs-fixes](https://github.com/luisrudge/postcss-flexbugs-fixes)
+* [postcss-gap-properties](https://github.com/jonathantneal/postcss-gap-properties)
 * [autoprefixer](https://github.com/postcss/autoprefixer)
 * [cssnano](http://cssnano.co/)
 
