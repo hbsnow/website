@@ -3,6 +3,7 @@ title: semantic-release による npm publish と ChangeLog 出力の自動化
 tags: postcss, sass
 description: semantic-release で npm publish と ChangeLog の生成を自動化する。
 datePublished: 2017-09-03
+dateModified:  2018-06-25
 ---
 
 npm にパッケージの公開、あるいはその更新をするとき、その手順であったり、そもそも手順どころか `npm publish` すること自体忘れるということがあります。ここではこの自動化に [semantic-release](https://www.npmjs.com/package/semantic-release) を使った方法を紹介します。
