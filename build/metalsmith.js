@@ -26,6 +26,7 @@ const configs = {
 module.exports = () => {
   return gulpsmith()
     .metadata(configs)
+    .use(drafts())
     .use(
       collections({
         blog: {
@@ -43,7 +44,6 @@ module.exports = () => {
         }
       })
     )
-    .use(drafts())
     .use(posixPath())
     .use(jsonMetadata())
     .use(inPlace())
