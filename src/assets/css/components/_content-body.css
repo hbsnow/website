@@ -21,3 +21,9 @@
     width: calc(100% + 2rem);
   }
 }
+
+.content-body blockquote {
+  border-left: 6px solid var(--color-divider);
+  margin-left: 0;
+  padding-left: 1em;
+}
