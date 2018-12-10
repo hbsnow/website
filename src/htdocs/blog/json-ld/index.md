@@ -178,6 +178,6 @@ AMP で JSON-LD を使用する場合には、いくつかの記述が必須と�
 
 ## 参考
 
-* [JSON-LD 1.1](https://json-ld.org/spec/latest/json-ld/)
-* [Introduction to Structured Data | Search | Google Developers](https://developers.google.com/search/docs/guides/intro-structured-data)
-* [Article | Search | Google Developers](https://developers.google.com/search/docs/data-types/article)
+- [JSON-LD 1.1](https://json-ld.org/spec/latest/json-ld/)
+- [Introduction to Structured Data | Search | Google Developers](https://developers.google.com/search/docs/guides/intro-structured-data)
+- [Article | Search | Google Developers](https://developers.google.com/search/docs/data-types/article)

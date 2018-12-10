@@ -17,18 +17,18 @@ pagetype: webpage
 
 ### pagetype
 
-* BlogPosting
-* Review
-* Amp
-* Feed
-* Template
+- BlogPosting
+- Review
+- Amp
+- Feed
+- Template
 
 ## Commit Message
 
-* feat (feature)
-* fix (bug fix)
-* docs (documentation)
-* style (formatting, missing semi colons, …)
-* refactor
-* test (when adding missing tests)
-* chore (maintain)
+- feat (feature)
+- fix (bug fix)
+- docs (documentation)
+- style (formatting, missing semi colons, …)
+- refactor
+- test (when adding missing tests)
+- chore (maintain)

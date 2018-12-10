@@ -21,14 +21,14 @@ Strategy パターンは、[Wikipedia では以下のように解説](https://ja
 
 ゲームの敵をサンプルとして用います。
 
-* [sample 1](https://github.com/hbsnow/design-pattern-php-sample/tree/master/htdocs/strategy/sample1)
+- [sample 1](https://github.com/hbsnow/design-pattern-php-sample/tree/master/htdocs/strategy/sample1)
 
 Monser という具象クラスがあって、それぞれのモンスター
 
-* Goblin (歩ける・攻撃できる)
-* Slime (ゆっくり歩ける・攻撃できる)
-* Mandragora (攻撃できる)
-* Dragon (歩ける・飛べる・攻撃できる)
+- Goblin (歩ける・攻撃できる)
+- Slime (ゆっくり歩ける・攻撃できる)
+- Mandragora (攻撃できる)
+- Dragon (歩ける・飛べる・攻撃できる)
 
 は Monser クラスを継承しています。共通でないモンスターの行動「歩く」と「飛ぶ」についてはインターフェースを作成してそれぞれの継承先のクラスに実装しました。
 
@@ -36,7 +36,7 @@ Monser という具象クラスがあって、それぞれのモンスター
 
 ## Strategy パターンを使用する例
 
-* [sample 2](https://github.com/hbsnow/design-pattern-php-sample/tree/master/htdocs/strategy/sample2)
+- [sample 2](https://github.com/hbsnow/design-pattern-php-sample/tree/master/htdocs/strategy/sample2)
 
 上記のサンプルでは「歩く」と「飛ぶ」の 2 つの振る舞いに対してプログラミングしています。PHP には Trait があるので Trait を使ってもいいかもしれませんが、ここでは使用していません。
 
@@ -46,4 +46,4 @@ Monser という具象クラスがあって、それぞれのモンスター
 
 このパターンについては Open-Closed Principle(開放/閉鎖原則) を知っているとより理解しやすいと思う。開放/閉鎖原則も理解しにくいのですが、下記の動画はとてもわかりやすいのでおすすめです。
 
-* [「SOLID の原則ってどんなふうに使うの？オープン・クローズドの原則編 拡大版」　 後藤英宣](https://www.youtube.com/watch?v=cUV1nXPfjFY)
+- [「SOLID の原則ってどんなふうに使うの？オープン・クローズドの原則編 拡大版」　 後藤英宣](https://www.youtube.com/watch?v=cUV1nXPfjFY)
