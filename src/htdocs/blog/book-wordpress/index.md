@@ -4,7 +4,7 @@ tags: book, wordpress
 description: 技術評論社「エンジニアのための WordPress 開発入門」を読んでの感想。
 datePublished: 2018-05-14
 dateModified: 2018-08-04
-isbn: ISBN-4-7741-8706-8 C3055
+isbn: 978-4774187068
 ---
 
 ## 購入動機

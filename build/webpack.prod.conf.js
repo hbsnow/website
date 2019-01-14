@@ -8,7 +8,7 @@ module.exports = merge(baseWebpackConfig, {
   mode: 'production',
   devtool: false,
   optimization: {
-    minimize: true,
+    minimize: true
   },
   plugins: [
     // IDの生成 (recommended for production)
