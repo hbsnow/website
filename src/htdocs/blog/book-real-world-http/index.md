@@ -2,7 +2,7 @@
 title: 「Raal World Http」感想
 tags: book, wordpress
 description: O'Reilly Japan「Raal World Http」を読んでの感想。
-datePublished: 2018-01-14
+datePublished: 2019-01-14
 isbn: 978-4873118048
 ---
 
@@ -16,8 +16,8 @@ isbn: 978-4873118048
 
 ## 気になった用語
 
-用語 |Page|意味
----|---|---
-ワンショット|viii|再帰的に通信しない、一度きりの通信
+| 用語         | Page | 意味                               |
+| ------------ | ---- | ---------------------------------- |
+| ワンショット | viii | 再帰的に通信しない、一度きりの通信 |
 
 ワンショットについては、[mozaic.fm の ep17 Service Worker](https://mozaic.fm/episodes/17/service-worker.html) で解説されていたのが妙に記憶に残っていて覚えていた。
