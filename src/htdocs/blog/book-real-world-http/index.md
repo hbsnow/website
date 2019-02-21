@@ -1,10 +1,12 @@
 ---
-title: 「Raal World Http」感想
+title: O'Reilly Japan「Raal World Http」感想
 tags: book, wordpress
 description: O'Reilly Japan「Raal World Http」を読んでの感想。
 datePublished: 2019-01-14
 isbn: 978-4873118048
 ---
+
+WIP
 
 ## 購入動機
 

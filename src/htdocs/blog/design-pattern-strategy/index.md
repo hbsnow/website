@@ -1,6 +1,6 @@
 ---
 title: デザインパターンの学習メモ「Strategy パターン」
-tags: design_pattern
+tags: デザインパターン
 description: GoFのデザインパターンのうちの一つである「Strategy パターン」についての学習メモ。
 datePublished: 2018-09-27
 ---
@@ -21,24 +21,187 @@ Strategy パターンは、[Wikipedia では以下のように解説](https://ja
 
 ゲームの敵をサンプルとして用います。
 
-- [sample 1](https://github.com/hbsnow/design-pattern-php-sample/tree/master/htdocs/strategy/sample1)
+```php
+<?php
+declare(strict_types=1);
+
+interface Walkable
+{
+    public function walk(): string;
+}
+
+interface Flyable
+{
+    public function fly(): string;
+}
+
+class Monster
+{
+}
+
+class Slime extends Monster implements Walkable
+{
+    public function walk(): string
+    {
+        return 'ゆっくり歩く';
+    }
+}
+
+class Goblin extends Monster implements Walkable
+{
+    public function walk(): string
+    {
+        return '歩く';
+    }
+}
+
+class Dragon extends Monster implements Walkable, Flyable
+{
+    public function walk(): string
+    {
+        return '歩く';
+    }
+
+    public function fly(): string
+    {
+        return '飛ぶ';
+    }
+}
+
+$Slime = new Slime();
+$Goblin = new Goblin();
+$Dragon = new Dragon();
+
+echo <<< EOT
+Slime
+{$Slime->walk()}
+
+Goblin
+{$Goblin->walk()}
+
+Dragon
+{$Dragon->walk()}
+{$Dragon->fly()}
+EOT;
+```
 
 Monser という具象クラスがあって、それぞれのモンスター
 
-- Goblin (歩ける・攻撃できる)
-- Slime (ゆっくり歩ける・攻撃できる)
-- Mandragora (攻撃できる)
-- Dragon (歩ける・飛べる・攻撃できる)
+- Goblin (歩ける)
+- Slime (ゆっくり歩ける)
+- Dragon (歩ける・飛べる)
 
-は Monser クラスを継承しています。共通でないモンスターの行動「歩く」と「飛ぶ」についてはインターフェースを作成してそれぞれの継承先のクラスに実装しました。
+は Monser クラスを継承しています。モンスターの行動「歩く」と「飛ぶ」についてはインターフェースを作成してそれぞれの継承先のクラスに実装しました。
 
 問題はインターフェースが実装をもたないことから、Goblin と Dragon の「歩く」という同じコードの再利用ができず、また変更に対して閉じていないために保守性が損なわれている点です。
 
 ## Strategy パターンを使用する例
 
-- [sample 2](https://github.com/hbsnow/design-pattern-php-sample/tree/master/htdocs/strategy/sample2)
+```php
+<?php
+declare(strict_types=1);
 
-上記のサンプルでは「歩く」と「飛ぶ」の 2 つの振る舞いに対してプログラミングしています。PHP には Trait があるので Trait を使ってもいいかもしれませんが、ここでは使用していません。
+interface WalkInterface
+{
+    public function walk();
+}
+
+class NormalWalk implements WalkInterface
+{
+    public function walk()
+    {
+        return "歩く";
+    }
+}
+
+class SlowWalk implements WalkInterface
+{
+    public function walk()
+    {
+        return "ゆっくり歩く";
+    }
+}
+
+interface FlyInterface
+{
+    public function fly();
+}
+
+class NormalFly implements FlyInterface
+{
+    public function fly()
+    {
+        return "飛ぶ";
+    }
+}
+
+class NoFly implements FlyInterface
+{
+    public function fly()
+    {
+        // 飛べないので何もしない
+    }
+}
+
+class Monster
+{
+    private $walkBehavior;
+    private $flyBehavior;
+
+    public function __construct(
+        WalkInterface $walkBehavior,
+        FlyInterface $flyBehavior
+    ) {
+        $this->walkBehavior = $walkBehavior;
+        $this->flyBehavior = $flyBehavior;
+    }
+
+    public function walk()
+    {
+        return $this->walkBehavior->walk();
+    }
+
+    public function fly()
+    {
+        return $this->flyBehavior->fly();
+    }
+}
+
+class Goblin extends Monster
+{
+}
+
+class Slime extends Monster
+{
+}
+
+class Dragon extends Monster
+{
+}
+
+$normalWalk = new NormalWalk();
+$slowWalk = new SlowWalk();
+$normalFly = new NormalFly();
+$noFly = new NoFly();
+
+$Goblin = new Goblin($normalWalk, $noFly);
+$Slime = new Slime($slowWalk, $noFly);
+$Dragon = new Dragon($normalWalk, $normalFly);
+
+echo <<< EOT
+Slime
+{$Slime->walk()}
+
+Goblin
+{$Goblin->walk()}
+
+Dragon
+{$Dragon->walk()}
+{$Dragon->fly()}
+EOT;
+```
+
+上記のサンプルでは「歩く」と「飛ぶ」の 2 つの振る舞いに対してプログラミングしています。
 
 攻撃することはすべてのモンスターに共通しているので、Monster 抽象クラスに攻撃するメソッドを記述しているのですが、この例であれば攻撃の種類は今後増えていきそうな気がするので、本来ここもインターフェースで切り出したほうがいいかもしれません。
 

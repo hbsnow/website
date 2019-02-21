@@ -1,5 +1,5 @@
 ---
-title: 「エンジニアのための WordpPress 開発入門」感想
+title: 技術評論社「エンジニアのための WordpPress 開発入門」感想
 tags: book, wordpress
 description: 技術評論社「エンジニアのための WordPress 開発入門」を読んでの感想。
 datePublished: 2018-05-14
