@@ -82,21 +82,21 @@ task('copy', () => {
 })
 
 task(
-  'watch',
-  series(task('build:css'), () => {
-    watch('src/htdocs/**/*', task('build:html'))
-    watch('src/layouts/**/*', task('build:html'))
-    watch('src/assets/css/**/*.css', task('build:css'))
-    watch('src/sw.js', task('build:js'))
-  })
-)
-
-task(
   'build',
   series(
     parallel('build:image', 'copy', 'build:css', 'build:js'),
     task('build:html')
   )
+)
+
+task(
+  'watch',
+  series(task('build'), () => {
+    watch('src/htdocs/**/*', task('build:html'))
+    watch('src/layouts/**/*', task('build:html'))
+    watch('src/assets/css/**/*.css', task('build:css'))
+    watch('src/sw.js', task('build:js'))
+  })
 )
 
 task('default', task('build'))
