@@ -23,12 +23,14 @@ module.exports = () => {
 
     return (
       `<div class="codeblock">` +
-      `<div class="codeblock__title">${fileName}</div>` +
-      `<pre class="codeblock__content ${ext}">` +
-      `<code class="codeblock__code codeblock__code--${ext}">` +
-      md.parser.utils.escapeHtml(token.content) +
-      `</code>` +
-      `</pre>\n` +
+        fileName && `<div class="codeblock__title">${fileName}</div>` +
+        `<pre class="codeblock__content` + (ext && ` ${ext}`) + `">` +
+          `<code class="codeblock__code` +
+            ext && `codeblock__code--${ext}` +
+          `">` +
+            md.parser.utils.escapeHtml(token.content) +
+          `</code>` +
+        `</pre>\n` +
       `</div>\n`
     )
   }
