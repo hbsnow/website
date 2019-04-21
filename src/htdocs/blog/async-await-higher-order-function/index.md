@@ -3,6 +3,7 @@ title: JavaScriptのasync/awaitをforEachで使ったらハマった話
 tags: javascript, promise
 description: JavaScriptのasync/awaitをforEachで使ったらハマった話を社内で発表したので、発表内容に関する資料。
 datePublished: 2019-04-14
+dateModified: 2019-04-21
 ---
 
 - [JavaScriptのasync/awaitをforEachで使ったらハマった話](https://gist.github.com/hbsnow/d107782c0a99a901d379da08ee3f48db)
@@ -44,11 +45,7 @@ $ timer 200ms
 $ timer 300ms
 ```
 
-`[100, 300, 200]` で順次実行されてほしいので、結果もその順序になって欲しかったのですが実際の出力では並列で実行されてしまっています。babel でも次のような issue があげられていて、それについての回答がわかりやすいかもしれません。
-
-- [async/await in .forEach doesn't seem to actually await async operations #909](https://github.com/babel/babel/issues/909)
-
-スライドにはこの挙動の理由とかも書いたけれども、高階関数で async/await は気をつける必要があるということをまず覚えておくことが変な罠を踏まなくて済む大事なことなのではないかと思います。
+`[100, 300, 200]` で順次実行されて欲しかったのですが実際の出力では並列で実行されてしまっています。
 
 ## 順次処理
 
@@ -60,7 +57,11 @@ $ timer 300ms
 })()
 ```
 
-`for...of` で書くのが、シンプルでわかりやすいのですが、Airbnb の JavaScript Style Guide では `for...of` が使用禁止されているので、状況によっては使いたくないということもあるかもしれません。そういった場合には `then` を使用することで解決します。
+`for...of` で書くのが、おそらくもっともシンプルでわかりやすいはずです。
+
+しかし、例えば Airbnb の JavaScript Style Guide のようなコーディングルールを採用している場合には `for...of` が使用禁止されているので、状況によっては使いたくても使えないということもあります。
+
+そういった場合には `then` を使用することで解決することができます。
 
 ```javascript
 import { timer } from './timer'
