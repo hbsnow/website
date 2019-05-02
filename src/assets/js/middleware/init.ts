@@ -1,26 +1,31 @@
-import Document from '../class/Utils/Document'
 import Progress from '../components/Progress'
-import errorHtml from '../pug/error.pug'
+import { fetchWithTimeout } from '../app/fetchWithTimeout'
 
 const progress = new Progress(
   document.querySelector('.progress__svg'),
   document.querySelector('.progress__bar')
 )
 
-export default async (ctx, next) => {
+export default async (ctx: PageJS.Context, next: () => void): Promise<void> => {
   ctx.state.referrer = location.pathname
 
   if (!ctx.init) {
     progress.active()
 
     try {
-      ctx.state.content = await Document.fetch(`${ctx.canonicalPath}index.tpl`)
+      const content = await fetchWithTimeout(
+        fetch(`${ctx.canonicalPath}index.tpl`)
+      )
+
+      ctx.state.content = await content.text()
     } catch (error) {
       console.error(error)
-      ctx.state.content = errorHtml()
+      ctx.state.content = require('../pug/error.pug')
     }
+
     progress.finish()
   }
+
   ctx.save()
   next()
 }

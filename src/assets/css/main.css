@@ -8,8 +8,8 @@
 @import 'animation/_scale-down.css';
 @import 'animation/_move-from-top.css';
 @import 'animation/_move-from-bottom.css';
-@import 'animation/_move-from-left.css';
-@import 'animation/_move-from-right.css';
+@import 'animation/_move-from-start.css';
+@import 'animation/_move-from-end.css';
 
 /* components */
 @import 'components/_layout.css';

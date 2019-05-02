@@ -18,12 +18,12 @@ module.exports = merge(baseWebpackConfig, {
     open: false,
     overlay: false,
     contentBase: path.join(__dirname, '../docs/'),
-    publicPath: '/'
+    publicPath: '/',
   },
   plugins: [
     // IDの生成 (recommended for development)
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
-  ]
+    new webpack.NoEmitOnErrorsPlugin(),
+  ],
 })

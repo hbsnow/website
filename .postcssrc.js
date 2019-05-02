@@ -1,6 +1,6 @@
 const path = require('path')
 
-module.exports = ctx => {
+module.exports = (ctx) => {
   const file = path.parse(ctx.file.path)
 
   // ファイル名が `_` から始まるものを判定し、
@@ -14,12 +14,12 @@ module.exports = ctx => {
       {
         doiuse: {
           // なぜか一つ設定をいれておかないと.browserslistrcを読み込まない
-          ignore: []
+          ignore: [],
         },
         stylelint: {},
         'postcss-reporter': {
-          clearReportedMessages: true
-        }
+          clearReportedMessages: true,
+        },
       },
       isPartial
         ? {}
@@ -30,9 +30,9 @@ module.exports = ctx => {
               'postcss-discard-unused': true,
               'postcss-merge-idents': true,
               'postcss-reduce-idents': true,
-              'z-index': true
-            }
+              'z-index': true,
+            },
           }
-    )
+    ),
   }
 }

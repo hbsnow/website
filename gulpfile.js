@@ -1,12 +1,7 @@
 'use strict'
 
-const gulp = require('gulp')
-const webp = require('gulp-webp')
-const imagemin = require('gulp-imagemin')
-const pngquant = require('imagemin-pngquant')
-const mozjpeg = require('imagemin-mozjpeg')
+const { series, parallel, task, src, dest, watch } = require('gulp')
 const sourcemaps = require('gulp-sourcemaps')
-const eslint = require('gulp-eslint')
 const postcss = require('gulp-postcss')
 const frontMatter = require('gulp-front-matter')
 const filter = require('gulp-filter')
@@ -16,97 +11,73 @@ const cached = require('gulp-cached')
 const uglifyes = require('uglify-es')
 const composer = require('gulp-uglify/composer')
 const minify = composer(uglifyes, console)
-const pump = require('pump')
-const runSequence = require('run-sequence')
+const plumber = require('gulp-plumber')
 
 const isProduction = process.env.NODE_ENV === 'production'
-let watch = false
 
-gulp.task('build:css', cb => {
-  pump(
-    [
-      gulp.src('src/assets/css/**/*.css'),
-      postcss({ modules: true }),
-      filter(['**', '!**/_*.css']),
-      gulp.dest('docs/assets/css')
-    ],
-    cb
-  )
+task('build:css', () => {
+  return src('src/assets/css/**/*.css')
+    .pipe(plumber())
+    .pipe(postcss({ modules: true }))
+    .pipe(filter(['**', '!**/_*.css']))
+    .pipe(dest('docs/assets/css'))
 })
 
-gulp.task('build:js', cb => {
-  pump(
-    [
-      gulp.src('src/sw.js'),
-      gulpIf(!isProduction, sourcemaps.init()),
-      eslint(),
-      eslint.format(),
-      minify(),
-      gulpIf(!isProduction, sourcemaps.write()),
-      gulp.dest('docs')
-    ],
-    cb
-  )
+task('build:js', () => {
+  return src('src/sw.js')
+    .pipe(plumber())
+    .pipe(gulpIf(!isProduction, sourcemaps.init()))
+    .pipe(minify())
+    .pipe(gulpIf(!isProduction, sourcemaps.write()))
+    .pipe(dest('docs'))
 })
 
-gulp.task('build:image', () => {
-  return gulp
-    .src(['src/+(assets)/**/*.+(png|jpg|svg)', 'src/html/**/*.+(png|jpg|svg)'])
+task('build:image', () => {
+  return src([
+    'src/+(assets)/**/*.+(png|jpg|svg)',
+    'src/html/**/*.+(png|jpg|svg)',
+  ]).pipe(dest('docs'))
+})
+
+task('build:html', () => {
+  return src('src/htdocs/**/*')
     .pipe(
-      imagemin([
-        pngquant({ quality: '70-80', speed: 1 }),
-        mozjpeg({ quality: 70, progressive: true }),
-        imagemin.svgo(),
-        imagemin.optipng()
-      ])
-    )
-    .pipe(gulp.dest('docs'))
-    .pipe(filter(['**', '!**/*.svg']))
-    .pipe(webp())
-    .pipe(gulp.dest('docs'))
-})
-
-gulp.task('build:html', cb => {
-  pump(
-    [
-      gulp.src('src/htdocs/**/*'),
       frontMatter({
-        property: 'frontMatter'
-      }).on('data', file => {
+        property: 'frontMatter',
+      }).on('data', (file) => {
         Object.assign(file, file.frontMatter)
         delete file.frontMatter
-      }),
-      require('./build/metalsmith')(),
-      inlineSource({
-        rootpath: 'docs'
-      }),
-      gulp.dest('docs')
-    ],
-    cb
+      })
+    )
+    .pipe(require('./build/metalsmith')())
+    .pipe(inlineSource({ rootpath: 'docs' }))
+    .pipe(dest('docs'))
+})
+
+task('copy', () => {
+  return src([
+    'src/+(assets)/**/*.+(txt|xml|json)',
+    'src/*.+(html|txt|xml|json)',
+    'src/README.md',
+  ]).pipe(dest('docs'))
+})
+
+task(
+  'build',
+  series(
+    parallel('build:image', 'copy', 'build:css', 'build:js'),
+    task('build:html')
   )
-})
+)
 
-gulp.task('copy', () => {
-  return gulp
-    .src([
-      'src/+(assets)/**/*.+(txt|xml|json)',
-      'src/*.+(html|txt|xml|json)',
-      'src/README.md'
-    ])
-    .pipe(gulp.dest('docs'))
-})
+task(
+  'watch',
+  series(task('build'), () => {
+    watch('src/htdocs/**/*', task('build:html'))
+    watch('src/layouts/**/*', task('build:html'))
+    watch('src/assets/css/**/*.css', task('build:css'))
+    watch('src/sw.js', task('build:js'))
+  })
+)
 
-gulp.task('watch', ['build'], () => {
-  gulp.watch('src/htdocs/**/*', ['build:html'])
-  gulp.watch('src/layouts/**/*', ['build:html'])
-  gulp.watch('src/assets/css/**/*.css', ['build:css'])
-  gulp.watch('src/sw.js', ['build:js'])
-})
-
-gulp.task('build', cb => {
-  runSequence(
-    ['build:image', 'copy', 'build:css', 'build:js'],
-    'build:html',
-    cb
-  )
-})
+task('default', task('build'))

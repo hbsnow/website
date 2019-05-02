@@ -18,9 +18,9 @@ const markdown = require('./metalsmith-markdown')
 
 const configs = {
   site: require('../configs.json'),
-  moment: require('moment'),
+  dayjs: require('dayjs'),
   escape: require('recursive-escape'),
-  url: require('url')
+  url: require('url'),
 }
 
 module.exports = () => {
@@ -33,15 +33,15 @@ module.exports = () => {
           pattern: 'blog/*/index.md',
           sortBy: 'datePublished',
           reverse: true,
-          refer: false
-        }
+          refer: false,
+        },
       })
     )
     .use(
       collectionMetadata({
         'collections.blog': {
-          pagetype: 'BlogPosting'
-        }
+          pagetype: 'BlogPosting',
+        },
       })
     )
     .use(posixPath())
@@ -51,13 +51,13 @@ module.exports = () => {
     .use(
       copy({
         pattern: '**/index.html',
-        transform: file => file.replace(/index.html$/g, 'index.tpl')
+        transform: (file) => file.replace(/index.html$/g, 'index.tpl'),
       })
     )
     .use(
       copy({
         pattern: 'blog/*/index.html',
-        transform: file => file.replace(/index.html$/g, 'amp.html')
+        transform: (file) => file.replace(/index.html$/g, 'amp.html'),
       })
     )
     .use(
@@ -65,15 +65,15 @@ module.exports = () => {
         {
           pattern: '**/index.tpl',
           metadata: {
-            pagetype: 'Template'
-          }
+            pagetype: 'Template',
+          },
         },
         {
           pattern: 'blog/*/amp.html',
           metadata: {
-            pagetype: 'Amp'
-          }
-        }
+            pagetype: 'Amp',
+          },
+        },
       ])
     )
     .use(
@@ -81,14 +81,14 @@ module.exports = () => {
         engine: 'pug',
         pattern: ['**/*'],
         default: 'start.pug',
-        directory: 'src/layouts'
+        directory: 'src/layouts',
       })
     )
     .use(
       sitemap({
         hostname: configs.site.url,
         urlProperty: 'posixPath',
-        pattern: '**/index.html'
+        pattern: '**/index.html',
       })
     )
     .use(rename([['feed.html', 'feed.xml']]))
