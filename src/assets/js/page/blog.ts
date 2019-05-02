@@ -1,6 +1,6 @@
 import Codeblock from '../components/Codeblock'
 
-export default ctx => {
+export default (): void => {
   const codeblock = new Codeblock(
     document.querySelectorAll('.codeblock__content')
   )

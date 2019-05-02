@@ -7,7 +7,7 @@ module.exports = () => {
   const md = markdown('commonmark', {
     html: false,
     xhtmlOut: false,
-    quotes: ''
+    quotes: '',
   })
 
   md.parser.use(require('markdown-it-table').markdownItTable)

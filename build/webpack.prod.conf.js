@@ -8,12 +8,12 @@ module.exports = merge(baseWebpackConfig, {
   mode: 'production',
   devtool: false,
   optimization: {
-    minimize: true
+    minimize: true,
   },
   plugins: [
     // IDの生成 (recommended for production)
     // Scope Hoisting を有効化する
     new webpack.HashedModuleIdsPlugin(),
-    new webpack.optimize.ModuleConcatenationPlugin()
-  ]
+    new webpack.optimize.ModuleConcatenationPlugin(),
+  ],
 })

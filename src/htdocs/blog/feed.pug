@@ -11,7 +11,7 @@ doctype xml
 feed(xmlns='http://www.w3.org/2005/Atom' xml:lang='ja')
   id tag:#[=atomUrl.hostname],2017:feed
   title= site.name
-  updated= moment(atomUpdated).format('YYYY-MM-DDTHH:mm:ss+09:00')
+  updated= dayjs(atomUpdated).format('YYYY-MM-DDTHH:mm:ss+09:00')
   link(rel='alternate' href=site.url)/
   link(rel='self' type='application/atom+xml' href=atomSelf)/
   author
@@ -23,5 +23,5 @@ feed(xmlns='http://www.w3.org/2005/Atom' xml:lang='ja')
       id= entryUrl
       title= val.title
       link(rel='alternate' href=entryUrl)/
-      updated=  moment(val.datePublished).format('YYYY-MM-DDTHH:mm:ss+09:00')
+      updated=  dayjs(val.datePublished).format('YYYY-MM-DDTHH:mm:ss+09:00')
       summary= val.description

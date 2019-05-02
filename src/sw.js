@@ -6,7 +6,7 @@ if (
   'ServiceWorkerGlobalScope' in self &&
   self instanceof ServiceWorkerGlobalScope
 ) {
-  self.addEventListener('install', event => {
+  self.addEventListener('install', (event) => {
     event.waitUntil(
       (async () => {
         const cache = await caches.open(CACHE_NAME)
@@ -15,13 +15,13 @@ if (
     )
   })
 
-  self.addEventListener('activate', event => {
+  self.addEventListener('activate', (event) => {
     event.waitUntil(
       (async () => {
         const cachedFiles = await caches.keys()
 
         await Promise.all(
-          cachedFiles.map(cacheFile => {
+          cachedFiles.map((cacheFile) => {
             if (cacheFile !== CACHE_NAME) {
               return caches.delete(cacheFile)
             }
@@ -31,7 +31,7 @@ if (
     )
   })
 
-  self.addEventListener('fetch', event => {
+  self.addEventListener('fetch', (event) => {
     if (
       event.request.cache === 'only-if-cached' &&
       event.request.mode !== 'same-origin'
@@ -55,8 +55,10 @@ if (
   })
 } else if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(error => {
-      console.error(error)
-    })
+    navigator.serviceWorker
+      .register('/sw.js', { scope: '/' })
+      .catch((error) => {
+        console.error(error)
+      })
   })
 }

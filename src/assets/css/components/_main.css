@@ -22,12 +22,12 @@
   animation: move-from-top 0.4s ease both;
 }
 
-.main--in-left {
-  animation: move-from-left 0.4s ease both;
+.main--in-start {
+  animation: move-from-start 0.4s ease both;
 }
 
-.main--in-right {
-  animation: move-from-right 0.4s ease both;
+.main--in-end {
+  animation: move-from-end 0.4s ease both;
 }
 
 .main__body {

@@ -1,4 +1,4 @@
-@keyframes move-from-left {
+@keyframes move-from-start {
   from {
     opacity: 0;
     transform: translateX(-25%);

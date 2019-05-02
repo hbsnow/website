@@ -1,11 +1,21 @@
 export default class {
-  constructor(elem, activeClassName, path) {
+  private activeClassName: string
+  private elem: Element | null
+  private path: string
+
+  public constructor(
+    elem: Element | null,
+    activeClassName: string,
+    path: string
+  ) {
     this.elem = elem
     this.activeClassName = activeClassName
     this.path = path
   }
 
-  changeClass(currentPath) {
+  public changeClass(currentPath: string): void {
+    if (!this.elem) return
+
     if (currentPath === this.path) {
       this.elem.classList.remove(this.activeClassName)
     } else {

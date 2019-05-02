@@ -1,4 +1,4 @@
-@keyframes move-from-right {
+@keyframes move-from-end {
   from {
     opacity: 0;
     transform: translateX(25%);

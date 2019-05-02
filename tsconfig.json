@@ -1,0 +1,19 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "baseUrl": "./src/assets/js",
+    "paths": {
+      "*": ["@types/*"]
+    },
+    "lib": [
+      "es6",
+      "dom",
+      "dom.iterable"
+    ],
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  }
+}
