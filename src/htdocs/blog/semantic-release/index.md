@@ -1,6 +1,6 @@
 ---
 title: semantic-release による npm publish と ChangeLog 出力の自動化
-tags: postcss, sass
+tags: npm
 description: semantic-release で npm publish と ChangeLog の生成を自動化する。
 datePublished: 2017-09-03
 dateModified: 2018-06-25
@@ -21,7 +21,7 @@ semantic-release-cli setup
 
 ## 使い方
 
-バージョンを自動であげるには、コミットログの形式が [AngularJS Commit Message Conventions](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#heading=h.4e0o8t4fffjf) であり、デフォルトの設定では以下の `<Type>` である必要があります。
+バージョンを自動であげるには、コミットログの形式が [AngularJS Commit Message Conventions](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#type) であり、デフォルトの設定では以下の `<Type>` である必要があります。
 
 | Type | Release type     |
 | ---- | ---------------- |

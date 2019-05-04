@@ -1,6 +1,6 @@
 ---
 title: PostCSS の設定ファイル
-tags: postcss, sass
+tags: PostCSS, Sass
 description: PostCSS の設定ファイル。
 datePublished: 2018-04-08
 dateModified: 2018-05-29

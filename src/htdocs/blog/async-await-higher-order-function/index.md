@@ -1,12 +1,12 @@
 ---
-title: JavaScriptのasync/awaitをforEachで使ったらハマった話
-tags: javascript, promise
+title: JavaScript の async/await を forEach で使ったらハマった話
+tags: JavaScript, Promise
 description: JavaScriptのasync/awaitをforEachで使ったらハマった話を社内で発表したので、発表内容に関する資料。
 datePublished: 2019-04-14
 dateModified: 2019-04-21
 ---
 
-- [JavaScriptのasync/awaitをforEachで使ったらハマった話](https://gist.github.com/hbsnow/d107782c0a99a901d379da08ee3f48db)
+- [JavaScript の async/await を forEach で使ったらハマった話](https://gist.github.com/hbsnow/d107782c0a99a901d379da08ee3f48db)
 
 上記のスライドを社内で発表したのでそのときのまとめです。サンプルコードは下記にあります。
 
@@ -15,8 +15,8 @@ dateModified: 2019-04-21
 ## 簡単な解説
 
 ```javascript
-function timer (delay) {
-  return new Promise(resolve => {
+function timer(delay) {
+  return new Promise((resolve) => {
     setTimeout(() => {
       console.log(`timer ${delay}ms`)
       resolve(delay)
@@ -24,7 +24,7 @@ function timer (delay) {
   })
 }
 
-;[100, 300, 200].forEach(async delay => {
+;[100, 300, 200].forEach(async (delay) => {
   await timer(delay)
 })
 ```
@@ -67,7 +67,7 @@ $ timer 300ms
 import { timer } from './timer'
 
 let promiseChain = Promise.resolve()
-;[100, 300, 200].forEach(delay => {
+;[100, 300, 200].forEach((delay) => {
   promiseChain = promiseChain.then(() => timer(delay))
 })
 ```
@@ -89,6 +89,6 @@ let promiseChain = Promise.resolve()
 
 ```javascript
 ;(async () => {
-  await Promise.all([100, 300, 200].map(async delay => await timer(delay)))
+  await Promise.all([100, 300, 200].map(async (delay) => await timer(delay)))
 })()
 ```

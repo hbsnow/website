@@ -1,6 +1,6 @@
 ---
 title: Docker による Wordpress のローカル開発環境構築
-tags: wordpress, docker
+tags: Wordpress, Docker
 description: Docker で Wordpress のローカル開発環境を構築する。
 datePublished: 2018-05-11
 ---
