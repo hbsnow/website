@@ -8,7 +8,7 @@ dateModified: 2019-05-04
 
 GoF のデザインパターンのうちの一つ、Strategy パターンについて PHP のサンプルコードを交えて学習していきます。
 
-Strategy パターンは、[Wikipedia では以下のように解説](https://ja.wikipedia.org/wiki/Strategy_%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3)されています。
+Strategy パターンは、[Wikipedia では以下のように解説](https://ja.wikipedia.org/wiki/Strategy_パターン)されています。
 
 > Strategy パターンは、コンピュータープログラミングの領域において、アルゴリズムを実行時に選択することができるデザインパターンである。
 
