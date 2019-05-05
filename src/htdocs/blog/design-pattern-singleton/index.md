@@ -11,7 +11,7 @@ Singleton パターンは、[Wikipedia では以下のように解説](https://j
 
 > Singleton パターンとは、そのクラスのインスタンスが 1 つしか生成されないことを保証するデザインパターンのことである。
 
-これに加えてグローバルなアクセスポイントを提供するといった説明もされることが多いこのパターンはわかりやすく、便利なので覚えると何でもかんでもパターンに当てはめてしまいがちで、[Design Patterns 15 Years Later: An Interview with Erich Gamma, Richard Helm, and Ralph Johnson](http://www.informit.com/articles/article.aspx?p=1404056) のインタビューで、Erich Gamma はこのパターンについて以下のようなコメントを残しています。
+これに加えてグローバルなアクセスポイントを提供するといった説明もされることが多いこのパターンはわかりやすく、一見すると便利なので覚えはじめには何でもかんでもこのパターンに当てはめてしまいがちで、[Design Patterns 15 Years Later: An Interview with Erich Gamma, Richard Helm, and Ralph Johnson](http://www.informit.com/articles/article.aspx?p=1404056) のインタビューでは、Erich Gamma がこのパターンについて以下のようなコメントを残しています。
 
 > When discussing which patterns to drop, we found that we still love them all. (Not really—I'm in favor of dropping Singleton. Its use is almost always a design smell.)
 
