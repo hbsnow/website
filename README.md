@@ -27,4 +27,4 @@ pagetype: BlogPosting
 
 ## Commit Message
 
-This site uses (Angular Commit Message Conventions)[https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#type].
+This site uses [Angular Commit Message Conventions](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#type).
