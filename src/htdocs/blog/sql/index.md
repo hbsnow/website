@@ -38,10 +38,10 @@ drop table
 ## テーブルのリネーム
 
 ```sql
---MySQL
+/* MySQL */
 rename table BEFORE_TABLE_NAME to AFTER_TABLE_NAME;
 
--- PostgreSQL
+/* PostgreSQL */
 alter table BEFORE_TABLE_NAME rename AFTER_TABLE_NAME;
 ```
 
@@ -59,15 +59,13 @@ alter table TABLE_NAME drop column slug;
 
 ## トランザクション
 
-### MySQL
-
 ```sql
--- MySQL
+/* MySQL */
 start transaction;
 -- ここに処理
 commit;
 
--- PostgreSQL
+/* PostgreSQL */
 begin transaction;
 -- ここに処理
 commit;
@@ -77,4 +75,11 @@ commit;
 
 ```sql
 select distinct category from TABLE_NAME;
+```
+
+## レコードのカウント
+
+```sql
+-- 重複とNULLの除外
+select count(distinct category) from TABLE_NAME;
 ```
