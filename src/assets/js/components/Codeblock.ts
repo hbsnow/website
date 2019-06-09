@@ -8,10 +8,8 @@ export default class {
   }
 
   public run(): void {
-    this.node.forEach(
-      (node): void => {
-        hljs.highlightBlock(node)
-      }
-    )
+    this.node.forEach((node): void => {
+      hljs.highlightBlock(node)
+    })
   }
 }

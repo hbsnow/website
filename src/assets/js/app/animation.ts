@@ -51,13 +51,9 @@ export const fadeOut = (
   if (!elem) return
 
   elem.classList.add(className)
-  animationEnd(
-    elem,
-    className,
-    (): void => {
-      if (!remove) return
+  animationEnd(elem, className, (): void => {
+    if (!remove) return
 
-      elem.remove()
-    }
-  )
+    elem.remove()
+  })
 }
