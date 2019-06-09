@@ -1,7 +1,7 @@
 import { fadeIn, fadeOut } from '../app/animation'
 import Nav from '../components/Nav'
 import configs from '../../../../configs.json'
-import { compare } from 'compare-url-hierarchy'
+import { compare } from '@hbsnow/compare-url-hierarchy'
 
 enum FadeType {
   UNKNOWN = 'main--in',

@@ -20,11 +20,11 @@
     "clean": "rimraf ./docs"
   },
   "dependencies": {
+    "@hbsnow/compare-url-hierarchy": "^1.2.4",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
     "animejs": "^2.2.0",
     "autoprefixer": "^9.4.2",
-    "compare-url-hierarchy": "^1.2.1",
     "css-loader": "^2.0.0",
     "dayjs": "^1.8.13",
     "doiuse": "^4.1.0",

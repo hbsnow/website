@@ -138,6 +138,13 @@
     normalize-path "^2.0.1"
     through2 "^2.0.3"
 
+"@hbsnow/compare-url-hierarchy@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@hbsnow/compare-url-hierarchy/-/compare-url-hierarchy-1.2.4.tgz#3f9de5d3b407a0fcb30b1c0d6bd9ee098ac62717"
+  integrity sha512-5s/T88TorJUABqrmplZKe+31jEfaSAQDHhvD6yH3dPUAoETyVixesYbpkXO9Pc/kuw4eN5RF7STE7TPjt+SCzQ==
+  dependencies:
+    is-absolute-url "^3.0.0"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -1728,13 +1735,6 @@ commondir@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
   integrity sha1-3dgA2gxmEnOTzKWVDqloo6rxJTs=
-
-compare-url-hierarchy@^1.2.1:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/compare-url-hierarchy/-/compare-url-hierarchy-1.2.2.tgz#e66c72ead4b85195be15b42340572d9237a7a4f3"
-  integrity sha512-VsJjuMnAJtH2EAJi1EXCfVKvYBN0X1bOncBHdwRDA24BPnWsS+GS24254hskpDiu7LDytconrRO5CP8J+NaHlA==
-  dependencies:
-    is-absolute-url "^3.0.0"
 
 component-emitter@^1.2.0:
   version "1.2.1"
