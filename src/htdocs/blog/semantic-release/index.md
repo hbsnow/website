@@ -3,7 +3,7 @@ title: semantic-release による npm publish と ChangeLog 出力の自動化
 tags: npm
 description: semantic-release で npm publish と ChangeLog の生成を自動化する。
 datePublished: 2017-09-03
-dateModified: 2018-06-25
+dateModified: 2019-06-09
 ---
 
 npm にパッケージの公開、あるいはその更新をするとき、その手順であったり、そもそも手順どころか `npm publish` すること自体忘れるということがあります。ここではこの自動化に [semantic-release](https://www.npmjs.com/package/semantic-release) を使った方法を紹介します。
@@ -41,3 +41,19 @@ semantic-release-cli setup
   }
 }
 ```
+
+## 正しく動作しないケース
+
+package.json に files を指定していて、かつそのディレクトリが .gitignore されているとき、正しく動作しなかったので semantic-release を使うのをやめた。よくわからないが、一度 semantic-release でリリースしたものについては、いくら手動で `npm publish` しても files に指定したものが publish されなかった。
+
+### 手動で更新する方法
+
+手動で `npm publish` する場合、以下のコマンドを叩くとバージョンが更新される。
+
+| Command             | Release type     |
+| ------------------- | ---------------- |
+| `npm version patch` | Patch Release    |
+| `npm version minor` | Feature Release  |
+| `npm version major` | Breaking Release |
+
+- [npm-version](https://docs.npmjs.com/cli/version)
