@@ -15,7 +15,7 @@ dateModified: 2019-04-21
 ## 簡単な解説
 
 ```javascript
-function timer(delay) {
+const timer = (delay) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       console.log(`timer ${delay}ms`)
