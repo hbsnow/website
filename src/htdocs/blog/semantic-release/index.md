@@ -58,7 +58,7 @@ package.json に files を指定していて、かつそのディレクトリが
 
 - [npm-version](https://docs.npmjs.com/cli/version)
 
-リリースの手順としては 
+リリースの手順としては
 
 1. `npm version TYPE`
 2. `git push origin TAG_NAME`
