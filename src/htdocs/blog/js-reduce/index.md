@@ -115,4 +115,4 @@ console.log(
 
 ## async/await で配列の順次処理
 
-これについては別記事[JavaScript の async/await を forEach で使ったらハマった話](/blog/async-await-higher-order-function)で書いたのでそちらを参照してください。
+これについては別記事 [JavaScript の async/await を forEach で使ったらハマった話](/blog/async-await-higher-order-function/)で書いたのでそちらを参照してください。
