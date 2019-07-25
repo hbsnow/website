@@ -8,23 +8,23 @@ datePublished: 2019-06-01
 ## DB の作成
 
 ```sql
-create database DB_NAME;
+CREATE DATABASE db_name;
 ```
 
 ## DB の削除
 
 ```sql
-drop database DB_NAME;
+DROP DATABASE db_name;
 ```
 
 ## テーブルの作成
 
 ```sql
-create table TABLE_NAME
+CREATE TABLE table_name
 (
   id         integer      not null,
   name       varchar(255) not null,
-  created_at date         ,
+  created_at date,
   primary key (id)
 );
 ```
@@ -32,54 +32,54 @@ create table TABLE_NAME
 ## テーブルの削除
 
 ```sql
-drop table
+DROP TABLE table_name;
 ```
 
 ## テーブルのリネーム
 
 ```sql
 /* MySQL */
-rename table BEFORE_TABLE_NAME to AFTER_TABLE_NAME;
+RENAME TABLE before_table_name TO after_table_name;
 
 /* PostgreSQL */
-alter table BEFORE_TABLE_NAME rename AFTER_TABLE_NAME;
+ALTER TABLE before_table_name RENAME after_table_name;
 ```
 
 ## カラムの追加
 
 ```sql
-alter table TABLE_NAME add column slug varchar(255) not null;
+ALTER TABLE table_name ADD column slug varchar(255) not null;
 ```
 
 ## カラムの削除
 
 ```sql
-alter table TABLE_NAME drop column slug;
+ALTER TABLE table_name DROP column slug;
 ```
 
 ## トランザクション
 
 ```sql
 /* MySQL */
-start transaction;
+BEGIN;
 -- ここに処理
-commit;
+COMMIT;
 
 /* PostgreSQL */
-begin transaction;
+BEGIN TRANSACTION;
 -- ここに処理
-commit;
+COMMIT;
 ```
 
 ## 重複の除外
 
 ```sql
-select distinct category from TABLE_NAME;
+SELECT DISTINCT category FROM table_name;
 ```
 
 ## レコードのカウント
 
 ```sql
 -- 重複とNULLの除外
-select count(distinct category) from TABLE_NAME;
+SELECT count(DISTINCT category) FROM table_name;
 ```
