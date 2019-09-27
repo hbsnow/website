@@ -6,6 +6,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
+    warnOnUnsupportedTypeScriptVersion: false
   },
   env: {
     browser: true,
