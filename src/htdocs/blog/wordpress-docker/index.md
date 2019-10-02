@@ -3,9 +3,12 @@ title: Docker による Wordpress のローカル開発環境構築
 tags: Wordpress, Docker
 description: Docker で Wordpress のローカル開発環境を構築する。
 datePublished: 2018-05-11
+dateModified: 2019-10-02
 ---
 
 ここには Docker のインストールなどのごく初歩的な解説はありません。また、Wordpress の環境構築には Docker の他に [VCCW](https://github.com/vccw-team/vccw) という Vagrant を使用する Starter もよく知られているようですが、私自身は使用したことがないので、これらツールの比較についてはこのページで言及していません。
+
+また、[Laradock](https://laradock.io/) でも Wordpress をサポートしているようなので、そちらを試してみるのもいいかもしれません。
 
 ## とりあえず動かす
 
