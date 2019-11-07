@@ -1,11 +1,15 @@
 import React from 'react'
 import Container from '../atoms/Container'
 
-const Footer: React.FunctionComponent = ({ children }) => {
+const Footer: React.FC = ({ children }) => {
   return (
-    <Container>
-      <footer>{children}</footer>
-    </Container>
+    <>
+      <footer>
+        <Container>
+          {children}
+        </Container>
+      </footer>
+    </>
   )
 }
 

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-const Container: React.FunctionComponent = ({ children }) => (
+const Container: React.FC = ({ children }) => (
   <>
     <div>{children}</div>
     <style jsx>{`
