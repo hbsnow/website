@@ -1,5 +1,5 @@
-import Layout from '../components/templates/default'
-import Container from '../components/atoms/Container'
+import Layout from '../templates/default'
+import Container from '../components/Container/Container'
 
 export default () => (
   <Layout>
