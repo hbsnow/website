@@ -4,4 +4,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://4uing.net/sitemap.xml
+Sitemap: https://hbsnow.github.io/sitemap.xml

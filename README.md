@@ -1,30 +1,12 @@
 # hbsnow.github.io
 
-hbsnow.github.io
+## 移転しました
 
-[![Build Status](https://travis-ci.org/hbsnow/website.svg?branch=master)](https://travis-ci.org/hbsnow/website)
+[hbsnow.dev](https://hbsnow.dev) に移転しました。
 
-## YAML Formatter
+See also: https://github.com/hbsnow/hbsnow.dev
 
-```
----
-title: Page Title
-tags: JavaScript, Design pattern
-description: 記事の説明
-datePublished: 公開日
-dateModified: 更新日
-pagetype: BlogPosting
----
-```
+## 過去のバージョン
 
-### pagetype
-
-- BlogPosting (default)
-- WebPage
-- Amp
-- Feed
-- Template
-
-## Commit Message
-
-This site uses [Angular Commit Message Conventions](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#type).
+- [v1](https://github.com/hbsnow/website/tree/v1.0)
+- [v2](https://github.com/hbsnow/website/tree/v2.0)
