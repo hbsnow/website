@@ -2,6 +2,12 @@
 description: Home
 ---
 
+p: a(href="https://hbsnow.dev") https://hbsnow.dev
+
+p 上記ページに移転しました。
+
+p このサイトに残っている一部コンテンツは古く、自分で参照することもなかったため移転はせずにそのまま残してあります。
+
 ul.post-list
   each val in collections.blog
     - var date = dayjs(val.datePublished)
